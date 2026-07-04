@@ -1,0 +1,46 @@
+/* assets/css/layout.css - Grid and Structural Layout Stylesheet */
+
+/* Main application container alignments */
+.stAppDeployButton {
+    display: none !important; /* Hide native deploy button */
+}
+
+/* Adjust main Streamlit block wrapper margins */
+.block-container {
+    padding-top: var(--spacing-sm) !important;
+    padding-bottom: var(--spacing-sm) !important;
+    padding-left: var(--spacing-md) !important;
+    padding-right: var(--spacing-md) !important;
+    max-width: 100% !important;
+}
+
+/* Ensure column layouts adapt to parent layout height */
+div[data-testid="stHorizontalBlock"] {
+    gap: var(--spacing-md) !important;
+    width: 100% !important;
+}
+
+/* Align columns to prevent baseline/offset layout overlapping */
+div[data-testid="column"] {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+/* Fixed spacing widgets and layout alignment bars */
+.vertical-spacer {
+    display: block;
+    height: var(--spacing-sm);
+    width: 100%;
+}
+
+.vertical-spacer-lg {
+    display: block;
+    height: var(--spacing-md);
+    width: 100%;
+}
+
+/* Force container frames to expand to 100% width of parent columns */
+div[data-testid="stVerticalBlock"] {
+    width: 100% !important;
+}

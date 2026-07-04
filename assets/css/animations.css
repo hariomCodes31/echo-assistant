@@ -1,0 +1,110 @@
+/* assets/css/animations.css - Keyframe Animations and Floating Shaders */
+
+/* Clockwise Rotation for AI Core Outer Rings */
+@keyframes spin-clockwise {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Counter-Clockwise Rotation for AI Core Inner Rings */
+@keyframes spin-counter-clockwise {
+    from {
+        transform: rotate(360deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+/* Volumetric breathing core pulse for the center orb */
+@keyframes breathe-core {
+    0%, 100% {
+        transform: scale(1.0);
+        opacity: 0.8;
+        filter: drop-shadow(0 0 12px rgba(0, 217, 255, 0.45));
+    }
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+        filter: drop-shadow(0 0 25px rgba(0, 217, 255, 0.65));
+    }
+}
+
+/* Suspended Glass Panel floating offset keyframe */
+@keyframes float-panel {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Soundwave Voice visualizer breathing */
+@keyframes speaking-vibration {
+    0%, 100% {
+        transform: scale(1.0) translate(0, 0);
+    }
+    33% {
+        transform: scale(1.03) translate(-1px, 1px);
+    }
+    66% {
+        transform: scale(0.98) translate(1px, -1px);
+    }
+}
+
+/* Pulse highlight status dot */
+@keyframes status-pulse {
+    0%, 100% {
+        opacity: 0.75;
+        box-shadow: 0 0 4px currentColor;
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 12px currentColor;
+    }
+}
+
+/* Ambient space fog shift coordinate translation */
+@keyframes ambient-fog-shift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Running Neon Border Light shift keyframe cycle */
+@keyframes border-glow-cycle {
+    0%, 100% {
+        border-color: rgba(0, 217, 255, 0.15) !important;
+        box-shadow: 
+            var(--glow-panel),
+            0 0 15px rgba(0, 217, 255, 0.05),
+            inset 0 0 20px rgba(255, 255, 255, 0.01) !important;
+    }
+    50% {
+        border-color: rgba(123, 97, 255, 0.25) !important;
+        box-shadow: 
+            var(--glow-panel),
+            0 0 25px rgba(123, 97, 255, 0.15),
+            inset 0 0 20px rgba(123, 97, 255, 0.02) !important;
+    }
+}
+
+/* Smooth fade-in animation for chat history bubbles */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

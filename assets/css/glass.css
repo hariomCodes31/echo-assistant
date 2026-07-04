@@ -1,0 +1,75 @@
+/* assets/css/glass.css - Glassmorphic and Neon Border Stylesheet */
+
+/* Apply glassmorphic visual tokens to Streamlit vertical block containers */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: var(--bg-panel-hologram) !important;
+    backdrop-filter: blur(30px) !important;
+    -webkit-backdrop-filter: blur(30px) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: 
+        var(--glow-panel),
+        0 0 15px rgba(0, 217, 255, 0.05),
+        inset 0 0 15px rgba(255, 255, 255, 0.01) !important;
+}
+
+/* Restyle native buttons to look like neon-glowing glass tiles */
+div.stButton > button {
+    background: rgba(255, 255, 255, 0.02) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 217, 255, 0.2) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    box-shadow: inset 0 0 8px rgba(0, 217, 255, 0.02) !important;
+}
+
+div.stButton > button:hover {
+    color: var(--neon-cyan) !important;
+    border-color: var(--neon-cyan) !important;
+    background: rgba(0, 217, 255, 0.08) !important;
+    box-shadow: 
+        var(--glow-cyan),
+        inset 0 0 10px rgba(0, 217, 255, 0.05) !important;
+}
+
+/* Secondary Button styling (Clear controls, etc.) */
+div.stButton > button[kind="secondary"] {
+    border-color: rgba(255, 77, 90, 0.25) !important;
+    color: var(--neon-red) !important;
+}
+
+div.stButton > button[kind="secondary"]:hover {
+    color: var(--text-primary) !important;
+    border-color: var(--neon-red) !important;
+    background: rgba(255, 77, 90, 0.1) !important;
+    box-shadow: 0 0 15px rgba(255, 77, 90, 0.3) !important;
+}
+
+/* Restyle Streamlit progress bars with neon gradients */
+div[data-testid="stProgress"] {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border-radius: var(--radius-xs) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 2px !important;
+}
+
+div[data-testid="stProgress"] > div > div > div {
+    background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-purple) 100%) !important;
+    box-shadow: var(--glow-cyan) !important;
+    border-radius: var(--radius-xs) !important;
+}
+
+/* Glassmorphism styling for text inputs */
+div[data-testid="stTextInput"] > div > div > input {
+    background: rgba(6, 11, 25, 0.5) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    backdrop-filter: blur(15px) !important;
+}
+
+div[data-testid="stTextInput"] > div > div > input:focus {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan) !important;
+}

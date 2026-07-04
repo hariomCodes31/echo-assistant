@@ -1,0 +1,28 @@
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Browser profile
+chrome_profile/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Test / Temporary files
+test_recording.wav
+screenshot.png
+
+# OS
+Thumbs.db
+.DS_Store

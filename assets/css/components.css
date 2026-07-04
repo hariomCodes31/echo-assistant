@@ -1,0 +1,708 @@
+/* assets/css/components.css - Translucent Glass Panels and Neon Indicators */
+
+/* Target native vertical containers to apply floating glassmorphic projections */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: 
+        linear-gradient(rgba(255, 255, 255, 0.003) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.003) 1px, transparent 1px),
+        var(--bg-panel-hologram) !important;
+    background-size: 8px 8px !important; /* Tech grid pattern overlay */
+    backdrop-filter: blur(35px) !important;
+    -webkit-backdrop-filter: blur(35px) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    border-radius: var(--radius-xl) !important;
+    animation: 
+        float-panel 8s ease-in-out infinite,
+        border-glow-cycle 10s ease-in-out infinite !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    border-color: rgba(0, 217, 255, 0.4) !important;
+    box-shadow: 
+        0 20px 45px rgba(0, 217, 255, 0.2),
+        0 0 25px rgba(0, 217, 255, 0.15),
+        inset 0 0 25px rgba(0, 217, 255, 0.03) !important;
+    transform: translateY(-7px) !important;
+}
+
+/* Style buttons into custom glowing glass tiles */
+div.stButton > button {
+    background: rgba(255, 255, 255, 0.02) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+div.stButton > button:hover {
+    color: var(--neon-cyan) !important;
+    border-color: var(--neon-cyan) !important;
+    background: rgba(0, 217, 255, 0.05) !important;
+    box-shadow: 
+        var(--glow-cyan),
+        inset 0 0 10px rgba(0, 217, 255, 0.05) !important;
+}
+
+/* Secondary Button (Clear panels, uploads) styling overrides */
+div.stButton > button[kind="secondary"] {
+    border-color: rgba(255, 77, 90, 0.25) !important;
+    color: var(--neon-red) !important;
+}
+
+div.stButton > button[kind="secondary"]:hover {
+    color: var(--text-primary) !important;
+    border-color: var(--neon-red) !important;
+    background: rgba(255, 77, 90, 0.1) !important;
+    box-shadow: 0 0 15px rgba(255, 77, 90, 0.3) !important;
+}
+
+/* Progress trackers with glowing neon tracks */
+div[data-testid="stProgress"] {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border-radius: var(--radius-xs) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 2px !important;
+}
+
+div[data-testid="stProgress"] > div > div > div {
+    background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-purple) 100%) !important;
+    box-shadow: var(--glow-cyan) !important;
+    border-radius: var(--radius-xs) !important;
+}
+
+/* Style file upload area to fit layout */
+[data-testid="stFileUploader"] {
+    background: rgba(255, 255, 255, 0.01) !important;
+    border: 1px dashed rgba(0, 217, 255, 0.2) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 10px !important;
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="stFileUploader"]:hover {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: 0 0 10px rgba(0, 217, 255, 0.1) !important;
+}
+
+/* --- Holographic Core Custom Styles --- */
+.hologram-core-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 240px;
+    margin: 15px 0;
+}
+.hologram-svg {
+    width: 220px;
+    height: 220px;
+    position: absolute;
+    z-index: 2;
+}
+.outer-ring {
+    transform-origin: center;
+    animation: spin-clockwise 25s linear infinite;
+}
+.mid-ring {
+    transform-origin: center;
+    animation: spin-counter-clockwise 10s linear infinite;
+}
+.inner-ring {
+    transform-origin: center;
+    animation: spin-clockwise 6s linear infinite;
+}
+.core-sphere {
+    transform-origin: center;
+    animation: breathe-core 4s ease-in-out infinite;
+}
+.particle {
+    transform-origin: center;
+    animation: spin-clockwise 15s linear infinite;
+}
+
+/* State specific speed overrides */
+.listening-core .outer-ring { animation-duration: 6s; }
+.listening-core .core-sphere { animation-duration: 1.2s; }
+
+.processing-core .outer-ring { animation-duration: 2s; animation-direction: reverse; }
+.processing-core .core-sphere { animation-duration: 0.6s; }
+
+.speaking-core .core-sphere { animation: speaking-vibration 0.2s ease-in-out infinite; }
+
+/* Holographic projection platform base */
+.glow-platform {
+    position: absolute;
+    bottom: 5px;
+    width: 130px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 217, 255, 0.4) 0%, transparent 70%);
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+    z-index: 1;
+    animation: breathe-core 4s ease-in-out infinite;
+}
+
+/* Top bar status configurations */
+.status-badge-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.status-widget {
+    background: rgba(6, 11, 25, 0.35);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 217, 255, 0.12);
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+.status-widget:hover {
+    border-color: rgba(0, 217, 255, 0.3);
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.15);
+}
+.status-widget p {
+    margin: 0;
+    padding: 0;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+.status-widget h4 {
+    margin: 3px 0 0 0;
+    font-size: 0.85rem;
+    color: var(--neon-cyan);
+    font-weight: 600;
+}
+
+/* Trademark signature at bottom-left */
+.branding-footer {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 1px;
+    margin-top: 15px;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.branding-footer:hover {
+    opacity: 1;
+    color: var(--neon-cyan);
+    text-shadow: var(--glow-cyan);
+}
+/* ===========================================================
+   QUANTUM AI CORE
+=========================================================== */
+
+.echo-core{
+    position:relative;
+    width:100%;
+    height:560px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    isolation:isolate;
+}
+
+/* ---------------- Background ---------------- */
+
+.core-background{
+
+    position:absolute;
+    inset:0;
+
+    background:
+        radial-gradient(circle at center,
+        rgba(0,217,255,.08),
+        transparent 70%);
+
+}
+
+/* ---------------- Stars ---------------- */
+
+.core-stars{
+
+    position:absolute;
+    inset:0;
+
+}
+
+.core-stars span{
+
+    position:absolute;
+
+    width:4px;
+    height:4px;
+
+    border-radius:50%;
+
+    background:#00d9ff;
+
+    box-shadow:
+        0 0 10px #00d9ff,
+        0 0 20px #00d9ff;
+
+    animation:
+        floatStars linear infinite;
+
+}
+
+.s1{top:8%;left:18%;animation-duration:15s;}
+.s2{top:16%;left:73%;animation-duration:20s;}
+.s3{top:31%;left:9%;animation-duration:14s;}
+.s4{top:39%;left:82%;animation-duration:18s;}
+.s5{top:51%;left:16%;animation-duration:12s;}
+.s6{top:63%;left:72%;animation-duration:16s;}
+.s7{top:76%;left:28%;animation-duration:19s;}
+.s8{top:83%;left:61%;animation-duration:15s;}
+.s9{top:21%;left:41%;animation-duration:22s;}
+.s10{top:52%;left:52%;animation-duration:18s;}
+.s11{top:71%;left:86%;animation-duration:17s;}
+.s12{top:12%;left:58%;animation-duration:14s;}
+
+/* ---------------- Beam ---------------- */
+
+.vertical-beam{
+
+    position:absolute;
+
+    width:6px;
+    height:330px;
+
+    background:
+        linear-gradient(
+            transparent,
+            rgba(0,217,255,.9),
+            transparent
+        );
+
+    filter:blur(6px);
+
+    animation:
+        beamPulse 2.8s infinite;
+
+}
+
+/* ---------------- Platform ---------------- */
+
+.projector-platform{
+
+    position:absolute;
+
+    width:420px;
+    height:420px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+.platform-ring{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,217,255,.18);
+
+}
+
+.ring1{width:410px;height:410px;}
+.ring2{width:340px;height:340px;}
+.ring3{width:270px;height:270px;}
+.ring4{width:190px;height:190px;}
+.ring5{width:130px;height:130px;}
+
+/* ---------------- Core ---------------- */
+
+.core-area{
+
+    position:relative;
+
+    width:420px;
+    height:420px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+/* ---------------- Rings ---------------- */
+
+.outer-circle{
+
+    position:absolute;
+
+    width:360px;
+    height:360px;
+
+    border-radius:50%;
+
+    border:2px solid rgba(0,217,255,.25);
+
+    animation:
+        spinClock 24s linear infinite;
+
+}
+
+.middle-circle{
+
+    position:absolute;
+
+    width:270px;
+    height:270px;
+
+    border-radius:50%;
+
+    border:2px dashed rgba(123,97,255,.45);
+
+    animation:
+        spinAnti 18s linear infinite;
+
+}
+
+.inner-circle{
+
+    position:absolute;
+
+    width:170px;
+    height:170px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(255,255,255,.35);
+
+    animation:
+        spinClock 8s linear infinite;
+
+}
+
+/* ---------------- Glow ---------------- */
+
+.core-glow{
+
+    position:absolute;
+
+    width:130px;
+    height:130px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(circle,
+            #00d9ff,
+            #2456ff 70%,
+            transparent);
+
+    filter:blur(35px);
+
+    animation:
+        breathe 3s ease-in-out infinite;
+
+}
+
+/* ---------------- Center ---------------- */
+
+.core-center{
+
+    position:absolute;
+
+    width:105px;
+    height:105px;
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+        radial-gradient(circle,
+        #ffffff,
+        #00d9ff);
+
+    box-shadow:
+        0 0 25px #00d9ff,
+        0 0 60px #00d9ff,
+        0 0 120px rgba(0,217,255,.45);
+
+}
+
+/* ---------------- X ---------------- */
+
+.core-x{
+
+    font-size:44px;
+    font-weight:900;
+
+    color:white;
+
+    text-shadow:
+        0 0 10px #00d9ff,
+        0 0 25px #00d9ff,
+        0 0 50px #00d9ff;
+
+}
+
+/* ---------------- Pulse ---------------- */
+
+.pulse{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    border:2px solid rgba(0,217,255,.4);
+
+}
+
+.pulse1{
+
+    width:120px;
+    height:120px;
+
+    animation:
+        pulseRing 2s infinite;
+
+}
+
+.pulse2{
+
+    width:120px;
+    height:120px;
+
+    animation:
+        pulseRing 2s infinite .8s;
+
+}
+
+/* ---------------- Animations ---------------- */
+
+@keyframes spinClock{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+@keyframes spinAnti{
+
+    from{
+        transform:rotate(360deg);
+    }
+
+    to{
+        transform:rotate(0deg);
+    }
+
+}
+
+@keyframes breathe{
+
+    0%,100%{
+
+        transform:scale(.95);
+
+        opacity:.7;
+
+    }
+
+    50%{
+
+        transform:scale(1.08);
+
+        opacity:1;
+
+    }
+
+}
+
+@keyframes beamPulse{
+
+    0%,100%{
+
+        opacity:.35;
+
+    }
+
+    50%{
+
+        opacity:1;
+
+    }
+
+}
+
+@keyframes pulseRing{
+
+    0%{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+    100%{
+
+        transform:scale(2);
+
+        opacity:0;
+
+    }
+
+}
+
+@keyframes floatStars{
+
+    from{
+
+        transform:translateY(0);
+
+    }
+
+    to{
+
+        transform:translateY(-40px);
+
+    }
+
+}
+
+/* =========================================
+   MISSING COMPONENT CLASSES
+   ========================================= */
+
+/* Panel title used across right-column panels */
+.panel-title {
+    font-family: var(--font-primary, 'Outfit', sans-serif);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary, #F8FAFC);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px !important;
+}
+
+/* Active menu highlight for sidebar navigation */
+.active-menu .stButton > button {
+    background: rgba(0, 217, 255, 0.1) !important;
+    border-color: #00D9FF !important;
+    color: #00D9FF !important;
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.2), inset 0 0 10px rgba(0, 217, 255, 0.05) !important;
+}
+
+/* Monitor label for progress bars */
+.monitor-label {
+    font-family: var(--font-mono, 'Share Tech Mono', monospace);
+    font-size: 0.75rem;
+    color: var(--text-secondary, #94A3B8);
+    margin-bottom: 4px;
+}
+
+/* Left menu sidebar container */
+.left-menu-container {
+    min-height: auto !important;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Voice tray widget */
+.voice-tray-widget {
+    width: 100%;
+}
+
+/* Sidebar file uploader compact style */
+div[data-testid="stFileUploader"] label {
+    font-size: 0.7rem !important;
+}
+
+/* Chat input styling for dark theme */
+div[data-testid="stChatInput"] {
+    background: rgba(6, 11, 25, 0.5) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    border-radius: var(--radius-md, 12px) !important;
+}
+
+div[data-testid="stChatInput"] textarea {
+    color: var(--text-primary, #F8FAFC) !important;
+    font-family: var(--font-primary, 'Outfit', sans-serif) !important;
+}
+
+/* Scrollable container styling */
+div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stVerticalBlock"] {
+    scrollbar-width: thin;
+}
+
+/* Orbit ring animations for AI core */
+.orbit {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 217, 255, 0.15);
+}
+
+.orbit1 { width: 380px; height: 380px; animation: spinClock 30s linear infinite; }
+.orbit2 { width: 320px; height: 320px; animation: spinAnti 22s linear infinite; }
+.orbit3 { width: 260px; height: 260px; animation: spinClock 16s linear infinite; }
+.orbit4 { width: 200px; height: 200px; animation: spinAnti 12s linear infinite; }
+.orbit5 { width: 150px; height: 150px; animation: spinClock 9s linear infinite; }
+
+/* Satellite dots on orbits */
+.satellite {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00D9FF;
+    box-shadow: 0 0 8px #00D9FF, 0 0 16px #00D9FF;
+}
+
+.sat1 { top: 10%; left: 50%; animation: spinClock 15s linear infinite; }
+.sat2 { top: 50%; right: 5%; animation: spinAnti 12s linear infinite; }
+.sat3 { bottom: 10%; left: 40%; animation: spinClock 18s linear infinite; }
+.sat4 { top: 30%; left: 10%; animation: spinAnti 14s linear infinite; }
+
+/* Energy grid overlay */
+.energy-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.mic-wave-glow {
+    margin-top: -5px !important;
+    margin-bottom: 5px !important;
+}
+
+.stHtmlComponent, .stHtmlComponent > * {
+    height: 320px !important;
+}
+
+.stChatInput {
+    margin-top: -15px !important;
+}
+
+.element-container {
+    margin-top: -3px !important;
+    margin-bottom: -3px !important;
+}

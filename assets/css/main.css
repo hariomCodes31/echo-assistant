@@ -1,0 +1,174 @@
+/* assets/css/main.css - Global Stylesheet for ECHO OS */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+/* Color Custom Properties - Futuristic Neon Palette */
+:root {
+    /* Color Tokens */
+    --bg-dark-base: #020408;
+    --bg-dark-core: #040811;
+    --bg-panel-hologram: rgba(6, 11, 25, 0.4);
+    
+    --neon-cyan: #00D9FF;
+    --neon-purple: #7B61FF;
+    --neon-pink: #EC4899;
+    --neon-green: #10B981;
+    --neon-red: #FF4D5A;
+    
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    
+    --glow-cyan: 0 0 15px rgba(0, 217, 255, 0.3);
+    --glow-purple: 0 0 15px rgba(123, 97, 255, 0.3);
+    --glow-panel: 0 15px 35px rgba(0, 0, 0, 0.6);
+    
+    /* Typography Tokens */
+    --font-primary: 'Outfit', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+    
+    /* Spacing Tokens */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Border Radius Tokens */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    
+    /* Z-Index Tokens */
+    --z-index-base: 1;
+    --z-index-panel: 10;
+    --z-index-overlay: 100;
+    --z-index-popup: 1000;
+    
+    /* Transition Tokens */
+    --transition-speed: 0.3s;
+    --transition-curve: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Global Reset and Canvas Setup */
+html,
+body,
+.stApp {
+    font-family: var(--font-primary);
+    background-color: var(--bg-dark-base) !important;
+    color: var(--text-primary) !important;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow-x: hidden !important; /* Block horizontal overflows */
+    box-sizing: border-box;
+}
+
+/* Scrollbar customization for webkit engines */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-xs);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 217, 255, 0.2);
+    border-radius: var(--radius-xs);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-cyan);
+    box-shadow: var(--glow-cyan);
+}
+
+/* Text Selection Styling */
+::selection {
+    background: rgba(0, 217, 255, 0.2);
+    color: var(--neon-cyan);
+}
+
+/* Utility classes for typography */
+.title-font {
+    font-family: var(--font-primary);
+    font-weight: 700;
+}
+
+.mono-font {
+    font-family: var(--font-mono);
+}
+
+.glow-text-cyan {
+    color: var(--neon-cyan);
+    text-shadow: var(--glow-cyan);
+}
+
+.glow-text-purple {
+    color: var(--neon-purple);
+    text-shadow: var(--glow-purple);
+}
+
+/* Global Heading Defaults */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Media Query Placeholders */
+/* 4K Displays (3840px+) */
+@media (min-width: 2560px) {
+    :root {
+        --spacing-md: 24px;
+        --spacing-lg: 36px;
+        --spacing-xl: 48px;
+    }
+}
+
+/* Laptop / Desktop standard (1440px - 1920px) */
+@media (max-width: 1920px) {
+    /* Fits 1920x1080 layouts */
+}
+
+@media (max-width: 1600px) {
+    /* Fits 1600x900 layouts */
+}
+
+@media (max-width: 1440px) {
+    /* Fits 1440x900 layouts */
+}
+
+/* Medium screen / Small laptop (1280px - 1366px) */
+@media (max-width: 1366px) {
+    /* Fits 1366x768 layouts */
+}
+
+@media (max-width: 1280px) {
+    /* Fits 1280x720 layouts */
+}
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 768px) {
+    :root {
+        --spacing-md: 12px;
+        --spacing-lg: 18px;
+        --spacing-xl: 24px;
+    }
+}
+
+/* Accessibility - Prefers Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

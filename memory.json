@@ -1,0 +1,10 @@
+[
+    {
+        "role": "user",
+        "content": "open github"
+    },
+    {
+        "role": "assistant",
+        "content": "\ud83d\udc19 Opened GitHub"
+    }
+]
