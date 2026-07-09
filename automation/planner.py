@@ -67,6 +67,6 @@ def _tts_text(line: str) -> str:
     # Remove [n/m] prefix
     line = re.sub(r"^\[\d+/\d+\]\s*", "", line)
     # Remove common emoji
-    for ch in ["🌐", "🔍", "✅", "❌", "⚠️", "🎵", "▶️", "📂", "🖥️", "🤖", "**"]:
+    for ch in ["🌐", "🔍", "✅", "❌", "⚠️", "🎵", "▶️", "📂", "🖥️", "🤖", "**", "⏰", "⌨️", "🧮", "📭"]:
         line = line.replace(ch, "")
     return line.strip()

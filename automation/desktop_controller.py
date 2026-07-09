@@ -86,7 +86,19 @@ _APP_MAP: dict[str, dict] = {
         "window": "Notepad",
         "kill": ["notepad.exe"],
     },
+    "notebook": {
+        "launch": "notepad.exe",
+        "process": "notepad.exe",
+        "window": "Notepad",
+        "kill": ["notepad.exe"],
+    },
     "calculator": {
+        "launch": "calc.exe",
+        "process": "CalculatorApp.exe",
+        "window": "Calculator",
+        "kill": ["CalculatorApp.exe"],
+    },
+    "calculator app": {
         "launch": "calc.exe",
         "process": "CalculatorApp.exe",
         "window": "Calculator",

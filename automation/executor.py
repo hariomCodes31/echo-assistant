@@ -116,6 +116,68 @@ def _dispatch(
         filename = step.get("filename", "")
         return desktop_controller.open_file_in_folder(folder, filename)
 
+    # ── Schedule a command to run at a future time ───────────────────────────
+    elif action == "scheduled_command":
+        time_str = step.get("time", "")
+        command  = step.get("command", "")
+        from automation.scheduler import schedule_command
+        return schedule_command(time_str, command)
+
+    # ── Type text into the currently focused window ───────────────────────────
+    elif action == "type_text":
+        text = step.get("text", "")
+        if not text:
+            return "⚠️ No text provided to type."
+        try:
+            import time as _time
+            import pyautogui
+            _time.sleep(0.6)   # Give the newly-opened app time to focus
+            pyautogui.write(text, interval=0.03)
+            return f"⌨️ Typed: {text}"
+        except Exception as e:
+            return f"❌ Could not type text: {e}"
+
+    # ── Open Calculator and evaluate an expression ────────────────────────────
+    elif action == "calculate":
+        expression = step.get("expression", "")
+        if not expression:
+            return "⚠️ No expression provided to calculate."
+        try:
+            import time as _time
+            import pyautogui
+
+            # Open calculator (reuse desktop_controller so it handles already-running)
+            open_result = desktop_controller.open_app("calculator")
+            desktop_controller.wait_for_app("calculator", timeout=8.0)
+            _time.sleep(0.8)   # Let the Calculator window fully render and focus
+
+            # Clear any previous value
+            pyautogui.press('escape')
+            for ch in expression:
+                if ch.isdigit():
+                    pyautogui.press(ch)
+                elif ch == '+':
+                    pyautogui.press('+')
+                elif ch == '-':
+                    pyautogui.press('-')
+                elif ch == '*':
+                    pyautogui.press('*')
+                elif ch == '/':
+                    pyautogui.press('/')
+                elif ch == '(':
+                    pyautogui.hotkey('shift', '9')
+                elif ch == ')':
+                    pyautogui.hotkey('shift', '0')
+                elif ch == '.':
+                    pyautogui.press('.')
+                elif ch == ' ':
+                    pass   # skip spaces
+            pyautogui.press('enter')   # press = to evaluate
+
+            return f"🧮 {open_result} — Calculated: **{expression}**"
+        except Exception as e:
+            return f"❌ Calculator failed: {e}"
+
     # ── Google web search (fallback) ─────────────────────────────────────────
     elif action == "web_search":
         query = step.get("query", "")

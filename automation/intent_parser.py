@@ -12,15 +12,18 @@ POLICY:
     → parse into a list of action dicts and return them.
 
 Action dict schema:
-  {"action": "open_website",    "target": "<name_or_url>"}
-  {"action": "open_app",        "target": "<app_name>"}
-  {"action": "open_folder",     "target": "<folder_name>"}
-  {"action": "browser_search",  "target": "<site>", "query": "<query>"}
-  {"action": "play_music",      "query": "<song_name>"}
-  {"action": "youtube_play",    "query": "<song_or_video>"}
-  {"action": "close_app",       "target": "<app_name>"}
-  {"action": "open_file",       "folder": "<folder>", "filename": "<file>"}
-  {"action": "web_search",      "query": "<query>"}
+  {"action": "open_website",       "target": "<name_or_url>"}
+  {"action": "open_app",           "target": "<app_name>"}
+  {"action": "open_folder",        "target": "<folder_name>"}
+  {"action": "browser_search",     "target": "<site>", "query": "<query>"}
+  {"action": "play_music",         "query": "<song_name>"}
+  {"action": "youtube_play",       "query": "<song_or_video>"}
+  {"action": "close_app",          "target": "<app_name>"}
+  {"action": "open_file",          "folder": "<folder>", "filename": "<file>"}
+  {"action": "web_search",         "query": "<query>"}
+  {"action": "scheduled_command",  "time": "<HH:MMam/pm>", "command": "<command>"}
+  {"action": "type_text",          "text": "<text_to_type>"}
+  {"action": "calculate",          "expression": "<math_expression>"}
 """
 from __future__ import annotations
 
@@ -53,7 +56,13 @@ _WEBSITE_NAMES: frozenset[str] = frozenset({
 
 # Verbs that introduce a new sub-command in a compound command
 _ACTION_VERB_RE = re.compile(
-    r"\b(open|launch|go\s+to|navigate\s+to|search(?:\s+for)?|play|close|type)\b",
+    r"\b(open|launch|go\s+to|navigate\s+to|search(?:\s+for)?|play|close|type|calculate)\b",
+    re.IGNORECASE,
+)
+
+# Pattern: "<command> at <time>"  — scheduling suffix
+_SCHEDULE_RE = re.compile(
+    r"^(.+?)\s+at\s+(\d{1,2}:\d{2}\s*(?:am|pm)?)\s*$",
     re.IGNORECASE,
 )
 
@@ -65,7 +74,7 @@ _HARD_SEP_RE = re.compile(
 
 # "and" followed by an action verb → also a step separator
 _SOFT_SEP_RE = re.compile(
-    r"\s+and\s+(?=(?:open|launch|go\s+to|navigate\s+to|search|play|close|type)\b)",
+    r"\s+and\s+(?=(?:open|launch|go\s+to|navigate\s+to|search|play|close|type|calculate)\b)",
     re.IGNORECASE,
 )
 
@@ -185,6 +194,16 @@ def _parse_single(cmd: str, context_site: str | None = None) -> dict | list[dict
     if m:
         return {"action": "close_app", "target": m.group(1).strip().lower()}
 
+    # type <text>  — type text into focused window
+    m = re.match(r"^type\s+(.+)$", cmd, re.IGNORECASE)
+    if m:
+        return {"action": "type_text", "text": m.group(1).strip()}
+
+    # calculate <expression>  — open calculator and compute
+    m = re.match(r"^calculate\s+(.+)$", cmd, re.IGNORECASE)
+    if m:
+        return {"action": "calculate", "expression": m.group(1).strip()}
+
     return None
 
 
@@ -199,6 +218,14 @@ def _fast_parse(command: str) -> list[dict] | None:
     Pure-Python fast path. Returns a step list or None.
     Single-step commands that router already owns → None.
     """
+    # ── Scheduling: "<command> at HH:MMam/pm" ───────────────────────────────
+    # Check BEFORE the router-owns guard so scheduled single commands are caught.
+    m = _SCHEDULE_RE.match(command)
+    if m:
+        inner_cmd = m.group(1).strip()
+        time_str  = m.group(2).strip()
+        return [{"action": "scheduled_command", "time": time_str, "command": inner_cmd}]
+
     # Hand off to router if it owns this command type
     if _ROUTER_OWNS.match(command):
         return None
@@ -218,6 +245,11 @@ def _fast_parse(command: str) -> list[dict] | None:
         _ROUTER_SINGLE = {"open_app", "open_website", "open_folder", "play_music", "close_app"}
         if len(steps) == 1 and steps[0]["action"] in _ROUTER_SINGLE:
             return None
+
+        # New single-step actions we do handle ourselves
+        _PLANNER_SINGLE = {"scheduled_command", "type_text", "calculate"}
+        if len(steps) == 1 and steps[0]["action"] in _PLANNER_SINGLE:
+            return steps
 
         return steps
 
@@ -263,15 +295,18 @@ Convert the user's command into a JSON array of action steps.
 Respond ONLY with valid JSON — no explanation, no markdown.
 
 Action types:
-  {"action":"open_website",   "target":"<site_name_or_url>"}
-  {"action":"open_app",       "target":"<app_name>"}
-  {"action":"open_folder",    "target":"<downloads|documents|desktop|pictures>"}
-  {"action":"browser_search", "target":"<site>", "query":"<query>"}
-  {"action":"play_music",     "query":"<song>"}
-  {"action":"youtube_play",   "query":"<video>"}
-  {"action":"close_app",      "target":"<app_name>"}
-  {"action":"open_file",      "folder":"<folder>", "filename":"<file>"}
-  {"action":"web_search",     "query":"<query>"}
+  {"action":"open_website",      "target":"<site_name_or_url>"}
+  {"action":"open_app",          "target":"<app_name>"}
+  {"action":"open_folder",       "target":"<downloads|documents|desktop|pictures>"}
+  {"action":"browser_search",    "target":"<site>", "query":"<query>"}
+  {"action":"play_music",        "query":"<song>"}
+  {"action":"youtube_play",      "query":"<video>"}
+  {"action":"close_app",         "target":"<app_name>"}
+  {"action":"open_file",         "folder":"<folder>", "filename":"<file>"}
+  {"action":"web_search",        "query":"<query>"}
+  {"action":"scheduled_command", "time":"<HH:MMam/pm>", "command":"<command>"}
+  {"action":"type_text",         "text":"<text_to_type>"}
+  {"action":"calculate",         "expression":"<math_expression>"}
 
 Rules:
 - Native apps: spotify, vscode, discord, steam, notepad, calculator,
@@ -280,6 +315,9 @@ Rules:
 - "open X and search Y" → open_website(X) + browser_search(X, Y)
 - "open spotify and play Y" → open_app(spotify) + play_music(Y)
 - "open youtube and play Y" → open_website(youtube) + youtube_play(Y)
+- "play X at 3:10pm" → scheduled_command(time=3:10pm, command=play X)
+- "open notepad and type hello" → open_app(notepad) + type_text(text=hello)
+- "open calculator and calculate 2+10" → open_app(calculator) + calculate(expression=2+10)
 - Return [] if you cannot parse the command
 
 Example:
