@@ -17,17 +17,19 @@ def render_sidebar():
             "Browser Tools": 5,
             "Music Playbacks": 6,
             "Weather Alerts": 7,
-            "System Control": 8
+            "System Control": 8,
+            "Sports Hub": 9,
+            "Control Settings": 10
         }
         if active_view in view_indices:
             idx = view_indices[active_view]
             st.markdown(f"""
                 <style>
                     div[data-testid="column"]:nth-of-type(1) div.stButton:nth-of-type({idx}) > button {{
-                        background: rgba(0, 217, 255, 0.1) !important;
-                        border-color: #00D9FF !important;
-                        color: #00D9FF !important;
-                        box-shadow: 0 0 15px rgba(0, 217, 255, 0.2), inset 0 0 10px rgba(0, 217, 255, 0.05) !important;
+                        background: rgba(255, 255, 255, 0.03) !important;
+                        border-color: var(--neon-cyan) !important;
+                        color: var(--neon-cyan) !important;
+                        box-shadow: var(--glow-cyan), inset 0 0 10px rgba(255, 255, 255, 0.01) !important;
                     }}
                 </style>
             """, unsafe_allow_html=True)
@@ -35,8 +37,8 @@ def render_sidebar():
         # OS Brand Header inside a clean, single HTML block
         st.markdown("""
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
-                <div style="width: 32px; height: 32px; border-radius: 50%; border: 3px solid #00D9FF; box-shadow: 0 0 8px #00D9FF; display: flex; justify-content: center; align-items: center;">
-                    <div style="width: 10px; height: 10px; border-radius: 50%; background: #00D9FF;"></div>
+                <div style="width: 32px; height: 32px; border-radius: 50%; border: 3px solid var(--neon-cyan); box-shadow: var(--glow-cyan); display: flex; justify-content: center; align-items: center;">
+                    <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--neon-cyan);"></div>
                 </div>
                 <div>
                     <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; letter-spacing: 1px; color:#FFFFFF;">ECHO X</h3>
@@ -76,6 +78,14 @@ def render_sidebar():
             
         if st.button("⚙️ System Control", use_container_width=True, key="side_control_btn"):
             st.session_state.active_view = "System Control"
+            st.rerun()
+
+        if st.button("🏆 Sports Hub", use_container_width=True, key="side_sports_btn"):
+            st.session_state.active_view = "Sports Hub"
+            st.rerun()
+
+        if st.button("🔧 OS Settings", use_container_width=True, key="side_settings_btn"):
+            st.session_state.active_view = "Control Settings"
             st.rerun()
         
         # Vision Input Section Header

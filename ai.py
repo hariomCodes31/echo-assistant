@@ -13,17 +13,31 @@ client = Groq(
 
 
 def ask_ai(prompt):
+    model = "llama-3.3-70b-versatile"
+    temperature = 0.7
+    max_tokens = 1024
+
+    try:
+        import streamlit as st
+        if "llm_model" in st.session_state:
+            model = st.session_state.llm_model
+        if "llm_temp" in st.session_state:
+            temperature = st.session_state.llm_temp
+        if "llm_max_tokens" in st.session_state:
+            max_tokens = st.session_state.llm_max_tokens
+    except Exception:
+        pass
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=model,
         messages=[
             {
                 "role": "user",
                 "content": prompt
             }
         ],
-        temperature=0.7,
-        max_tokens=1024,
+        temperature=temperature,
+        max_tokens=max_tokens,
     )
 
     return response.choices[0].message.content

@@ -10,6 +10,7 @@ from tools.browser import (
 from tools.weather import weather
 from tools.desktop import desktop
 from tools.music import music
+from tools.sports import sports
 from automation.planner import run as planner_run
 
 
@@ -34,6 +35,13 @@ def execute(command):
     # ---------------- Music ---------------- #
 
     result = music(command)
+
+    if result:
+        return result
+
+    # ---------------- Sports ---------------- #
+
+    result = sports(command)
 
     if result:
         return result

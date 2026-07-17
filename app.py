@@ -25,6 +25,8 @@ from pages.browser_tools import load_browser_tools_page
 from pages.music_playbacks import load_music_playbacks_page
 from pages.weather_alerts import load_weather_alerts_page
 from pages.system_control import load_system_control_page
+from pages.sports import load_sports_page
+from pages.settings import load_settings_page
 
 # Set page config to wide layout
 st.set_page_config(
@@ -63,6 +65,40 @@ def load_all_stylesheets():
 
 # Load CSS once (called at module level, NOT inside the function)
 load_all_stylesheets()
+
+# Initialize session parameters before injecting styles
+if "os_theme" not in st.session_state:
+    st.session_state.os_theme = "Cyber Cyan"
+if "llm_model" not in st.session_state:
+    st.session_state.llm_model = "llama-3.3-70b-versatile"
+if "llm_temp" not in st.session_state:
+    st.session_state.llm_temp = 0.7
+if "llm_max_tokens" not in st.session_state:
+    st.session_state.llm_max_tokens = 1024
+
+def inject_theme_css():
+    theme = st.session_state.get("os_theme", "Cyber Cyan")
+    themes = {
+        "Cyber Cyan": ("#00D9FF", "rgba(0, 217, 255, 0.3)"),
+        "Neon Green": ("#10B981", "rgba(16, 185, 129, 0.3)"),
+        "Synthwave Pink": ("#EC4899", "rgba(236, 72, 153, 0.3)"),
+        "Amber Gold": ("#F59E0B", "rgba(245, 158, 11, 0.3)"),
+        "Crimson Red": ("#EF4444", "rgba(239, 68, 68, 0.3)"),
+        "Grape Purple": ("#8B5CF6", "rgba(139, 92, 246, 0.3)")
+    }
+    hex_val, rgba_val = themes.get(theme, themes["Cyber Cyan"])
+    custom_style = f"""
+    <style>
+        :root {{
+            --neon-cyan: {hex_val} !important;
+            --glow-cyan: 0 0 15px {rgba_val} !important;
+        }}
+    </style>
+    """
+    st.markdown(custom_style, unsafe_allow_html=True)
+
+# Inject dynamic theme variables
+inject_theme_css()
 
 # Inject background visual elements (core background, particles, scan lines)
 st.markdown("""
@@ -141,6 +177,10 @@ with col_mid:
         load_weather_alerts_page()
     elif st.session_state.active_view == "System Control":
         load_system_control_page()
+    elif st.session_state.active_view == "Sports Hub":
+        load_sports_page()
+    elif st.session_state.active_view == "Control Settings":
+        load_settings_page()
         
     # 3. Bottom Chat Entry Command input field
     st.markdown('<div style="height: 8px;"></div>', unsafe_allow_html=True)
