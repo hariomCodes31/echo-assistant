@@ -1,0 +1,325 @@
+/* ============================================================
+   assets/css/3d_depth.css
+   ECHO X — 3D Depth System: Cards, Panels, Flip Stats,
+             Floating Geometry, Holographic Overlays
+   ============================================================ */
+
+/* ──────────────────────────────────────────────────────────
+   GLOBAL 3D PERSPECTIVE STAGE
+   ────────────────────────────────────────────────────────── */
+.stApp {
+    perspective: 1800px;
+    perspective-origin: 50% 30%;
+}
+
+/* ──────────────────────────────────────────────────────────
+   STATUS WIDGETS — 3D FLIP CARDS
+   ────────────────────────────────────────────────────────── */
+.status-widget {
+    transform-style: preserve-3d;
+    cursor: default;
+}
+
+/* Depth sheen: top inner light layer */
+.status-widget::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.09) 0%,
+        rgba(255,255,255,0.0)  45%,
+        rgba(0,217,255,0.03)   100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ──────────────────────────────────────────────────────────
+   STREAMLIT PANELS — 3D GLASS DEPTH
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    transform-style: preserve-3d;
+    transform-origin: center center;
+    /* Subtle base depth lift */
+    box-shadow:
+        var(--glow-panel),
+        0 0 0 1px rgba(255,255,255,0.03),
+        inset 0 1px 0 rgba(255,255,255,0.07),
+        /* 3D depth layers */
+        0 1px 0 rgba(0,217,255,0.06),
+        0 2px 0 rgba(0,217,255,0.04),
+        0 3px 0 rgba(0,217,255,0.02) !important;
+}
+
+/* Inner 3D sheen overlay */
+div[data-testid="stVerticalBlockBorderWrapper"] > div::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg,
+        rgba(255,255,255,0.04) 0%,
+        transparent 100%
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+/* ──────────────────────────────────────────────────────────
+   3D FLOATING HEXAGON GEOMETRY (decorative, injected via JS)
+   ────────────────────────────────────────────────────────── */
+.hex-float {
+    position: fixed;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.06;
+    animation: hex-rotate 20s linear infinite;
+    will-change: transform;
+}
+.hex-float svg { display: block; }
+
+@keyframes hex-rotate {
+    0%   { transform: rotateX(0deg)   rotateY(0deg)   rotateZ(0deg)   translateZ(0px); }
+    25%  { transform: rotateX(90deg)  rotateY(45deg)  rotateZ(30deg)  translateZ(20px); }
+    50%  { transform: rotateX(180deg) rotateY(90deg)  rotateZ(60deg)  translateZ(0px); }
+    75%  { transform: rotateX(270deg) rotateY(135deg) rotateZ(90deg)  translateZ(-20px); }
+    100% { transform: rotateX(360deg) rotateY(180deg) rotateZ(120deg) translateZ(0px); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   3D BUTTON DEPTH EFFECT
+   ────────────────────────────────────────────────────────── */
+div.stButton > button {
+    transform-style: preserve-3d;
+    transform: perspective(400px) translateZ(0px);
+}
+
+div.stButton > button:hover {
+    transform: perspective(400px) translateZ(8px) translateY(-2px) !important;
+}
+
+div.stButton > button:active {
+    transform: perspective(400px) translateZ(2px) translateY(0px) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   HOLOGRAPHIC DEPTH STRIPE (animated shimmer across panels)
+   ────────────────────────────────────────────────────────── */
+.holo-depth-stripe {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+        105deg,
+        transparent 20%,
+        rgba(0,217,255,0.035) 35%,
+        rgba(123,97,255,0.025) 50%,
+        rgba(255,255,255,0.015) 55%,
+        transparent 70%
+    );
+    background-size: 200% 200%;
+    animation: holo-stripe 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes holo-stripe {
+    0%   { background-position: 200% 0%; opacity: 0;   }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { background-position: -50% 100%; opacity: 0; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   NEON EDGE LIGHTS (left/right 3D edge glow on panels)
+   ────────────────────────────────────────────────────────── */
+.edge-light-left {
+    position: absolute;
+    left: -1px; top: 15%; bottom: 15%;
+    width: 1px;
+    background: linear-gradient(180deg,
+        transparent,
+        rgba(0,217,255,0.5),
+        rgba(123,97,255,0.4),
+        rgba(0,217,255,0.5),
+        transparent
+    );
+    border-radius: 1px;
+    animation: edge-pulse 3s ease-in-out infinite;
+    pointer-events: none;
+}
+.edge-light-right {
+    position: absolute;
+    right: -1px; top: 20%; bottom: 20%;
+    width: 1px;
+    background: linear-gradient(180deg,
+        transparent,
+        rgba(123,97,255,0.4),
+        rgba(0,217,255,0.3),
+        transparent
+    );
+    border-radius: 1px;
+    animation: edge-pulse 4s ease-in-out infinite 0.5s;
+    pointer-events: none;
+}
+
+@keyframes edge-pulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+    50%       { opacity: 1;   transform: scaleY(1.0); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   3D DEPTH INDICATOR BARS (bottom edge of panels)
+   ────────────────────────────────────────────────────────── */
+.depth-bottom-bar {
+    position: absolute;
+    bottom: -2px; left: 10%; right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(0,217,255,0.4) 30%,
+        rgba(123,97,255,0.3) 50%,
+        rgba(0,217,255,0.4) 70%,
+        transparent
+    );
+    border-radius: 0 0 var(--radius-full) var(--radius-full);
+    filter: blur(1px);
+    box-shadow: 0 2px 8px rgba(0,217,255,0.3);
+    animation: bottom-bar-glow 4s ease-in-out infinite;
+}
+
+@keyframes bottom-bar-glow {
+    0%, 100% { opacity: 0.4; transform: scaleX(0.85); }
+    50%       { opacity: 1;   transform: scaleX(1.0); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   3D ORBIT RING WIDGET (shown in sidebar / panels)
+   ────────────────────────────────────────────────────────── */
+.orbit-widget {
+    position: relative;
+    width: 60px; height: 60px;
+    transform-style: preserve-3d;
+    animation: orbit-widget-tilt 8s ease-in-out infinite;
+}
+
+.orbit-widget-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(0,217,255,0.3);
+    box-shadow: 0 0 8px rgba(0,217,255,0.2);
+}
+.orbit-widget-ring.r1 { transform: rotateX(75deg); animation: spinClock 8s linear infinite; }
+.orbit-widget-ring.r2 { transform: rotateY(75deg); animation: spinAnti 6s linear infinite; }
+.orbit-widget-ring.r3 { transform: rotateX(40deg) rotateY(40deg); animation: spinClock 12s linear infinite; }
+
+@keyframes orbit-widget-tilt {
+    0%, 100% { transform: rotateX(10deg) rotateY(0deg); }
+    50%       { transform: rotateX(-5deg) rotateY(15deg); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   3D NEURAL NODE DOTS
+   ────────────────────────────────────────────────────────── */
+.neural-node {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 6px var(--neon-cyan), 0 0 12px rgba(0,217,255,0.4);
+    animation: neural-pulse 3s ease-in-out infinite;
+}
+.neural-node:nth-child(2) { animation-delay: 0.5s; background: var(--neon-purple); box-shadow: 0 0 6px var(--neon-purple); }
+.neural-node:nth-child(3) { animation-delay: 1.0s; }
+.neural-node:nth-child(4) { animation-delay: 1.5s; background: var(--neon-pink); box-shadow: 0 0 6px var(--neon-pink); }
+
+@keyframes neural-pulse {
+    0%, 100% { transform: scale(1)   translateZ(0px);  opacity: 0.6; }
+    50%       { transform: scale(1.4) translateZ(10px); opacity: 1;   }
+}
+
+/* ──────────────────────────────────────────────────────────
+   CSS 3D CUBE (decorative floating geometry)
+   ────────────────────────────────────────────────────────── */
+.cube-3d {
+    width: 30px; height: 30px;
+    transform-style: preserve-3d;
+    animation: cube-spin 12s linear infinite;
+    position: relative;
+}
+
+.cube-face {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(0,217,255,0.25);
+    background: rgba(0,217,255,0.03);
+}
+.cube-face.front  { transform: translateZ(15px); }
+.cube-face.back   { transform: translateZ(-15px) rotateY(180deg); }
+.cube-face.left   { transform: rotateY(-90deg) translateZ(15px); }
+.cube-face.right  { transform: rotateY(90deg)  translateZ(15px); }
+.cube-face.top    { transform: rotateX(90deg)  translateZ(15px); }
+.cube-face.bottom { transform: rotateX(-90deg) translateZ(15px); }
+
+@keyframes cube-spin {
+    0%   { transform: rotateX(0deg)   rotateY(0deg)   rotateZ(0deg); }
+    100% { transform: rotateX(360deg) rotateY(240deg) rotateZ(120deg); }
+}
+
+/* ──────────────────────────────────────────────────────────
+   DEPTH SHADOW TIERS (layered depth on containers)
+   ────────────────────────────────────────────────────────── */
+.depth-tier-1 {
+    box-shadow:
+        0 4px 6px rgba(0,0,0,0.3),
+        0 1px 3px rgba(0,0,0,0.2) !important;
+    transform: translateZ(4px);
+}
+.depth-tier-2 {
+    box-shadow:
+        0 10px 20px rgba(0,0,0,0.4),
+        0 6px 6px rgba(0,0,0,0.3),
+        0 0 15px rgba(0,217,255,0.05) !important;
+    transform: translateZ(8px);
+}
+.depth-tier-3 {
+    box-shadow:
+        0 25px 50px rgba(0,0,0,0.5),
+        0 15px 20px rgba(0,0,0,0.4),
+        0 0 30px rgba(0,217,255,0.1) !important;
+    transform: translateZ(16px);
+}
+
+/* ──────────────────────────────────────────────────────────
+   PROGRESS BAR 3D CHANNEL
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stProgress"] {
+    transform: perspective(200px) rotateX(5deg);
+    box-shadow:
+        0 3px 6px rgba(0,0,0,0.3),
+        0 0 8px rgba(0,217,255,0.08) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   SIDEBAR ACTIVE BUTTON — 3D EXTRUDE
+   ────────────────────────────────────────────────────────── */
+.active-menu .stButton > button {
+    transform: perspective(300px) translateZ(4px) !important;
+    box-shadow:
+        var(--glow-cyan-xs),
+        inset 0 0 12px rgba(0,217,255,0.06),
+        0 4px 12px rgba(0,217,255,0.15),
+        0 0 0 1px rgba(0,217,255,0.2) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   SCROLLBAR 3D DEPTH TRACK
+   ────────────────────────────────────────────────────────── */
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.4);
+}

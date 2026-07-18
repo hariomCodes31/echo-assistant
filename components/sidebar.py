@@ -29,10 +29,24 @@ def render_sidebar():
             st.markdown(f"""
                 <style>
                     div[data-testid="column"]:nth-of-type(1) div.stButton:nth-of-type({idx}) > button {{
-                        background: rgba(255, 255, 255, 0.03) !important;
+                        background: linear-gradient(90deg, rgba(0, 217, 255, 0.08) 0%, rgba(0, 217, 255, 0.02) 100%) !important;
                         border-color: var(--neon-cyan) !important;
                         color: var(--neon-cyan) !important;
-                        box-shadow: var(--glow-cyan), inset 0 0 10px rgba(255, 255, 255, 0.01) !important;
+                        box-shadow: var(--glow-cyan), inset 0 0 10px rgba(0, 217, 255, 0.05) !important;
+                        transform: perspective(300px) translateZ(5px) translateY(-1px) !important;
+                        position: relative !important;
+                        padding-left: 20px !important;
+                    }}
+                    div[data-testid="column"]:nth-of-type(1) div.stButton:nth-of-type({idx}) > button::before {{
+                        content: "" !important;
+                        position: absolute !important;
+                        left: 0 !important;
+                        top: 15% !important;
+                        bottom: 15% !important;
+                        width: 3px !important;
+                        background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple)) !important;
+                        box-shadow: var(--glow-cyan-xs) !important;
+                        border-radius: var(--radius-full) !important;
                     }}
                 </style>
             """, unsafe_allow_html=True)

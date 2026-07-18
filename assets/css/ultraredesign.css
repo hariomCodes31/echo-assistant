@@ -1,0 +1,192 @@
+/* ============================================================
+   assets/css/ultraredesign.css
+   ECHO OS v3.0 — The Ultimate Futuristic Redesign Layout
+   ============================================================ */
+
+/* ──────────────────────────────────────────────────────────
+   1. GLOBAL CANVAS OVERLAYS & HOLOGRAPHIC FRAME
+   ────────────────────────────────────────────────────────── */
+.stApp {
+    background:
+        radial-gradient(circle at 10% 10%, rgba(0, 217, 255, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(123, 97, 255, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(2, 4, 10, 0.98) 0%, #010206 100%) !important;
+    transform-style: preserve-3d;
+    perspective: 1200px;
+}
+
+/* Interactive HUD Overlay corner decorations */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 1px solid rgba(0, 217, 255, 0.05);
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* ──────────────────────────────────────────────────────────
+   2. FLOATING COLLAPSIBLE SIDEBAR
+   ────────────────────────────────────────────────────────── */
+div[data-testid="column"]:nth-of-type(1) {
+    position: fixed !important;
+    left: 20px !important;
+    top: 20px !important;
+    bottom: 20px !important;
+    width: 78px !important;
+    z-index: 9999 !important;
+    transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.45s, border-color 0.45s !important;
+    background: rgba(4, 8, 20, 0.65) !important;
+    backdrop-filter: blur(40px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+    border: 1px solid rgba(0, 217, 255, 0.16) !important;
+    border-radius: var(--radius-2xl) !important;
+    padding: var(--space-4) !important;
+    overflow: hidden !important;
+    box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.75),
+        inset 0 0 25px rgba(0, 217, 255, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+div[data-testid="column"]:nth-of-type(1):hover {
+    width: 270px !important;
+    background: rgba(5, 10, 26, 0.85) !important;
+    border-color: rgba(0, 217, 255, 0.35) !important;
+}
+
+/* Target internal sidebar container to remove standard margins */
+div[data-testid="column"]:nth-of-type(1) div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: transparent !important;
+    border: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    animation: none !important;
+    transform: none !important;
+}
+
+/* Brand header handling when collapsed vs expanded */
+div[data-testid="column"]:nth-of-type(1) h3,
+div[data-testid="column"]:nth-of-type(1) p {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+}
+div[data-testid="column"]:nth-of-type(1):hover h3,
+div[data-testid="column"]:nth-of-type(1):hover p {
+    opacity: 1;
+}
+
+/* Sidebar buttons default collapsed state */
+div[data-testid="column"]:nth-of-type(1) div.stButton > button {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    padding: 0 !important;
+    border-radius: var(--radius-md) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Sidebar button text node hidden state */
+div[data-testid="column"]:nth-of-type(1) div.stButton > button p,
+div[data-testid="column"]:nth-of-type(1) div.stButton > button span {
+    font-size: 0px !important;
+    opacity: 0;
+    transition: opacity 0.3s, font-size 0.3s;
+}
+
+/* Sidebar buttons expanded state on hover */
+div[data-testid="column"]:nth-of-type(1):hover div.stButton > button {
+    width: 100% !important;
+    height: 40px !important;
+    padding: 0 16px !important;
+    justify-content: flex-start !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-secondary) !important;
+}
+
+div[data-testid="column"]:nth-of-type(1):hover div.stButton > button p,
+div[data-testid="column"]:nth-of-type(1):hover div.stButton > button span {
+    font-size: 0.85rem !important;
+    opacity: 1;
+    margin-left: 8px !important;
+}
+
+/* Active navigation item styling overrides */
+div[data-testid="column"]:nth-of-type(1) div.active-menu div.stButton > button,
+div[data-testid="column"]:nth-of-type(1) .stButton > button[style*="border-color"] {
+    background: linear-gradient(90deg, rgba(0, 217, 255, 0.15) 0%, rgba(0, 217, 255, 0.02) 100%) !important;
+    border-color: var(--neon-cyan) !important;
+    color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan-xs) !important;
+}
+
+/* Sidebar labels target */
+div[data-testid="column"]:nth-of-type(1) div[style*="font-size:0.75rem"] {
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+div[data-testid="column"]:nth-of-type(1):hover div[style*="font-size:0.75rem"] {
+    opacity: 1;
+}
+
+/* ──────────────────────────────────────────────────────────
+   3. MIDDLE COLUMN & WORKSPACE SHIFT
+   ────────────────────────────────────────────────────────── */
+div[data-testid="column"]:nth-of-type(2) {
+    margin-left: 96px !important;
+    transition: margin-left 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   4. SYSTEM MONITOR & RIGHT TELEMETRY COLUMN
+   ────────────────────────────────────────────────────────── */
+div[data-testid="column"]:nth-of-type(3) {
+    /* Keep inline layout without overlapping */
+}
+
+/* ──────────────────────────────────────────────────────────
+   5. DEEPER GLASS panels
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 60%),
+        rgba(5, 9, 24, 0.6) !important;
+    backdrop-filter: blur(40px) saturate(210%) brightness(1.05) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(210%) brightness(1.05) !important;
+    border: 1px solid rgba(0, 217, 255, 0.16) !important;
+    border-radius: var(--radius-2xl) !important;
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.75),
+        inset 0 0 35px rgba(0, 217, 255, 0.02) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   6. RESPONSIVENESS AND LAYOUT SAFEGUARDS
+   ────────────────────────────────────────────────────────── */
+@media (max-width: 1200px) {
+    /* Sidebar fallback on tablet/mobile size to standard rendering */
+    div[data-testid="column"]:nth-of-type(1) {
+        position: relative !important;
+        left: 0 !important; top: 0 !important; bottom: 0 !important;
+        width: 100% !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+    }
+    div[data-testid="column"]:nth-of-type(2) {
+        margin-left: 0 !important;
+    }
+}

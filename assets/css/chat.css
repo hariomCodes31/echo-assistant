@@ -1,67 +1,143 @@
-/* assets/css/chat.css - Chat Interface and Message Stylesheet */
+/* ============================================================
+   assets/css/chat.css
+   ECHO X — Holographic Chat Timeline
+   ============================================================ */
 
-/* Floating Timeline Message Box container overrides */
+/* ──────────────────────────────────────────────────────────
+   CHAT MESSAGE BUBBLES
+   ────────────────────────────────────────────────────────── */
 .stChatMessage {
-    background: rgba(255, 255, 255, 0.01) !important;
-    backdrop-filter: blur(15px) !important;
-    -webkit-backdrop-filter: blur(15px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-radius: var(--radius-md) !important;
-    padding: var(--spacing-sm) var(--spacing-md) !important;
-    margin-bottom: var(--spacing-sm) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-    transition: all var(--transition-speed) var(--transition-curve) !important;
+    position: relative;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%),
+        rgba(5, 10, 25, 0.55) !important;
+    backdrop-filter: blur(20px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: var(--space-3) var(--space-4) !important;
+    margin-bottom: var(--space-2) !important;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05) !important;
+    animation: fade-in-up 0.4s var(--ease-out-expo) both !important;
+    transition: all var(--dur-base) var(--ease-out-expo) !important;
+    overflow: hidden;
+    will-change: transform;
 }
 
-/* Hover elevation with cyan glow for messages */
+/* ── Inner top shimmer ── */
+.stChatMessage::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+    pointer-events: none;
+}
+
+/* ── Holographic shimmer on hover ── */
+.stChatMessage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+        transparent 0%,
+        rgba(0, 217, 255, 0.04) 40%,
+        rgba(123, 97, 255, 0.03) 60%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: holo-shimmer 3s ease-in-out infinite;
+    opacity: 0;
+    transition: opacity var(--dur-base);
+    pointer-events: none;
+}
+
+.stChatMessage:hover::after { opacity: 1; }
+
 .stChatMessage:hover {
-    background: rgba(0, 217, 255, 0.02) !important;
-    border-color: rgba(0, 217, 255, 0.2) !important;
-    transform: translateY(-2px) scale(1.002) !important;
-    box-shadow: 0 6px 20px rgba(0, 217, 255, 0.08) !important;
+    background:
+        linear-gradient(135deg, rgba(0,217,255,0.04) 0%, rgba(0,217,255,0) 60%),
+        rgba(5, 12, 28, 0.7) !important;
+    border-color: rgba(0, 217, 255, 0.18) !important;
+    transform: translateY(-2px) scale(1.003) !important;
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(0, 217, 255, 0.06),
+        inset 0 1px 0 rgba(255,255,255,0.07) !important;
 }
 
-/* User Message bubble left-border highlight (Purple) */
+/* ── Role accent left borders ── */
 .stChatMessage[data-testid="stChatMessage"]:nth-child(even) {
-    border-left: 3px solid var(--neon-purple) !important;
+    border-left: 2px solid var(--neon-purple) !important;
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.3),
+        -2px 0 12px rgba(123, 97, 255, 0.12) !important;
 }
-
-/* Assistant Message bubble left-border highlight (Cyan) */
 .stChatMessage[data-testid="stChatMessage"]:nth-child(odd) {
-    border-left: 3px solid var(--neon-cyan) !important;
+    border-left: 2px solid var(--neon-cyan) !important;
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.3),
+        -2px 0 12px rgba(0, 217, 255, 0.12) !important;
 }
 
-/* Typing Indicators and status indicators */
+/* ── Staggered animation delay for message sequences ── */
+.stChatMessage:nth-child(1)  { animation-delay: 0.00s; }
+.stChatMessage:nth-child(2)  { animation-delay: 0.05s; }
+.stChatMessage:nth-child(3)  { animation-delay: 0.10s; }
+.stChatMessage:nth-child(4)  { animation-delay: 0.15s; }
+.stChatMessage:nth-child(5)  { animation-delay: 0.20s; }
+
+/* ──────────────────────────────────────────────────────────
+   TYPING INDICATOR
+   ────────────────────────────────────────────────────────── */
 .typing-indicator-dot {
-    width: 6px;
-    height: 6px;
-    background-color: var(--neon-cyan);
+    width: 6px; height: 6px;
+    background: var(--neon-cyan);
     border-radius: 50%;
     display: inline-block;
-    animation: breathe-core 1.2s infinite;
+    box-shadow: 0 0 8px var(--neon-cyan);
+    animation: scale-pulse 1.2s ease-in-out infinite;
 }
 
-/* Markdown and formatted code blocks inside chat cards */
+/* ──────────────────────────────────────────────────────────
+   CODE BLOCKS
+   ────────────────────────────────────────────────────────── */
 .stChatMessage code {
     font-family: var(--font-mono) !important;
-    background: rgba(0, 0, 0, 0.3) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
     color: var(--neon-cyan) !important;
     padding: 2px 6px !important;
     border-radius: var(--radius-xs) !important;
-    border: 1px solid rgba(0, 217, 255, 0.1) !important;
+    border: 1px solid rgba(0, 217, 255, 0.12) !important;
+    font-size: 0.82em !important;
 }
-
 .stChatMessage pre {
-    background: rgba(2, 4, 8, 0.6) !important;
+    background: rgba(2, 4, 10, 0.7) !important;
     border: 1px solid rgba(0, 217, 255, 0.1) !important;
-    border-radius: var(--radius-sm) !important;
-    padding: var(--spacing-md) !important;
+    border-radius: var(--radius-md) !important;
+    padding: var(--space-4) !important;
     overflow-x: auto;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
 }
-
 .stChatMessage pre code {
     background: transparent !important;
     border: none !important;
     padding: 0 !important;
     color: var(--text-primary) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   ASSISTANT / USER AVATAR ICONS
+   ────────────────────────────────────────────────────────── */
+.stChatMessage [data-testid="chatAvatarIcon-assistant"] {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue)) !important;
+    box-shadow: 0 0 12px rgba(0,217,255,0.4) !important;
+    border-radius: 50% !important;
+}
+.stChatMessage [data-testid="chatAvatarIcon-user"] {
+    background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink)) !important;
+    box-shadow: 0 0 12px rgba(123,97,255,0.4) !important;
+    border-radius: 50% !important;
 }

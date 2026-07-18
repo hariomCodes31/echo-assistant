@@ -1,46 +1,73 @@
-/* assets/css/layout.css - Grid and Structural Layout Stylesheet */
+/* ============================================================
+   assets/css/layout.css
+   ECHO X — Grid, Structural Layout & Perspective Depth
+   ============================================================ */
 
-/* Main application container alignments */
-.stAppDeployButton {
-    display: none !important; /* Hide native deploy button */
-}
+/* ── Deploy button ── */
+.stAppDeployButton { display: none !important; }
 
-/* Adjust main Streamlit block wrapper margins */
+/* ── Main block container ── */
 .block-container {
-    padding-top: var(--spacing-sm) !important;
-    padding-bottom: var(--spacing-sm) !important;
-    padding-left: var(--spacing-md) !important;
-    padding-right: var(--spacing-md) !important;
+    padding-top:    var(--space-2)  !important;
+    padding-bottom: var(--space-2)  !important;
+    padding-left:   var(--space-4)  !important;
+    padding-right:  var(--space-4)  !important;
     max-width: 100% !important;
 }
 
-/* Ensure column layouts adapt to parent layout height */
+/* ── Horizontal blocks (columns) ── */
 div[data-testid="stHorizontalBlock"] {
-    gap: var(--spacing-md) !important;
+    gap: 12px !important;
     width: 100% !important;
+    align-items: flex-start !important;
 }
 
-/* Align columns to prevent baseline/offset layout overlapping */
+/* ── Individual columns ── */
 div[data-testid="column"] {
     display: flex;
     flex-direction: column;
     height: auto;
+    gap: 10px;
 }
 
-/* Fixed spacing widgets and layout alignment bars */
-.vertical-spacer {
-    display: block;
-    height: var(--spacing-sm);
-    width: 100%;
-}
-
-.vertical-spacer-lg {
-    display: block;
-    height: var(--spacing-md);
-    width: 100%;
-}
-
-/* Force container frames to expand to 100% width of parent columns */
+/* ── Vertical block full width ── */
 div[data-testid="stVerticalBlock"] {
     width: 100% !important;
+}
+
+/* ── Spacing helpers ── */
+.vertical-spacer    { display: block; height: var(--space-2); width: 100%; }
+.vertical-spacer-lg { display: block; height: var(--space-4); width: 100%; }
+
+/* ── Perspective wrapper for 3D tilt cards ── */
+.perspective-wrapper {
+    perspective: 1000px;
+    perspective-origin: 50% 50%;
+}
+
+/* ── 3D tilt card ── */
+.tilt-card {
+    transform-style: preserve-3d;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+    will-change: transform;
+}
+
+/* ── Depth layer system ── */
+.depth-0 { transform: translateZ(0);    }
+.depth-1 { transform: translateZ(10px); }
+.depth-2 { transform: translateZ(20px); }
+.depth-3 { transform: translateZ(30px); }
+
+/* ── Floating element ── */
+.float-element {
+    animation: float-panel 8s ease-in-out infinite;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1366px) {
+    div[data-testid="stHorizontalBlock"] { gap: 8px !important; }
+    .block-container {
+        padding-left:  var(--space-2) !important;
+        padding-right: var(--space-2) !important;
+    }
 }

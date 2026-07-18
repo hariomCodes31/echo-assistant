@@ -33,39 +33,78 @@ def render_topbar(cpu=23, ram=48, groq_status="READY"):
 
     topbar_html = textwrap.dedent(f"""
         <div class="status-badge-container" style="grid-template-columns: repeat(6, 1fr);">
-            <div class="status-widget">
-                <p>LOCAL TIME</p>
-                <h4>{current_time}</h4>
-                <div style="font-size:0.6rem; color:#64748B; margin-top:2px;">{current_date}</div>
+            <!-- LOCAL TIME -->
+            <div class="status-widget" style="position:relative;">
+                <div class="corner-bracket tl" style="width:6px; height:6px; border-width:1px 0 0 1px;"></div>
+                <div class="corner-bracket tr" style="width:6px; height:6px; border-width:1px 1px 0 0;"></div>
+                <div class="corner-bracket bl" style="width:6px; height:6px; border-width:0 0 1px 1px;"></div>
+                <div class="corner-bracket br" style="width:6px; height:6px; border-width:0 1px 1px 0;"></div>
+                <p style="letter-spacing:1.5px;">SYSTEM CHRONO</p>
+                <h4 style="font-family:var(--font-display); letter-spacing:1px;">{current_time}</h4>
+                <div style="font-family:var(--font-mono); font-size:0.55rem; color:var(--text-muted); margin-top:3px;">
+                    DATE: {current_date} <span style="animation:glow-flicker 1.5s infinite; color:var(--neon-cyan);">⚡</span>
+                </div>
             </div>
-            <div class="status-widget">
-                <p>SYSTEM STATE</p>
-                <h4 style="color:#10B981; display:flex; align-items:center; justify-content:center; gap:5px;">
-                    ONLINE <span class="status-dot-active" style="width:6px; height:6px; background:#10B981; border-radius:50%; display:inline-block;"></span>
+
+            <!-- SYSTEM STATE -->
+            <div class="status-widget" style="position:relative;">
+                <div class="corner-bracket tl" style="width:6px; height:6px; border-width:1px 0 0 1px;"></div>
+                <div class="corner-bracket tr" style="width:6px; height:6px; border-width:1px 1px 0 0;"></div>
+                <div class="corner-bracket bl" style="width:6px; height:6px; border-width:0 0 1px 1px;"></div>
+                <div class="corner-bracket br" style="width:6px; height:6px; border-width:0 1px 1px 0;"></div>
+                <p style="letter-spacing:1.5px;">SYS MATRIX</p>
+                <h4 style="color:#10B981; text-shadow:0 0 8px rgba(16,185,129,0.4); display:flex; align-items:center; justify-content:center; gap:5px; font-family:var(--font-display);">
+                    ONLINE <span class="status-dot-active" style="width:6px; height:6px; background:#10B981; border-radius:50%;"></span>
                 </h4>
-                <div style="font-size:0.6rem; color:#64748B; margin-top:2px;">All Systems Operational</div>
+                <div style="font-family:var(--font-mono); font-size:0.55rem; color:var(--text-muted); margin-top:3px;">SECURE // ACTIVE</div>
             </div>
-            <div class="status-widget">
-                <p>CPU USAGE</p>
-                <h4>{cpu}%</h4>
-                <div style="font-size:0.6rem; color:#64748B; margin-top:2px;">Dynamic Workload</div>
+
+            <!-- CPU USAGE -->
+            <div class="status-widget" style="position:relative;">
+                <div class="corner-bracket tl" style="width:6px; height:6px; border-width:1px 0 0 1px;"></div>
+                <div class="corner-bracket tr" style="width:6px; height:6px; border-width:1px 1px 0 0;"></div>
+                <div class="corner-bracket bl" style="width:6px; height:6px; border-width:0 0 1px 1px;"></div>
+                <div class="corner-bracket br" style="width:6px; height:6px; border-width:0 1px 1px 0;"></div>
+                <p style="letter-spacing:1.5px;">CORE LOAD</p>
+                <h4 style="font-family:var(--font-display);">{cpu}%</h4>
+                <div style="font-family:var(--font-mono); font-size:0.55rem; color:var(--text-muted); margin-top:3px;">
+                    TEMP: 42°C <span style="color:var(--neon-pink);">■</span>
+                </div>
             </div>
-            <div class="status-widget">
-                <p>RAM USAGE</p>
-                <h4>{ram}%</h4>
-                <div style="font-size:0.6rem; color:#64748B; margin-top:2px;">Memory Buffer Allocation</div>
+
+            <!-- RAM USAGE -->
+            <div class="status-widget" style="position:relative;">
+                <div class="corner-bracket tl" style="width:6px; height:6px; border-width:1px 0 0 1px;"></div>
+                <div class="corner-bracket tr" style="width:6px; height:6px; border-width:1px 1px 0 0;"></div>
+                <div class="corner-bracket bl" style="width:6px; height:6px; border-width:0 0 1px 1px;"></div>
+                <div class="corner-bracket br" style="width:6px; height:6px; border-width:0 1px 1px 0;"></div>
+                <p style="letter-spacing:1.5px;">MEM BUFFER</p>
+                <h4 style="font-family:var(--font-display);">{ram}%</h4>
+                <div style="font-family:var(--font-mono); font-size:0.55rem; color:var(--text-muted); margin-top:3px;">ALLOC: STATIC</div>
             </div>
-            <div class="status-widget">
-                <p>GROQ SYSTEM</p>
-                <h4 style="color:#EC4899; display:flex; align-items:center; justify-content:center; gap:5px;">
-                    {groq_status} <span class="status-dot-active" style="width:6px; height:6px; background:#EC4899; border-radius:50%; display:inline-block;"></span>
+
+            <!-- GROQ INFERENCE -->
+            <div class="status-widget" style="position:relative;">
+                <div class="corner-bracket tl" style="width:6px; height:6px; border-width:1px 0 0 1px;"></div>
+                <div class="corner-bracket tr" style="width:6px; height:6px; border-width:1px 1px 0 0;"></div>
+                <div class="corner-bracket bl" style="width:6px; height:6px; border-width:0 0 1px 1px;"></div>
+                <div class="corner-bracket br" style="width:6px; height:6px; border-width:0 1px 1px 0;"></div>
+                <p style="letter-spacing:1.5px;">GROQ ENGINE</p>
+                <h4 style="color:#EC4899; text-shadow:0 0 8px rgba(236,72,153,0.4); display:flex; align-items:center; justify-content:center; gap:5px; font-family:var(--font-display);">
+                    {groq_status} <span class="status-dot-active" style="width:6px; height:6px; background:#EC4899; border-radius:50%;"></span>
                 </h4>
-                <div style="font-size:0.6rem; color:#64748B; margin-top:2px;">Ultra-Fast Inference</div>
+                <div style="font-family:var(--font-mono); font-size:0.55rem; color:var(--text-muted); margin-top:3px;">INFERENCE // L1</div>
             </div>
-            <div class="status-widget">
-                <p>NETWORK I/O</p>
-                <h4 style="color:#00D9FF; font-size:0.85rem; letter-spacing:0.5px;">{net_str}</h4>
-                <div style="font-size:0.6rem; color:#64748B; margin-top:2px;">Live Transfer Speed</div>
+
+            <!-- NETWORK SPEED -->
+            <div class="status-widget" style="position:relative;">
+                <div class="corner-bracket tl" style="width:6px; height:6px; border-width:1px 0 0 1px;"></div>
+                <div class="corner-bracket tr" style="width:6px; height:6px; border-width:1px 1px 0 0;"></div>
+                <div class="corner-bracket bl" style="width:6px; height:6px; border-width:0 0 1px 1px;"></div>
+                <div class="corner-bracket br" style="width:6px; height:6px; border-width:0 1px 1px 0;"></div>
+                <p style="letter-spacing:1.5px;">COMM CHANNEL</p>
+                <h4 style="color:#00D9FF; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; text-shadow:var(--glow-cyan-xs);">{net_str}</h4>
+                <div style="font-family:var(--font-mono); font-size:0.55rem; color:var(--text-muted); margin-top:3px;">BANDWIDTH: MAX 📶</div>
             </div>
         </div>
     """).strip()

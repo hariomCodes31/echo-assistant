@@ -1,174 +1,187 @@
-/* assets/css/main.css - Global Stylesheet for ECHO OS */
+/* ============================================================
+   assets/css/main.css
+   ECHO X — Global Design System & Cinematic Token Layer
+   ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
 
-/* Color Custom Properties - Futuristic Neon Palette */
+/* ──────────────────────────────────────────────────────────
+   DESIGN TOKENS
+   ────────────────────────────────────────────────────────── */
 :root {
-    /* Color Tokens */
-    --bg-dark-base: #020408;
-    --bg-dark-core: #040811;
-    --bg-panel-hologram: rgba(6, 11, 25, 0.4);
-    
-    --neon-cyan: #00D9FF;
-    --neon-purple: #7B61FF;
-    --neon-pink: #EC4899;
-    --neon-green: #10B981;
-    --neon-red: #FF4D5A;
-    
-    --text-primary: #F8FAFC;
+    /* ── Backgrounds ── */
+    --bg-void:         #010208;
+    --bg-deep:         #020410;
+    --bg-dark-base:    #020408;
+    --bg-dark-core:    #040811;
+    --bg-panel-hologram: rgba(5, 10, 28, 0.55);
+    --bg-panel-glass:    rgba(8, 15, 35, 0.45);
+    --bg-card:           rgba(10, 18, 40, 0.6);
+
+    /* ── Neon Palette ── */
+    --neon-cyan:    #00D9FF;
+    --neon-cyan-dim: rgba(0, 217, 255, 0.6);
+    --neon-purple:  #7B61FF;
+    --neon-pink:    #EC4899;
+    --neon-green:   #10B981;
+    --neon-amber:   #F59E0B;
+    --neon-red:     #FF4D5A;
+    --neon-blue:    #2563EB;
+    --neon-indigo:  #4F46E5;
+
+    /* ── Text ── */
+    --text-primary:   #F1F5F9;
     --text-secondary: #94A3B8;
-    --text-muted: #64748B;
-    
-    --glow-cyan: 0 0 15px rgba(0, 217, 255, 0.3);
-    --glow-purple: 0 0 15px rgba(123, 97, 255, 0.3);
-    --glow-panel: 0 15px 35px rgba(0, 0, 0, 0.6);
-    
-    /* Typography Tokens */
-    --font-primary: 'Outfit', sans-serif;
-    --font-mono: 'Share Tech Mono', monospace;
-    
-    /* Spacing Tokens */
-    --spacing-xs: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
-    
-    /* Border Radius Tokens */
-    --radius-xs: 4px;
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
-    
-    /* Z-Index Tokens */
-    --z-index-base: 1;
-    --z-index-panel: 10;
-    --z-index-overlay: 100;
-    --z-index-popup: 1000;
-    
-    /* Transition Tokens */
+    --text-muted:     #475569;
+    --text-ghost:     #1E293B;
+
+    /* ── Multi-level Glow System ── */
+    --glow-cyan-xs:  0 0 6px  rgba(0, 217, 255, 0.25);
+    --glow-cyan:     0 0 15px rgba(0, 217, 255, 0.35);
+    --glow-cyan-md:  0 0 30px rgba(0, 217, 255, 0.4);
+    --glow-cyan-lg:  0 0 60px rgba(0, 217, 255, 0.35);
+    --glow-cyan-xl:  0 0 100px rgba(0, 217, 255, 0.25);
+
+    --glow-purple-xs: 0 0 6px  rgba(123, 97, 255, 0.25);
+    --glow-purple:    0 0 15px rgba(123, 97, 255, 0.35);
+    --glow-purple-md: 0 0 30px rgba(123, 97, 255, 0.4);
+
+    --glow-pink:   0 0 15px rgba(236, 72, 153, 0.35);
+    --glow-green:  0 0 15px rgba(16, 185, 129, 0.35);
+    --glow-amber:  0 0 15px rgba(245, 158, 11, 0.35);
+    --glow-red:    0 0 15px rgba(255, 77, 90, 0.35);
+
+    --glow-panel:  0 20px 60px rgba(0, 0, 0, 0.7),
+                   0 4px  20px rgba(0, 0, 0, 0.5);
+
+    /* ── Typography ── */
+    --font-display:  'Orbitron', sans-serif;
+    --font-primary:  'Space Grotesk', 'Outfit', sans-serif;
+    --font-body:     'Outfit', sans-serif;
+    --font-mono:     'Share Tech Mono', monospace;
+
+    /* ── Spacing ── */
+    --space-1: 4px;   --space-2: 8px;   --space-3: 12px;
+    --space-4: 16px;  --space-5: 20px;  --space-6: 24px;
+    --space-8: 32px;  --space-10: 40px; --space-12: 48px;
+
+    /* Legacy spacing aliases */
+    --spacing-xs: 4px;  --spacing-sm: 8px;
+    --spacing-md: 16px; --spacing-lg: 24px; --spacing-xl: 32px;
+
+    /* ── Radii ── */
+    --radius-xs: 4px;  --radius-sm: 8px;   --radius-md: 12px;
+    --radius-lg: 16px; --radius-xl: 20px;  --radius-2xl: 28px;
+    --radius-full: 9999px;
+
+    /* ── Z-layers ── */
+    --z-bg: -10; --z-base: 1; --z-panel: 10;
+    --z-float: 50; --z-overlay: 100; --z-popup: 1000;
+
+    /* ── Motion ── */
+    --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out:     cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce:     cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth:     cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    --dur-fast:   150ms; --dur-base: 300ms;
+    --dur-slow:   500ms; --dur-xl:   800ms;
+
+    /* Legacy */
     --transition-speed: 0.3s;
     --transition-curve: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* ── Glass ── */
+    --glass-bg:      rgba(8, 15, 35, 0.55);
+    --glass-border:  rgba(0, 217, 255, 0.12);
+    --glass-blur:    blur(32px) saturate(180%);
+    --glass-shimmer: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%, rgba(255,255,255,0.02) 100%);
 }
 
-/* Global Reset and Canvas Setup */
-html,
-body,
-.stApp {
+/* ──────────────────────────────────────────────────────────
+   GLOBAL RESET & CANVAS
+   ────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, .stApp {
     font-family: var(--font-primary);
-    background-color: var(--bg-dark-base) !important;
+    background-color: var(--bg-void) !important;
     color: var(--text-primary) !important;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100vw;
-    overflow-x: hidden !important; /* Block horizontal overflows */
-    box-sizing: border-box;
+    margin: 0; padding: 0;
+    height: 100vh; width: 100vw;
+    overflow-x: hidden !important;
 }
 
-/* Scrollbar customization for webkit engines */
-::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-}
-
-::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: var(--radius-xs);
-}
-
+/* ──────────────────────────────────────────────────────────
+   SCROLLBAR
+   ────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 217, 255, 0.2);
-    border-radius: var(--radius-xs);
+    background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple));
+    border-radius: var(--radius-full);
 }
-
 ::-webkit-scrollbar-thumb:hover {
     background: var(--neon-cyan);
     box-shadow: var(--glow-cyan);
 }
 
-/* Text Selection Styling */
+/* ──────────────────────────────────────────────────────────
+   SELECTION
+   ────────────────────────────────────────────────────────── */
 ::selection {
-    background: rgba(0, 217, 255, 0.2);
+    background: rgba(0, 217, 255, 0.18);
     color: var(--neon-cyan);
 }
 
-/* Utility classes for typography */
-.title-font {
-    font-family: var(--font-primary);
-    font-weight: 700;
-}
-
-.mono-font {
-    font-family: var(--font-mono);
-}
+/* ──────────────────────────────────────────────────────────
+   TYPOGRAPHY UTILITIES
+   ────────────────────────────────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+.font-mono    { font-family: var(--font-mono); }
+.font-body    { font-family: var(--font-body); }
 
 .glow-text-cyan {
     color: var(--neon-cyan);
-    text-shadow: var(--glow-cyan);
+    text-shadow: var(--glow-cyan-xs), var(--glow-cyan);
 }
-
 .glow-text-purple {
     color: var(--neon-purple);
-    text-shadow: var(--glow-purple);
+    text-shadow: var(--glow-purple-xs), var(--glow-purple);
+}
+.glow-text-pink {
+    color: var(--neon-pink);
+    text-shadow: var(--glow-pink);
 }
 
-/* Global Heading Defaults */
+/* Legacy aliases */
+.title-font { font-family: var(--font-primary); font-weight: 700; }
+.mono-font  { font-family: var(--font-mono); }
+
+/* ──────────────────────────────────────────────────────────
+   HEADINGS
+   ────────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text-primary);
-    margin: 0 0 var(--spacing-sm) 0;
+    margin: 0 0 var(--space-2) 0;
     font-weight: 600;
     letter-spacing: 0.5px;
+    font-family: var(--font-primary);
 }
 
-/* Responsive Media Query Placeholders */
-/* 4K Displays (3840px+) */
+/* ──────────────────────────────────────────────────────────
+   MEDIA QUERIES
+   ────────────────────────────────────────────────────────── */
 @media (min-width: 2560px) {
-    :root {
-        --spacing-md: 24px;
-        --spacing-lg: 36px;
-        --spacing-xl: 48px;
-    }
+    :root { --spacing-md: 24px; --spacing-lg: 36px; --spacing-xl: 48px; }
 }
-
-/* Laptop / Desktop standard (1440px - 1920px) */
-@media (max-width: 1920px) {
-    /* Fits 1920x1080 layouts */
-}
-
-@media (max-width: 1600px) {
-    /* Fits 1600x900 layouts */
-}
-
-@media (max-width: 1440px) {
-    /* Fits 1440x900 layouts */
-}
-
-/* Medium screen / Small laptop (1280px - 1366px) */
-@media (max-width: 1366px) {
-    /* Fits 1366x768 layouts */
-}
-
-@media (max-width: 1280px) {
-    /* Fits 1280x720 layouts */
-}
-
-/* Tablets (768px - 1024px) */
 @media (max-width: 768px) {
-    :root {
-        --spacing-md: 12px;
-        --spacing-lg: 18px;
-        --spacing-xl: 24px;
-    }
+    :root { --spacing-md: 12px; --spacing-lg: 18px; --spacing-xl: 24px; }
 }
-
-/* Accessibility - Prefers Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
     }
 }

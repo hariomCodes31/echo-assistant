@@ -1,75 +1,317 @@
-/* assets/css/glass.css - Glassmorphic and Neon Border Stylesheet */
+/* ============================================================
+   assets/css/glass.css
+   ECHO X — Cinematic Glassmorphism Panel System
+   ============================================================ */
 
-/* Apply glassmorphic visual tokens to Streamlit vertical block containers */
+/* ──────────────────────────────────────────────────────────
+   BASE GLASS PANELS (Streamlit containers)
+   ────────────────────────────────────────────────────────── */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    background: var(--bg-panel-hologram) !important;
-    backdrop-filter: blur(30px) !important;
-    -webkit-backdrop-filter: blur(30px) !important;
-    border: 1px solid rgba(0, 217, 255, 0.15) !important;
-    border-radius: var(--radius-xl) !important;
-    box-shadow: 
+    position: relative;
+    background:
+        var(--glass-shimmer),
+        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 60%),
+        rgba(6, 12, 28, 0.58) !important;
+    backdrop-filter: blur(36px) saturate(180%) brightness(1.05) !important;
+    -webkit-backdrop-filter: blur(36px) saturate(180%) brightness(1.05) !important;
+    border: 1px solid rgba(0, 217, 255, 0.14) !important;
+    border-radius: var(--radius-2xl) !important;
+    box-shadow:
         var(--glow-panel),
-        0 0 15px rgba(0, 217, 255, 0.05),
-        inset 0 0 15px rgba(255, 255, 255, 0.01) !important;
+        0 0 0 1px rgba(255, 255, 255, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07),
+        inset 0 0 40px rgba(0, 217, 255, 0.02) !important;
+    overflow: hidden;
+    animation:
+        float-panel 10s ease-in-out infinite,
+        border-glow-cycle 14s ease-in-out infinite !important;
+    transition:
+        transform var(--dur-slow) var(--ease-out-expo),
+        box-shadow var(--dur-slow) var(--ease-out-expo),
+        border-color var(--dur-slow) var(--ease-in-out) !important;
+    will-change: transform, box-shadow;
 }
 
-/* Restyle native buttons to look like neon-glowing glass tiles */
+/* ── Inner top highlight stroke ── */
+div[data-testid="stVerticalBlockBorderWrapper"]::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), rgba(0,217,255,0.25), rgba(255,255,255,0.18), transparent);
+    border-radius: var(--radius-full);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ── Running neon border sweep ── */
+div[data-testid="stVerticalBlockBorderWrapper"]::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0, 217, 255, 0.5) 30%,
+        rgba(123, 97, 255, 0.4) 50%,
+        rgba(0, 217, 255, 0.5) 70%,
+        transparent 100%
+    );
+    background-size: 300% 100%;
+    animation: border-sweep 6s linear infinite;
+    opacity: 0;
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 1px;
+    pointer-events: none;
+    transition: opacity var(--dur-base) var(--ease-out-expo);
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"]:hover::after {
+    opacity: 0.6;
+}
+
+/* ── Hover elevation ── */
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    border-color: rgba(0, 217, 255, 0.35) !important;
+    box-shadow:
+        0 32px 80px rgba(0, 0, 0, 0.75),
+        0 8px  30px rgba(0, 0, 0, 0.5),
+        0 0   40px rgba(0, 217, 255, 0.18),
+        0 0   80px rgba(0, 217, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 0 50px rgba(0, 217, 255, 0.04) !important;
+    transform: translateY(-8px) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   BUTTONS — Charged Neon Glass
+   ────────────────────────────────────────────────────────── */
 div.stButton > button {
-    background: rgba(255, 255, 255, 0.02) !important;
-    backdrop-filter: blur(10px) !important;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 100%),
+        rgba(6, 12, 28, 0.5) !important;
+    backdrop-filter: blur(12px) !important;
     border: 1px solid rgba(0, 217, 255, 0.2) !important;
-    border-radius: var(--radius-sm) !important;
+    border-radius: var(--radius-md) !important;
     color: var(--text-secondary) !important;
+    font-family: var(--font-primary) !important;
     font-weight: 500 !important;
-    box-shadow: inset 0 0 8px rgba(0, 217, 255, 0.02) !important;
+    letter-spacing: 0.3px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 12px rgba(0, 217, 255, 0.02),
+        0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    transition: all var(--dur-base) var(--ease-out-expo) !important;
+    will-change: transform, box-shadow;
+}
+
+/* Ripple pseudo ── */
+div.stButton > button::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: rgba(0, 217, 255, 0.4);
+    transform: scale(0) translate(-50%, -50%);
+    transform-origin: 0 0;
+    transition: transform 0.5s var(--ease-out-expo), opacity 0.5s;
+    opacity: 0;
+    pointer-events: none;
+}
+
+div.stButton > button:active::after {
+    transform: scale(8) translate(-50%, -50%);
+    opacity: 0;
+    transition: 0s;
 }
 
 div.stButton > button:hover {
     color: var(--neon-cyan) !important;
     border-color: var(--neon-cyan) !important;
-    background: rgba(0, 217, 255, 0.08) !important;
-    box-shadow: 
+    background:
+        linear-gradient(135deg, rgba(0,217,255,0.08) 0%, rgba(0,217,255,0.02) 100%),
+        rgba(6, 12, 28, 0.6) !important;
+    box-shadow:
         var(--glow-cyan),
-        inset 0 0 10px rgba(0, 217, 255, 0.05) !important;
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 0 20px rgba(0,217,255,0.06),
+        0 8px 25px rgba(0, 0, 0, 0.4) !important;
+    transform: translateY(-2px) scale(1.01) !important;
 }
 
-/* Secondary Button styling (Clear controls, etc.) */
+div.stButton > button:active {
+    transform: translateY(0px) scale(0.98) !important;
+    box-shadow:
+        0 0 6px rgba(0, 217, 255, 0.4),
+        inset 0 0 20px rgba(0, 217, 255, 0.08) !important;
+}
+
+/* ── Secondary / danger buttons ── */
 div.stButton > button[kind="secondary"] {
-    border-color: rgba(255, 77, 90, 0.25) !important;
-    color: var(--neon-red) !important;
+    border-color: rgba(255, 77, 90, 0.22) !important;
+    color: rgba(255, 77, 90, 0.8) !important;
 }
 
 div.stButton > button[kind="secondary"]:hover {
     color: var(--text-primary) !important;
     border-color: var(--neon-red) !important;
-    background: rgba(255, 77, 90, 0.1) !important;
-    box-shadow: 0 0 15px rgba(255, 77, 90, 0.3) !important;
+    background:
+        linear-gradient(135deg, rgba(255,77,90,0.1) 0%, rgba(255,77,90,0.02) 100%),
+        rgba(6,12,28,0.6) !important;
+    box-shadow: var(--glow-red), 0 8px 25px rgba(0,0,0,0.4) !important;
+    transform: translateY(-2px) !important;
 }
 
-/* Restyle Streamlit progress bars with neon gradients */
+/* ──────────────────────────────────────────────────────────
+   PROGRESS BARS — Animated shimmer gradient
+   ────────────────────────────────────────────────────────── */
 div[data-testid="stProgress"] {
-    background: rgba(255, 255, 255, 0.02) !important;
+    background: rgba(255, 255, 255, 0.025) !important;
     border-radius: var(--radius-xs) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
     padding: 2px !important;
+    overflow: hidden;
 }
 
 div[data-testid="stProgress"] > div > div > div {
-    background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-purple) 100%) !important;
-    box-shadow: var(--glow-cyan) !important;
+    background:
+        linear-gradient(90deg,
+            var(--neon-cyan) 0%,
+            var(--neon-purple) 50%,
+            var(--neon-cyan) 100%) !important;
+    background-size: 200% 100% !important;
+    animation: progress-shimmer 2.5s linear infinite !important;
+    box-shadow: var(--glow-cyan-xs) !important;
     border-radius: var(--radius-xs) !important;
 }
 
-/* Glassmorphism styling for text inputs */
+/* ──────────────────────────────────────────────────────────
+   TEXT INPUTS — Glass focus
+   ────────────────────────────────────────────────────────── */
 div[data-testid="stTextInput"] > div > div > input {
-    background: rgba(6, 11, 25, 0.5) !important;
+    background: rgba(5, 10, 25, 0.6) !important;
     border: 1px solid rgba(0, 217, 255, 0.15) !important;
     border-radius: var(--radius-md) !important;
     color: var(--text-primary) !important;
-    backdrop-filter: blur(15px) !important;
+    font-family: var(--font-primary) !important;
+    backdrop-filter: blur(16px) !important;
+    transition: all var(--dur-base) var(--ease-out-expo) !important;
 }
 
 div[data-testid="stTextInput"] > div > div > input:focus {
     border-color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan-xs), 0 0 0 1px rgba(0,217,255,0.1) !important;
+    outline: none !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   FILE UPLOADER
+   ────────────────────────────────────────────────────────── */
+[data-testid="stFileUploader"] {
+    background: rgba(5, 10, 25, 0.4) !important;
+    border: 1px dashed rgba(0, 217, 255, 0.22) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 10px !important;
+    transition: all var(--dur-base) var(--ease-out-expo) !important;
+}
+
+[data-testid="stFileUploader"]:hover {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: 0 0 16px rgba(0, 217, 255, 0.12) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   SELECTBOX / DROPDOWNS
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stSelectbox"] > div > div {
+    background: rgba(5, 10, 25, 0.6) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    backdrop-filter: blur(16px) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   NUMBER INPUT
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stNumberInput"] input {
+    background: rgba(5, 10, 25, 0.6) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   TEXT AREA
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stTextArea"] textarea {
+    background: rgba(5, 10, 25, 0.6) !important;
+    border: 1px solid rgba(0, 217, 255, 0.15) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary) !important;
+    transition: border-color var(--dur-base) !important;
+}
+div[data-testid="stTextArea"] textarea:focus {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan-xs) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   DOWNLOAD BUTTON
+   ────────────────────────────────────────────────────────── */
+div.stDownloadButton > button {
+    background: linear-gradient(135deg, rgba(0,217,255,0.08), rgba(0,217,255,0.02)) !important;
+    border: 1px solid rgba(0, 217, 255, 0.25) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--neon-cyan) !important;
+    font-family: var(--font-primary) !important;
+    transition: all var(--dur-base) var(--ease-out-expo) !important;
+}
+div.stDownloadButton > button:hover {
+    background: rgba(0, 217, 255, 0.15) !important;
     box-shadow: var(--glow-cyan) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   EXPANDER
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stExpander"] {
+    background: rgba(5, 10, 25, 0.35) !important;
+    border: 1px solid rgba(0, 217, 255, 0.1) !important;
+    border-radius: var(--radius-lg) !important;
+    backdrop-filter: blur(16px) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   SLIDER
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stSlider"] > div > div > div {
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)) !important;
+}
+div[data-testid="stSlider"] [role="slider"] {
+    background: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan-xs) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   TOAST NOTIFICATIONS
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stToast"] {
+    background: rgba(6, 12, 30, 0.9) !important;
+    border: 1px solid rgba(0, 217, 255, 0.25) !important;
+    border-radius: var(--radius-lg) !important;
+    backdrop-filter: blur(24px) !important;
+    box-shadow: var(--glow-cyan-xs), 0 16px 40px rgba(0,0,0,0.5) !important;
 }

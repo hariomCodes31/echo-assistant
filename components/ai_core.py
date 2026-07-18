@@ -1,19 +1,26 @@
 import streamlit as st
+import streamlit.components.v1 as stc
 from textwrap import dedent
 
 
 STATE_MAP = {
-    "Idle": "core-idle",
-    "Listening": "core-listening",
+    "Idle":       "core-idle",
+    "Listening":  "core-listening",
     "Processing": "core-processing",
-    "Speaking": "core-speaking",
+    "Speaking":   "core-speaking",
 }
 
 
 def render_ai_core(mic_state="Idle"):
     """
-    Renders the holographic AI core animation using st.components.v1.html()
-    instead of st.markdown() to ensure complex nested HTML + CSS renders properly.
+    Fully 3D AI Core using Canvas 2D API + CSS 3D transforms.
+    Features:
+    - Animated 3D perspective rings (rotateX/Y transforms on canvas orbits)
+    - Neural-node particle web drawn on canvas (200 nodes, 3D z-depth)
+    - Mouse-follow 3D tilt of the entire core (±12°)
+    - State-sensitive speed + color (Idle / Listening / Processing / Speaking)
+    - Central glowing orb with chromatic halo
+    - Holographic scan-line sweep
     """
     state = STATE_MAP.get(mic_state, "core-idle")
 
@@ -21,10 +28,11 @@ def render_ai_core(mic_state="Idle"):
     <!DOCTYPE html>
     <html>
     <head>
+    <meta charset="UTF-8">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
 
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        *, *::before, *::after {{ margin:0; padding:0; box-sizing:border-box; }}
 
         body {{
             background: transparent;
@@ -36,303 +44,387 @@ def render_ai_core(mic_state="Idle"):
             width: 100%;
         }}
 
-        .echo-core {{
+        /* ── Container ── */
+        .core-shell {{
             position: relative;
+            width: min(420px, 95vw);
+            height: min(420px, 95vw);
+            transform-style: preserve-3d;
+            perspective: 900px;
+            cursor: none;
+        }}
+
+        /* ── Canvas (3D rings + particle web) ── */
+        #core-canvas {{
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
+            border-radius: 50%;
+        }}
+
+        /* ── Holographic scan line ── */
+        .holo-scan {{
+            position: absolute;
+            left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(0,217,255,0.7) 30%,
+                rgba(123,97,255,0.6) 50%,
+                rgba(0,217,255,0.7) 70%,
+                transparent
+            );
+            pointer-events: none;
+            animation: scanMove 3.5s ease-in-out infinite;
+            z-index: 3;
+        }}
+        @keyframes scanMove {{
+            0%   {{ top:-2px; opacity:0; }}
+            10%  {{ opacity:0.8; }}
+            90%  {{ opacity:0.8; }}
+            100% {{ top:calc(100% + 2px); opacity:0; }}
+        }}
+
+        /* ── Central orb (CSS layer on top of canvas) ── */
+        .core-orb {{
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 88px; height: 88px;
+            transform: translate(-50%, -50%) translateZ(20px);
+            border-radius: 50%;
+            background: radial-gradient(circle at 38% 38%, #ffffff, #00d9ff 45%, #2456ff 80%);
+            box-shadow:
+                0 0 20px #00d9ff,
+                0 0 45px #00d9ff,
+                0 0 90px rgba(0,217,255,0.5),
+                0 0 180px rgba(0,217,255,0.2),
+                inset 0 0 20px rgba(255,255,255,0.3);
             display: flex;
-            justify-content: center;
             align-items: center;
-            overflow: hidden;
-            isolation: isolate;
+            justify-content: center;
+            animation: orb-breathe 3.5s ease-in-out infinite;
+            z-index: 4;
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+        }}
+        .core-orb:hover {{
+            box-shadow:
+                0 0 30px #00d9ff,
+                0 0 70px #00d9ff,
+                0 0 140px rgba(0,217,255,0.7),
+                0 0 220px rgba(0,217,255,0.3);
+        }}
+        .core-x {{
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 10px #00d9ff, 0 0 24px #00d9ff, 0 0 50px rgba(0,217,255,0.8);
+            animation: x-flicker 8s ease-in-out infinite;
+            user-select: none;
         }}
 
-        /* Background radial glow */
-        .core-background {{
+        /* ── Pulse rings (CSS, sit behind orb) ── */
+        .pulse-ring {{
             position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, rgba(0,217,255,.08), transparent 70%);
+            top: 50%; left: 50%;
+            width: 90px; height: 90px;
+            transform: translate(-50%,-50%);
+            border-radius: 50%;
+            border: 2px solid rgba(0,217,255,0.45);
+            z-index: 3;
         }}
+        .pulse-ring.p1 {{ animation: pulse-expand 2.2s ease-out infinite; }}
+        .pulse-ring.p2 {{ animation: pulse-expand 2.2s ease-out infinite 1.1s; }}
 
-        /* Floating stars */
-        .core-stars {{
+        /* ── Status glow dot ── */
+        .state-dot {{
             position: absolute;
-            inset: 0;
-        }}
-        .core-stars span {{
-            position: absolute;
-            width: 3px;
-            height: 3px;
+            bottom: 12px; left: 50%;
+            transform: translateX(-50%);
+            width: 8px; height: 8px;
             border-radius: 50%;
             background: #00d9ff;
             box-shadow: 0 0 8px #00d9ff, 0 0 16px #00d9ff;
-            animation: floatStars linear infinite;
+            animation: dot-pulse 1.8s ease-in-out infinite;
+            z-index: 5;
         }}
-        .s1 {{ top:8%; left:18%; animation-duration:15s; }}
-        .s2 {{ top:16%; left:73%; animation-duration:20s; }}
-        .s3 {{ top:31%; left:9%; animation-duration:14s; }}
-        .s4 {{ top:39%; left:82%; animation-duration:18s; }}
-        .s5 {{ top:51%; left:16%; animation-duration:12s; }}
-        .s6 {{ top:63%; left:72%; animation-duration:16s; }}
-        .s7 {{ top:76%; left:28%; animation-duration:19s; }}
-        .s8 {{ top:83%; left:61%; animation-duration:15s; }}
-        .s9 {{ top:21%; left:41%; animation-duration:22s; }}
-        .s10 {{ top:52%; left:52%; animation-duration:18s; }}
-        .s11 {{ top:71%; left:86%; animation-duration:17s; }}
-        .s12 {{ top:12%; left:58%; animation-duration:14s; }}
+        .core-idle      .state-dot {{ background:#00d9ff; box-shadow:0 0 8px #00d9ff; animation-duration:2.5s; }}
+        .core-listening .state-dot {{ background:#10b981; box-shadow:0 0 8px #10b981, 0 0 20px #10b981; animation-duration:0.8s; }}
+        .core-processing .state-dot {{ background:#7b61ff; box-shadow:0 0 8px #7b61ff, 0 0 20px #7b61ff; animation-duration:0.4s; }}
+        .core-speaking  .state-dot {{ background:#ec4899; box-shadow:0 0 8px #ec4899, 0 0 20px #ec4899; animation-duration:0.2s; }}
 
-        /* Vertical beam */
-        .vertical-beam {{
-            position: absolute;
-            width: 4px;
-            height: 55%;
-            background: linear-gradient(transparent, rgba(0,217,255,.8), transparent);
-            filter: blur(4px);
-            animation: beamPulse 2.8s infinite;
-        }}
+        /* State speed overrides */
+        .core-listening  .core-orb {{ animation-duration: 1s; }}
+        .core-processing .core-orb {{ animation: orb-process 0.5s ease-in-out infinite; }}
+        .core-speaking   .core-orb {{ animation: orb-speak 0.18s ease-in-out infinite; }}
 
-        /* Platform rings */
-        .projector-platform {{
-            position: absolute;
-            width: min(380px, 90%);
-            height: min(380px, 90%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* ── Keyframes ── */
+        @keyframes orb-breathe {{
+            0%,100% {{ transform:translate(-50%,-50%) translateZ(20px) scale(1.0); filter:brightness(1); }}
+            50%      {{ transform:translate(-50%,-50%) translateZ(28px) scale(1.07); filter:brightness(1.2); }}
         }}
-        .platform-ring {{
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(0,217,255,.12);
+        @keyframes orb-process {{
+            0%,100% {{ transform:translate(-50%,-50%) translateZ(20px) scale(1.0); filter:hue-rotate(0deg); }}
+            50%      {{ transform:translate(-50%,-50%) translateZ(30px) scale(1.1); filter:hue-rotate(60deg); }}
         }}
-        .ring1 {{ width:100%; height:100%; }}
-        .ring2 {{ width:83%; height:83%; }}
-        .ring3 {{ width:66%; height:66%; }}
-        .ring4 {{ width:46%; height:46%; }}
-        .ring5 {{ width:32%; height:32%; }}
-
-        /* Core area */
-        .core-area {{
-            position: relative;
-            width: min(380px, 90%);
-            height: min(380px, 90%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        @keyframes orb-speak {{
+            0%,100% {{ transform:translate(-50%,-50%) translateZ(20px) scale(1.0) translate(0,0); }}
+            33%      {{ transform:translate(-50%,-50%) translateZ(22px) scale(1.03) translate(-1px,1px); }}
+            66%      {{ transform:translate(-50%,-50%) translateZ(18px) scale(0.98) translate(1px,-1px); }}
         }}
-
-        /* Orbits */
-        .orbit {{
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(0,217,255,.15);
+        @keyframes x-flicker {{
+            0%,94%,100% {{ opacity:1; }}
+            95%          {{ opacity:0.7; }}
+            97%          {{ opacity:1; }}
+            98%          {{ opacity:0.8; }}
         }}
-        .orbit1 {{ width:95%; height:95%; animation: spinClock 30s linear infinite; }}
-        .orbit2 {{ width:80%; height:80%; animation: spinAnti 22s linear infinite; }}
-        .orbit3 {{ width:65%; height:65%; animation: spinClock 16s linear infinite; }}
-        .orbit4 {{ width:50%; height:50%; animation: spinAnti 12s linear infinite; }}
-        .orbit5 {{ width:38%; height:38%; animation: spinClock 9s linear infinite; }}
-
-        /* Satellites */
-        .satellite {{
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: #00d9ff;
-            box-shadow: 0 0 6px #00d9ff, 0 0 14px #00d9ff;
+        @keyframes pulse-expand {{
+            0%   {{ transform:translate(-50%,-50%) scale(1);   opacity:0.9; }}
+            100% {{ transform:translate(-50%,-50%) scale(2.8); opacity:0; }}
         }}
-        .sat1 {{ top:5%; left:48%; animation: spinClock 15s linear infinite; }}
-        .sat2 {{ top:48%; right:3%; animation: spinAnti 12s linear infinite; }}
-        .sat3 {{ bottom:8%; left:38%; animation: spinClock 18s linear infinite; }}
-        .sat4 {{ top:28%; left:5%; animation: spinAnti 14s linear infinite; }}
-
-        /* Spinning circles */
-        .outer-circle {{
-            position: absolute;
-            width: 88%;
-            height: 88%;
-            border-radius: 50%;
-            border: 2px solid rgba(0,217,255,.25);
-            animation: spinClock 24s linear infinite;
-        }}
-        .middle-circle {{
-            position: absolute;
-            width: 66%;
-            height: 66%;
-            border-radius: 50%;
-            border: 2px dashed rgba(123,97,255,.4);
-            animation: spinAnti 18s linear infinite;
-        }}
-        .inner-circle {{
-            position: absolute;
-            width: 44%;
-            height: 44%;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,.3);
-            animation: spinClock 8s linear infinite;
-        }}
-
-        /* Pulse rings */
-        .pulse {{
-            position: absolute;
-            border-radius: 50%;
-            border: 2px solid rgba(0,217,255,.4);
-        }}
-        .pulse1 {{
-            width: 30%;
-            height: 30%;
-            animation: pulseRing 2s infinite;
-        }}
-        .pulse2 {{
-            width: 30%;
-            height: 30%;
-            animation: pulseRing 2s infinite .8s;
-        }}
-
-        /* Energy grid overlay */
-        .energy-grid {{
-            position: absolute;
-            inset: 10%;
-            background-image:
-                linear-gradient(rgba(0,217,255,.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,217,255,.03) 1px, transparent 1px);
-            background-size: 18px 18px;
-            border-radius: 50%;
-            opacity: 0.3;
-        }}
-
-        /* Core glow */
-        .core-glow {{
-            position: absolute;
-            width: 28%;
-            height: 28%;
-            border-radius: 50%;
-            background: radial-gradient(circle, #00d9ff, #2456ff 70%, transparent);
-            filter: blur(30px);
-            animation: breathe 3s ease-in-out infinite;
-        }}
-
-        /* Core center sphere */
-        .core-center {{
-            position: absolute;
-            width: 22%;
-            height: 22%;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: radial-gradient(circle, #ffffff, #00d9ff);
-            box-shadow: 0 0 25px #00d9ff, 0 0 60px #00d9ff, 0 0 120px rgba(0,217,255,.45);
-        }}
-
-        /* X letter */
-        .core-x {{
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(28px, 5vw, 48px);
-            font-weight: 900;
-            color: white;
-            text-shadow: 0 0 10px #00d9ff, 0 0 25px #00d9ff, 0 0 50px #00d9ff;
-        }}
-
-        /* State-specific overrides */
-        .core-listening .outer-circle {{ animation-duration: 6s; }}
-        .core-listening .core-glow {{ animation-duration: 1.2s; }}
-        .core-processing .outer-circle {{ animation-duration: 2s; animation-direction: reverse; }}
-        .core-processing .core-glow {{ animation-duration: 0.6s; }}
-        .core-speaking .core-center {{ animation: speakingVibrate 0.2s ease-in-out infinite; }}
-
-        /* Keyframes */
-        @keyframes spinClock {{
-            from {{ transform: rotate(0deg); }}
-            to {{ transform: rotate(360deg); }}
-        }}
-        @keyframes spinAnti {{
-            from {{ transform: rotate(360deg); }}
-            to {{ transform: rotate(0deg); }}
-        }}
-        @keyframes breathe {{
-            0%, 100% {{ transform: scale(.95); opacity: .7; }}
-            50% {{ transform: scale(1.08); opacity: 1; }}
-        }}
-        @keyframes beamPulse {{
-            0%, 100% {{ opacity: .35; }}
-            50% {{ opacity: 1; }}
-        }}
-        @keyframes pulseRing {{
-            0% {{ transform: scale(1); opacity: 1; }}
-            100% {{ transform: scale(2); opacity: 0; }}
-        }}
-        @keyframes floatStars {{
-            0% {{ transform: translateY(0) translateX(0); opacity: 0.3; }}
-            50% {{ transform: translateY(-20px) translateX(10px); opacity: 0.7; }}
-            100% {{ transform: translateY(0) translateX(0); opacity: 0.3; }}
-        }}
-        @keyframes speakingVibrate {{
-            0%, 100% {{ transform: scale(1.0); }}
-            33% {{ transform: scale(1.03) translate(-1px, 1px); }}
-            66% {{ transform: scale(0.98) translate(1px, -1px); }}
+        @keyframes dot-pulse {{
+            0%,100% {{ transform:translateX(-50%) scale(1);   opacity:0.7; }}
+            50%      {{ transform:translateX(-50%) scale(1.5); opacity:1;   }}
         }}
     </style>
     </head>
     <body>
-        <div class="echo-core {state}">
-            <div class="core-background"></div>
+    <div class="core-shell {state}" id="coreShell">
+        <canvas id="core-canvas"></canvas>
 
-            <div class="core-stars">
-                <span class="s s1"></span>
-                <span class="s s2"></span>
-                <span class="s s3"></span>
-                <span class="s s4"></span>
-                <span class="s s5"></span>
-                <span class="s s6"></span>
-                <span class="s s7"></span>
-                <span class="s s8"></span>
-                <span class="s s9"></span>
-                <span class="s s10"></span>
-                <span class="s s11"></span>
-                <span class="s s12"></span>
-            </div>
+        <div class="holo-scan"></div>
 
-            <div class="vertical-beam"></div>
+        <div class="pulse-ring p1"></div>
+        <div class="pulse-ring p2"></div>
 
-            <div class="projector-platform">
-                <div class="platform-ring ring1"></div>
-                <div class="platform-ring ring2"></div>
-                <div class="platform-ring ring3"></div>
-                <div class="platform-ring ring4"></div>
-                <div class="platform-ring ring5"></div>
-            </div>
-
-            <div class="core-area">
-                <div class="orbit orbit1"></div>
-                <div class="orbit orbit2"></div>
-                <div class="orbit orbit3"></div>
-                <div class="orbit orbit4"></div>
-                <div class="orbit orbit5"></div>
-
-                <div class="satellite sat1"></div>
-                <div class="satellite sat2"></div>
-                <div class="satellite sat3"></div>
-                <div class="satellite sat4"></div>
-
-                <div class="outer-circle"></div>
-                <div class="middle-circle"></div>
-                <div class="inner-circle"></div>
-
-                <div class="pulse pulse1"></div>
-                <div class="pulse pulse2"></div>
-
-                <div class="energy-grid"></div>
-                <div class="core-glow"></div>
-
-                <div class="core-center">
-                    <div class="core-x">X</div>
-                </div>
-            </div>
+        <div class="core-orb">
+            <div class="core-x">X</div>
         </div>
+
+        <div class="state-dot"></div>
+    </div>
+
+    <script>
+    (function(){{
+        var canvas  = document.getElementById('core-canvas');
+        var ctx     = canvas.getContext('2d');
+        var shell   = document.getElementById('coreShell');
+        var state   = '{state}';
+        var W, H, cx, cy, R;
+
+        // ── Size ──────────────────────────────────────────────────────────────
+        function resize(){{
+            W = canvas.width  = shell.offsetWidth;
+            H = canvas.height = shell.offsetHeight;
+            cx = W/2; cy = H/2;
+            R  = Math.min(W,H)/2;
+        }}
+        resize();
+        window.addEventListener('resize', resize);
+
+        // ── Mouse tilt ────────────────────────────────────────────────────────
+        var tiltX=0, tiltY=0, targetTX=0, targetTY=0;
+        var MAX_TILT = 12;
+        document.addEventListener('mousemove', function(e){{
+            var r = shell.getBoundingClientRect();
+            targetTX = ((e.clientY - r.top  - H/2) / (H/2)) * -MAX_TILT;
+            targetTY = ((e.clientX - r.left - W/2) / (W/2)) *  MAX_TILT;
+        }});
+
+        // ── 3D Particles / Neural web ─────────────────────────────────────────
+        var NUM_PARTICLES = 120;
+        var LINK_DIST = R * 0.62;
+        var particles = [];
+        function mkParticle(){{
+            var theta = Math.random() * Math.PI * 2;
+            var phi   = Math.acos(2*Math.random()-1);
+            var r     = 0.4*R + Math.random()*0.52*R;
+            return {{
+                x:  r * Math.sin(phi) * Math.cos(theta),
+                y:  r * Math.sin(phi) * Math.sin(theta),
+                z:  r * Math.cos(phi),
+                vx: (Math.random()-0.5)*0.18,
+                vy: (Math.random()-0.5)*0.18,
+                vz: (Math.random()-0.5)*0.18,
+                size: 1.5 + Math.random()*2,
+                hue:  Math.random() < 0.7 ? 193 : (Math.random() < 0.5 ? 260 : 330)
+            }};
+        }}
+        for(var i=0;i<NUM_PARTICLES;i++) particles.push(mkParticle());
+
+        // ── 3D Rings ──────────────────────────────────────────────────────────
+        var rings = [
+            {{ r:R*0.92, tiltX:70, tiltY:0,  speed:0.6,  col:'rgba(0,217,255,0.22)',  w:1.5 }},
+            {{ r:R*0.72, tiltX:30, tiltY:60, speed:-0.9, col:'rgba(123,97,255,0.35)', w:1.5 }},
+            {{ r:R*0.55, tiltX:80, tiltY:30, speed:1.3,  col:'rgba(0,217,255,0.18)',  w:1   }},
+            {{ r:R*0.38, tiltX:20, tiltY:80, speed:-1.6, col:'rgba(255,255,255,0.2)', w:1   }},
+        ];
+        var ringAngles = [0,0,0,0];
+
+        // ── Projection 3D→2D ─────────────────────────────────────────────────
+        function project(x,y,z,fov){{
+            var scale = fov / (fov + z);
+            return {{ px: cx + x*scale, py: cy + y*scale, scale: scale }};
+        }}
+
+        // ── Rotate point around X and Y axes ─────────────────────────────────
+        function rotatePoint(x,y,z,rx,ry){{
+            // Rotate around X
+            var rxr = rx * Math.PI/180;
+            var y1  = y*Math.cos(rxr) - z*Math.sin(rxr);
+            var z1  = y*Math.sin(rxr) + z*Math.cos(rxr);
+            // Rotate around Y
+            var ryr = ry * Math.PI/180;
+            var x2  = x*Math.cos(ryr) + z1*Math.sin(ryr);
+            var z2  = -x*Math.sin(ryr) + z1*Math.cos(ryr);
+            return {{x:x2, y:y1, z:z2}};
+        }}
+
+        // ── Speed multiplier per state ────────────────────────────────────────
+        var speedMap = {{
+            'core-idle':1.0, 'core-listening':2.2, 'core-processing':4.5, 'core-speaking':1.8
+        }};
+
+        var FOV = 480;
+        var frame = 0;
+
+        // ── Draw ellipse (3D ring projected) ──────────────────────────────────
+        function drawRing(ring, angle, parentTiltX, parentTiltY){{
+            var steps = 72;
+            var pts = [];
+            for(var i=0; i<steps; i++){{
+                var a = (i/steps)*Math.PI*2;
+                // Point on ring in ring's local 2D plane
+                var lx = ring.r * Math.cos(a);
+                var ly = ring.r * Math.sin(a);
+                var lz = 0;
+                // Tilt the ring
+                var p = rotatePoint(lx, ly, lz, ring.tiltX + angle*ring.speed, ring.tiltY);
+                // Apply parent (mouse) tilt
+                var p2 = rotatePoint(p.x, p.y, p.z, parentTiltX, parentTiltY);
+                var proj = project(p2.x, p2.y, p2.z, FOV);
+                pts.push(proj);
+            }}
+            ctx.beginPath();
+            ctx.moveTo(pts[0].px, pts[0].py);
+            for(var j=1;j<pts.length;j++) ctx.lineTo(pts[j].px, pts[j].py);
+            ctx.closePath();
+            ctx.strokeStyle = ring.col;
+            ctx.lineWidth   = ring.w;
+            ctx.stroke();
+        }}
+
+        // ── Main animation loop ───────────────────────────────────────────────
+        function draw(){{
+            frame++;
+            var spd = speedMap[state] || 1.0;
+
+            // Lerp tilt
+            tiltX += (targetTX - tiltX) * 0.06;
+            tiltY += (targetTY - tiltY) * 0.06;
+
+            // Clear
+            ctx.clearRect(0, 0, W, H);
+
+            // Ambient glow
+            var grad = ctx.createRadialGradient(cx,cy,0, cx,cy,R*0.7);
+            grad.addColorStop(0, 'rgba(0,217,255,0.07)');
+            grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, W, H);
+
+            // Draw rings
+            for(var ri=0;ri<rings.length;ri++){{
+                ringAngles[ri] += 0.005 * spd * (ri%2===0?1:-1);
+                drawRing(rings[ri], ringAngles[ri]*180/Math.PI, tiltX, tiltY);
+            }}
+
+            // Update + draw particles
+            var visible = [];
+            for(var pi=0;pi<particles.length;pi++){{
+                var p = particles[pi];
+                p.x += p.vx * spd;
+                p.y += p.vy * spd;
+                p.z += p.vz * spd;
+                // Bounce in sphere
+                var dist = Math.sqrt(p.x*p.x + p.y*p.y + p.z*p.z);
+                if(dist > R*0.95){{
+                    var nx=p.x/dist, ny=p.y/dist, nz=p.z/dist;
+                    var dot=p.vx*nx + p.vy*ny + p.vz*nz;
+                    p.vx -= 2*dot*nx; p.vy -= 2*dot*ny; p.vz -= 2*dot*nz;
+                }}
+                // Rotate with mouse tilt
+                var rp = rotatePoint(p.x, p.y, p.z, tiltX, tiltY);
+                var proj = project(rp.x, rp.y, rp.z, FOV);
+                var depth = (rp.z + R) / (2*R); // 0=back, 1=front
+                visible.push({{ proj:proj, depth:depth, hue:p.hue, size:p.size * proj.scale }});
+            }}
+
+            // Sort back→front
+            visible.sort(function(a,b){{ return a.depth - b.depth; }});
+
+            // Neural web links
+            for(var vi=0;vi<visible.length;vi++){{
+                for(var vj=vi+1;vj<visible.length;vj++){{
+                    var dx=visible[vi].proj.px - visible[vj].proj.px;
+                    var dy=visible[vi].proj.py - visible[vj].proj.py;
+                    var d = Math.sqrt(dx*dx+dy*dy);
+                    if(d < LINK_DIST*0.6){{
+                        var alpha = (1 - d/(LINK_DIST*0.6)) * 0.18 * visible[vi].depth;
+                        ctx.beginPath();
+                        ctx.moveTo(visible[vi].proj.px, visible[vi].proj.py);
+                        ctx.lineTo(visible[vj].proj.px, visible[vj].proj.py);
+                        ctx.strokeStyle = 'rgba(0,217,255,'+alpha+')';
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }}
+                }}
+            }}
+
+            // Draw dots
+            for(var di=0;di<visible.length;di++){{
+                var v = visible[di];
+                var alpha = 0.3 + v.depth * 0.7;
+                var radius = Math.max(0.5, v.size);
+                ctx.beginPath();
+                ctx.arc(v.proj.px, v.proj.py, radius, 0, Math.PI*2);
+                ctx.fillStyle = 'hsla('+v.hue+',100%,65%,'+alpha+')';
+                ctx.fill();
+                // Glow
+                if(v.depth > 0.6){{
+                    var grd = ctx.createRadialGradient(v.proj.px,v.proj.py,0, v.proj.px,v.proj.py, radius*4);
+                    grd.addColorStop(0,'hsla('+v.hue+',100%,65%,0.3)');
+                    grd.addColorStop(1,'transparent');
+                    ctx.beginPath();
+                    ctx.arc(v.proj.px,v.proj.py, radius*4, 0, Math.PI*2);
+                    ctx.fillStyle=grd;
+                    ctx.fill();
+                }}
+            }}
+
+            // Holographic horizontal data lines
+            ctx.globalAlpha = 0.04 + Math.sin(frame*0.03)*0.02;
+            for(var li=0; li<8; li++){{
+                var ly = cy - R*0.5 + li*(R*1.0/7);
+                ctx.beginPath();
+                ctx.moveTo(cx-R*0.7, ly);
+                ctx.lineTo(cx+R*0.7, ly);
+                ctx.strokeStyle = '#00d9ff';
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }}
+            ctx.globalAlpha = 1;
+
+            requestAnimationFrame(draw);
+        }}
+
+        draw();
+    }})();
+    </script>
     </body>
     </html>
     """)
 
-    st.iframe(full_html, height=420)
+    stc.html(full_html, height=430, scrolling=False)

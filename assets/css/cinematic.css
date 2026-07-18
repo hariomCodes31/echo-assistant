@@ -1,0 +1,302 @@
+/* ============================================================
+   assets/css/cinematic.css  (updated with 3D enhancements)
+   ECHO X — HUD Chrome + 3D Micro-interactions + Global Polish
+   ============================================================ */
+
+/* ──────────────────────────────────────────────────────────
+   CURSOR GLOW
+   ────────────────────────────────────────────────────────── */
+#echo-cursor-glow {
+    position: fixed;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(0,217,255,0.055) 0%,
+        rgba(123,97,255,0.025) 45%,
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    will-change: left, top;
+    mix-blend-mode: screen;
+    transition: left 0.06s linear, top 0.06s linear;
+}
+
+/* ──────────────────────────────────────────────────────────
+   HOLOGRAPHIC SCAN LINE
+   ────────────────────────────────────────────────────────── */
+.holo-scan-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(0,217,255,0.5) 30%,
+        rgba(123,97,255,0.4) 50%,
+        rgba(0,217,255,0.5) 70%,
+        transparent
+    );
+    animation: holo-scan 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* ──────────────────────────────────────────────────────────
+   NEON BADGE / PILL
+   ────────────────────────────────────────────────────────── */
+.neon-badge {
+    display: inline-flex;
+    align-items: center; gap: 5px;
+    background: rgba(0,217,255,0.08);
+    border: 1px solid rgba(0,217,255,0.25);
+    border-radius: var(--radius-full);
+    padding: 2px 10px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--neon-cyan);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: var(--glow-cyan-xs);
+    animation: badge-float 4s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+.neon-badge:hover { transform: translateZ(4px) scale(1.05); }
+
+/* ──────────────────────────────────────────────────────────
+   GLOW DIVIDER
+   ────────────────────────────────────────────────────────── */
+.glow-divider {
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(0,217,255,0.4),
+        rgba(123,97,255,0.3),
+        rgba(0,217,255,0.4),
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: border-sweep 4s linear infinite;
+    margin: 8px 0;
+    border-radius: var(--radius-full);
+}
+
+/* ──────────────────────────────────────────────────────────
+   METRIC CARD — 3D float
+   ────────────────────────────────────────────────────────── */
+.metric-card {
+    background:
+        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 100%),
+        rgba(5,10,25,0.6);
+    border: 1px solid rgba(0,217,255,0.12);
+    border-radius: var(--radius-lg);
+    padding: 10px 14px;
+    transition: all var(--dur-base) var(--ease-out-expo);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transform: perspective(300px) translateZ(0);
+}
+.metric-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 15%; right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+.metric-card:hover {
+    border-color: rgba(0,217,255,0.3);
+    transform: perspective(300px) translateZ(10px) translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 25px rgba(0,217,255,0.12);
+}
+.metric-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+.metric-value {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    text-shadow: var(--glow-cyan-xs);
+}
+
+/* ──────────────────────────────────────────────────────────
+   DATA CHIP
+   ────────────────────────────────────────────────────────── */
+.data-chip {
+    display: inline-flex;
+    align-items: center; gap: 4px;
+    background: rgba(0,217,255,0.05);
+    border: 1px solid rgba(0,217,255,0.15);
+    border-radius: var(--radius-xs);
+    padding: 1px 7px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--neon-cyan);
+    letter-spacing: 0.8px;
+    transform: perspective(100px) translateZ(2px);
+}
+.data-chip::before { content: "//"; color: rgba(0,217,255,0.4); font-size: 0.55rem; }
+
+/* ──────────────────────────────────────────────────────────
+   GLOW COUNTER BADGE
+   ────────────────────────────────────────────────────────── */
+.glow-counter {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    min-width: 22px; height: 18px;
+    background: rgba(0,217,255,0.1);
+    border: 1px solid rgba(0,217,255,0.3);
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--neon-cyan);
+    padding: 0 6px;
+    box-shadow: var(--glow-cyan-xs);
+    animation: scale-pulse 3s ease-in-out infinite;
+}
+
+/* ──────────────────────────────────────────────────────────
+   STATUS ROW
+   ────────────────────────────────────────────────────────── */
+.status-row {
+    display: flex;
+    justify-content: space-between; align-items: center;
+    font-family: var(--font-primary);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: color var(--dur-fast), transform var(--dur-base);
+}
+.status-row:last-child { border-bottom: none; }
+.status-row:hover { color: var(--text-secondary); transform: translateX(2px); }
+
+.status-value { font-family: var(--font-mono); font-weight: 600; font-size: 0.75rem; }
+.status-value.active  { color: var(--neon-green); text-shadow: var(--glow-green); }
+.status-value.standby { color: var(--neon-cyan);  text-shadow: var(--glow-cyan-xs); }
+.status-value.armed   { color: var(--neon-purple); text-shadow: var(--glow-purple-xs); }
+.status-value.warning { color: var(--neon-amber); text-shadow: var(--glow-amber); }
+
+/* ──────────────────────────────────────────────────────────
+   WAVEFORM BARS
+   ────────────────────────────────────────────────────────── */
+.waveform { display: inline-flex; align-items: center; gap: 2px; height: 20px; }
+.waveform-bar {
+    width: 2px; border-radius: 1px;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 4px var(--neon-cyan);
+    animation: waveform-dance var(--dur) ease-in-out infinite alternate;
+}
+.waveform-bar:nth-child(1) { --dur:0.4s; height:30%; }
+.waveform-bar:nth-child(2) { --dur:0.6s; height:70%; }
+.waveform-bar:nth-child(3) { --dur:0.5s; height:100%; animation-delay:0.1s; }
+.waveform-bar:nth-child(4) { --dur:0.7s; height:60%; animation-delay:0.05s; }
+.waveform-bar:nth-child(5) { --dur:0.45s; height:40%; animation-delay:0.15s; }
+.waveform-bar:nth-child(6) { --dur:0.65s; height:80%; }
+.waveform-bar:nth-child(7) { --dur:0.55s; height:50%; animation-delay:0.2s; }
+@keyframes waveform-dance { from { transform:scaleY(0.3); } to { transform:scaleY(1); } }
+
+/* ──────────────────────────────────────────────────────────
+   SELECTBOX & DROPDOWNS
+   ────────────────────────────────────────────────────────── */
+div[data-baseweb="select"] { background:rgba(5,10,25,0.6) !important; border-color:rgba(0,217,255,0.15) !important; }
+div[data-baseweb="select"] * { color:var(--text-primary) !important; font-family:var(--font-primary) !important; }
+div[data-baseweb="popover"] {
+    background:rgba(5,12,30,0.95) !important;
+    backdrop-filter:blur(24px) !important;
+    border:1px solid rgba(0,217,255,0.2) !important;
+    border-radius:var(--radius-lg) !important;
+    box-shadow:var(--glow-panel), 0 0 25px rgba(0,217,255,0.1) !important;
+}
+li[role="option"]:hover { background:rgba(0,217,255,0.08) !important; color:var(--neon-cyan) !important; }
+
+/* ──────────────────────────────────────────────────────────
+   WIDGET LABELS
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stWidgetLabel"] label,
+div[data-testid="stWidgetLabel"] p {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-primary) !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   MARKDOWN
+   ────────────────────────────────────────────────────────── */
+.stMarkdown p { color:var(--text-secondary) !important; font-family:var(--font-primary) !important; line-height:1.65 !important; }
+.stMarkdown strong { color:var(--text-primary) !important; font-weight:600 !important; }
+.stMarkdown a { color:var(--neon-cyan) !important; text-decoration:none !important; border-bottom:1px solid rgba(0,217,255,0.3); transition:border-color var(--dur-base); }
+.stMarkdown a:hover { border-color:var(--neon-cyan); text-shadow:var(--glow-cyan-xs); }
+.stMarkdown code { font-family:var(--font-mono) !important; background:rgba(0,217,255,0.06) !important; border:1px solid rgba(0,217,255,0.12) !important; border-radius:var(--radius-xs) !important; color:var(--neon-cyan) !important; padding:1px 6px !important; font-size:0.85em !important; }
+
+/* ──────────────────────────────────────────────────────────
+   TABLES
+   ────────────────────────────────────────────────────────── */
+table { border-collapse:collapse !important; width:100% !important; }
+thead th { font-family:var(--font-mono) !important; font-size:0.68rem !important; color:var(--neon-cyan) !important; letter-spacing:1.5px !important; text-transform:uppercase !important; border-bottom:1px solid rgba(0,217,255,0.25) !important; padding:6px 10px !important; background:rgba(0,217,255,0.04) !important; }
+tbody tr { border-bottom:1px solid rgba(255,255,255,0.03) !important; transition:background var(--dur-fast), transform var(--dur-fast) !important; }
+tbody tr:hover { background:rgba(0,217,255,0.03) !important; transform:translateX(2px); }
+tbody td { font-family:var(--font-primary) !important; font-size:0.78rem !important; color:var(--text-secondary) !important; padding:5px 10px !important; }
+
+/* ──────────────────────────────────────────────────────────
+   SPINNER
+   ────────────────────────────────────────────────────────── */
+div[data-testid="stSpinner"] > div {
+    border-color: rgba(0,217,255,0.2) rgba(0,217,255,0.2) var(--neon-cyan) rgba(0,217,255,0.2) !important;
+    box-shadow: 0 0 12px rgba(0,217,255,0.3) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   STAT PILLS (bottom bar)
+   ────────────────────────────────────────────────────────── */
+.stat-pill {
+    background: rgba(6,11,25,0.4);
+    border: 1px solid rgba(0,217,255,0.1);
+    border-radius: 10px;
+    padding: 5px 12px;
+    display: flex; align-items: center; gap: 8px;
+    white-space: nowrap;
+    transition: all var(--dur-base) var(--ease-out-expo);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    transform: perspective(200px) translateZ(0);
+}
+.stat-pill:hover {
+    border-color: rgba(0,217,255,0.25);
+    box-shadow: var(--glow-cyan-xs);
+    transform: perspective(200px) translateZ(4px) translateY(-1px);
+}
+
+/* ──────────────────────────────────────────────────────────
+   HUD MARQUEE
+   ────────────────────────────────────────────────────────── */
+.hud-marquee { overflow:hidden; white-space:nowrap; font-family:var(--font-mono); font-size:0.6rem; color:rgba(0,217,255,0.4); letter-spacing:1px; }
+.hud-marquee-inner { display:inline-block; animation:marquee 25s linear infinite; }
+@keyframes marquee { from{transform:translateX(100%);} to{transform:translateX(-100%);} }
+
+/* ──────────────────────────────────────────────────────────
+   HUD LOADING OVERLAY
+   ────────────────────────────────────────────────────────── */
+.hud-loading-overlay { position:fixed; inset:0; background:rgba(1,2,8,0.92); backdrop-filter:blur(8px); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:var(--z-popup); }
+.hud-loading-ring { width:64px; height:64px; border-radius:50%; border:2px solid rgba(0,217,255,0.15); border-top-color:var(--neon-cyan); animation:spin 1s linear infinite; box-shadow:0 0 20px rgba(0,217,255,0.3); }
+
+/* ──────────────────────────────────────────────────────────
+   CORNER BRACKETS
+   ────────────────────────────────────────────────────────── */
+.corner-bracket { position:absolute; width:14px; height:14px; border-color:var(--neon-cyan); border-style:solid; opacity:0.6; animation:corner-draw 0.5s var(--ease-out-expo) forwards; }
+.corner-bracket.tl { top:4px; left:4px; border-width:2px 0 0 2px; border-radius:2px 0 0 0; }
+.corner-bracket.tr { top:4px; right:4px; border-width:2px 2px 0 0; border-radius:0 2px 0 0; }
+.corner-bracket.bl { bottom:4px; left:4px; border-width:0 0 2px 2px; border-radius:0 0 0 2px; }
+.corner-bracket.br { bottom:4px; right:4px; border-width:0 2px 2px 0; border-radius:0 0 2px 0; }
+
+/* ──────────────────────────────────────────────────────────
+   JSON / CODE
+   ────────────────────────────────────────────────────────── */
+.stJson { background:rgba(2,5,15,0.7) !important; border:1px solid rgba(0,217,255,0.1) !important; border-radius:var(--radius-md) !important; font-family:var(--font-mono) !important; font-size:0.72rem !important; }

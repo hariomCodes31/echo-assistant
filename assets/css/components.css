@@ -1,708 +1,384 @@
-/* assets/css/components.css - Translucent Glass Panels and Neon Indicators */
+/* ============================================================
+   assets/css/components.css
+   ECHO X — All UI Components: Status Bar, Panels, AI Core,
+             Navigation, Monitor, Voice, Chat Input, etc.
+   ============================================================ */
 
-/* Target native vertical containers to apply floating glassmorphic projections */
-div[data-testid="stVerticalBlockBorderWrapper"] {
-    background: 
-        linear-gradient(rgba(255, 255, 255, 0.003) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.003) 1px, transparent 1px),
-        var(--bg-panel-hologram) !important;
-    background-size: 8px 8px !important; /* Tech grid pattern overlay */
-    backdrop-filter: blur(35px) !important;
-    -webkit-backdrop-filter: blur(35px) !important;
-    border: 1px solid rgba(0, 217, 255, 0.15) !important;
-    border-radius: var(--radius-xl) !important;
-    animation: 
-        float-panel 8s ease-in-out infinite,
-        border-glow-cycle 10s ease-in-out infinite !important;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    border-color: rgba(0, 217, 255, 0.4) !important;
-    box-shadow: 
-        0 20px 45px rgba(0, 217, 255, 0.2),
-        0 0 25px rgba(0, 217, 255, 0.15),
-        inset 0 0 25px rgba(0, 217, 255, 0.03) !important;
-    transform: translateY(-7px) !important;
-}
-
-/* Style buttons into custom glowing glass tiles */
-div.stButton > button {
-    background: rgba(255, 255, 255, 0.02) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(0, 217, 255, 0.15) !important;
-    border-radius: var(--radius-md) !important;
-    color: var(--text-secondary) !important;
-    font-weight: 500 !important;
-    transition: all 0.3s ease !important;
-}
-
-div.stButton > button:hover {
+/* ──────────────────────────────────────────────────────────
+   PANEL TITLE — HUD Section Headers
+   ────────────────────────────────────────────────────────── */
+.panel-title {
+    font-family: var(--font-display) !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
     color: var(--neon-cyan) !important;
-    border-color: var(--neon-cyan) !important;
-    background: rgba(0, 217, 255, 0.05) !important;
-    box-shadow: 
-        var(--glow-cyan),
-        inset 0 0 10px rgba(0, 217, 255, 0.05) !important;
+    letter-spacing: 2.5px !important;
+    text-transform: uppercase !important;
+    margin-bottom: 10px !important;
+    text-shadow: var(--glow-cyan-xs);
+    position: relative;
+    padding-left: 12px;
+}
+.panel-title::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 3px; height: 14px;
+    background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple));
+    border-radius: 2px;
+    box-shadow: var(--glow-cyan-xs);
 }
 
-/* Secondary Button (Clear panels, uploads) styling overrides */
-div.stButton > button[kind="secondary"] {
-    border-color: rgba(255, 77, 90, 0.25) !important;
-    color: var(--neon-red) !important;
+/* ──────────────────────────────────────────────────────────
+   MONITOR LABELS — Progress bar captions
+   ────────────────────────────────────────────────────────── */
+.monitor-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    margin-bottom: 3px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
 }
 
-div.stButton > button[kind="secondary"]:hover {
-    color: var(--text-primary) !important;
-    border-color: var(--neon-red) !important;
-    background: rgba(255, 77, 90, 0.1) !important;
-    box-shadow: 0 0 15px rgba(255, 77, 90, 0.3) !important;
+/* ──────────────────────────────────────────────────────────
+   STATUS BADGE CONTAINER (topbar)
+   ────────────────────────────────────────────────────────── */
+.status-badge-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
-/* Progress trackers with glowing neon tracks */
-div[data-testid="stProgress"] {
-    background: rgba(255, 255, 255, 0.02) !important;
-    border-radius: var(--radius-xs) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    padding: 2px !important;
+/* ── Status Widget ── */
+.status-widget {
+    position: relative;
+    background:
+        linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 100%),
+        rgba(5, 10, 25, 0.65);
+    backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(0, 217, 255, 0.13);
+    border-radius: var(--radius-lg);
+    padding: 10px 14px;
+    font-family: var(--font-mono);
+    text-align: center;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    transition: all var(--dur-base) var(--ease-out-expo);
+    overflow: hidden;
+    animation: badge-float 6s ease-in-out infinite;
+}
+.status-widget:nth-child(2) { animation-delay: 0.5s; }
+.status-widget:nth-child(3) { animation-delay: 1.0s; }
+.status-widget:nth-child(4) { animation-delay: 1.5s; }
+.status-widget:nth-child(5) { animation-delay: 2.0s; }
+.status-widget:nth-child(6) { animation-delay: 2.5s; }
+
+/* Inner top shimmer line */
+.status-widget::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 15%; right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    border-radius: var(--radius-full);
 }
 
-div[data-testid="stProgress"] > div > div > div {
-    background: linear-gradient(90deg, var(--neon-cyan) 0%, var(--neon-purple) 100%) !important;
-    box-shadow: var(--glow-cyan) !important;
-    border-radius: var(--radius-xs) !important;
+.status-widget:hover {
+    border-color: rgba(0, 217, 255, 0.35);
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.5),
+        0 0 25px rgba(0, 217, 255, 0.15),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    transform: translateY(-3px) scale(1.02);
 }
 
-/* Style file upload area to fit layout */
-[data-testid="stFileUploader"] {
-    background: rgba(255, 255, 255, 0.01) !important;
-    border: 1px dashed rgba(0, 217, 255, 0.2) !important;
-    border-radius: var(--radius-md) !important;
-    padding: 10px !important;
-    transition: all 0.3s ease !important;
+.status-widget p {
+    margin: 0; padding: 0;
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
 }
 
-[data-testid="stFileUploader"]:hover {
-    border-color: var(--neon-cyan) !important;
-    box-shadow: 0 0 10px rgba(0, 217, 255, 0.1) !important;
+.status-widget h4 {
+    margin: 4px 0 0 0;
+    font-size: 0.9rem;
+    color: var(--neon-cyan);
+    font-weight: 700;
+    font-family: var(--font-display);
+    text-shadow: var(--glow-cyan-xs);
+    letter-spacing: 0.5px;
 }
 
-/* --- Holographic Core Custom Styles --- */
+/* ── Pulsing status dot ── */
+.status-dot-active {
+    display: inline-block;
+    border-radius: 50%;
+    animation: status-pulse 2s ease-in-out infinite;
+}
+
+/* ──────────────────────────────────────────────────────────
+   AI CORE COMPONENT CLASSES
+   ────────────────────────────────────────────────────────── */
+
+/* --- Holographic Core Wrapper --- */
 .hologram-core-wrapper {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 240px;
-    margin: 15px 0;
+    height: 260px;
+    margin: 10px 0;
 }
 .hologram-svg {
-    width: 220px;
-    height: 220px;
+    width: 240px; height: 240px;
     position: absolute;
     z-index: 2;
+    filter: drop-shadow(0 0 20px rgba(0,217,255,0.4));
 }
-.outer-ring {
-    transform-origin: center;
-    animation: spin-clockwise 25s linear infinite;
-}
-.mid-ring {
-    transform-origin: center;
-    animation: spin-counter-clockwise 10s linear infinite;
-}
-.inner-ring {
-    transform-origin: center;
-    animation: spin-clockwise 6s linear infinite;
-}
-.core-sphere {
-    transform-origin: center;
-    animation: breathe-core 4s ease-in-out infinite;
-}
-.particle {
-    transform-origin: center;
-    animation: spin-clockwise 15s linear infinite;
-}
+.outer-ring  { transform-origin: center; animation: spin-clockwise 20s linear infinite; }
+.mid-ring    { transform-origin: center; animation: spin-counter-clockwise 10s linear infinite; }
+.inner-ring  { transform-origin: center; animation: spin-clockwise 5s linear infinite; }
+.core-sphere { transform-origin: center; animation: breathe-core 3s ease-in-out infinite; }
+.particle    { transform-origin: center; animation: spin-clockwise 12s linear infinite; }
 
-/* State specific speed overrides */
-.listening-core .outer-ring { animation-duration: 6s; }
-.listening-core .core-sphere { animation-duration: 1.2s; }
+.listening-core  .outer-ring  { animation-duration: 5s; }
+.listening-core  .core-sphere { animation-duration: 1s; }
+.processing-core .outer-ring  { animation-duration: 2s; animation-direction: reverse; }
+.processing-core .core-sphere { animation-duration: 0.5s; }
+.speaking-core   .core-sphere { animation: speaking-vibration 0.15s ease-in-out infinite; }
 
-.processing-core .outer-ring { animation-duration: 2s; animation-direction: reverse; }
-.processing-core .core-sphere { animation-duration: 0.6s; }
-
-.speaking-core .core-sphere { animation: speaking-vibration 0.2s ease-in-out infinite; }
-
-/* Holographic projection platform base */
+/* --- Holographic platform glow --- */
 .glow-platform {
     position: absolute;
     bottom: 5px;
-    width: 130px;
-    height: 10px;
+    width: 140px; height: 10px;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(0, 217, 255, 0.4) 0%, transparent 70%);
-    box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+    background: radial-gradient(ellipse at center, rgba(0,217,255,0.5) 0%, transparent 70%);
+    box-shadow: 0 0 20px rgba(0,217,255,0.4), 0 0 40px rgba(0,217,255,0.2);
     z-index: 1;
     animation: breathe-core 4s ease-in-out infinite;
 }
 
-/* Top bar status configurations */
-.status-badge-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-bottom: 12px;
+/* --- Echo Core Container (AI core page) --- */
+.echo-core {
+    position: relative;
+    width: 100%; height: 560px;
+    display: flex; justify-content: center; align-items: center;
+    overflow: hidden;
+    isolation: isolate;
 }
-.status-widget {
-    background: rgba(6, 11, 25, 0.35);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 217, 255, 0.12);
-    border-radius: 12px;
-    padding: 8px 12px;
-    font-family: var(--font-mono);
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-}
-.status-widget:hover {
-    border-color: rgba(0, 217, 255, 0.3);
-    box-shadow: 0 0 15px rgba(0, 217, 255, 0.15);
-}
-.status-widget p {
-    margin: 0;
-    padding: 0;
-    font-size: 0.65rem;
-    color: var(--text-muted);
-}
-.status-widget h4 {
-    margin: 3px 0 0 0;
-    font-size: 0.85rem;
-    color: var(--neon-cyan);
-    font-weight: 600;
+.core-background {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at center, rgba(0,217,255,0.1), transparent 65%);
 }
 
-/* Trademark signature at bottom-left */
+/* --- Stars --- */
+.core-stars { position: absolute; inset: 0; }
+.core-stars span {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 22px var(--neon-cyan);
+    animation: floatStars linear infinite;
+}
+.s1  { width:3px; height:3px; top:8%;  left:18%; animation-duration:14s; }
+.s2  { width:4px; height:4px; top:16%; left:73%; animation-duration:19s; background:var(--neon-purple); }
+.s3  { width:2px; height:2px; top:31%; left:9%;  animation-duration:12s; }
+.s4  { width:4px; height:4px; top:39%; left:82%; animation-duration:17s; }
+.s5  { width:3px; height:3px; top:51%; left:16%; animation-duration:11s; }
+.s6  { width:2px; height:2px; top:63%; left:72%; animation-duration:15s; background:var(--neon-pink); }
+.s7  { width:3px; height:3px; top:76%; left:28%; animation-duration:18s; }
+.s8  { width:4px; height:4px; top:83%; left:61%; animation-duration:14s; background:var(--neon-purple); }
+.s9  { width:2px; height:2px; top:21%; left:41%; animation-duration:21s; }
+.s10 { width:3px; height:3px; top:52%; left:52%; animation-duration:17s; }
+.s11 { width:2px; height:2px; top:71%; left:86%; animation-duration:16s; }
+.s12 { width:3px; height:3px; top:12%; left:58%; animation-duration:13s; background:var(--neon-cyan); }
+
+/* --- Vertical beam --- */
+.vertical-beam {
+    position: absolute;
+    width: 4px; height: 320px;
+    background: linear-gradient(transparent, rgba(0,217,255,0.95), transparent);
+    filter: blur(4px);
+    animation: beamPulse 2.5s infinite;
+}
+
+/* --- Projector platform --- */
+.projector-platform {
+    position: absolute;
+    width: 440px; height: 440px;
+    display: flex; justify-content: center; align-items: center;
+}
+.platform-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(0,217,255,0.14);
+    animation: spin-clockwise 40s linear infinite;
+}
+.ring1 { width:420px; height:420px; animation-duration: 50s; }
+.ring2 { width:350px; height:350px; animation-direction: reverse; animation-duration: 38s; }
+.ring3 { width:280px; height:280px; animation-duration: 28s; }
+.ring4 { width:200px; height:200px; animation-direction: reverse; animation-duration: 18s; }
+.ring5 { width:140px; height:140px; animation-duration: 12s; }
+
+/* --- Core area --- */
+.core-area {
+    position: relative;
+    width: 440px; height: 440px;
+    display: flex; justify-content: center; align-items: center;
+}
+.outer-circle {
+    position: absolute;
+    width: 370px; height: 370px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,217,255,0.22);
+    animation: spinClock 22s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(0,217,255,0.2));
+}
+.middle-circle {
+    position: absolute;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    border: 2px dashed rgba(123,97,255,0.4);
+    animation: spinAnti 15s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(123,97,255,0.25));
+}
+.inner-circle {
+    position: absolute;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3);
+    animation: spinClock 7s linear infinite;
+}
+.core-glow {
+    position: absolute;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #00d9ff, #2456ff 65%, transparent);
+    filter: blur(40px);
+    animation: breathe 3s ease-in-out infinite;
+}
+.core-center {
+    position: absolute;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    background: radial-gradient(circle, #ffffff, #00d9ff);
+    box-shadow: 0 0 30px #00d9ff, 0 0 70px #00d9ff, 0 0 130px rgba(0,217,255,0.5);
+}
+.core-x {
+    font-size: 46px; font-weight: 900; color: white;
+    font-family: var(--font-display);
+    text-shadow: 0 0 12px #00d9ff, 0 0 30px #00d9ff, 0 0 60px #00d9ff;
+}
+.pulse {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(0,217,255,0.45);
+}
+.pulse1 { width:130px; height:130px; animation: pulseRing 2s infinite; }
+.pulse2 { width:130px; height:130px; animation: pulseRing 2s infinite 0.9s; }
+
+/* Orbit rings */
+.orbit { position: absolute; border-radius: 50%; border: 1px solid rgba(0,217,255,0.12); }
+.orbit1 { width:390px; height:390px; animation: spinClock 28s linear infinite; }
+.orbit2 { width:330px; height:330px; animation: spinAnti  20s linear infinite; }
+.orbit3 { width:270px; height:270px; animation: spinClock 14s linear infinite; }
+.orbit4 { width:210px; height:210px; animation: spinAnti  10s linear infinite; }
+.orbit5 { width:160px; height:160px; animation: spinClock  7s linear infinite; }
+
+/* Satellite dots */
+.satellite {
+    position: absolute;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--neon-cyan);
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+}
+.sat1 { top: 8%;  left: 50%; animation: spinClock 14s linear infinite; }
+.sat2 { top: 50%; right: 4%; animation: spinAnti  10s linear infinite; }
+.sat3 { bottom: 8%; left: 38%; animation: spinClock 17s linear infinite; }
+.sat4 { top: 28%; left: 8%;  animation: spinAnti  12s linear infinite; }
+
+/* Energy grid */
+.energy-grid {
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(0,217,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,217,255,0.04) 1px, transparent 1px);
+    background-size: 22px 22px;
+    border-radius: 50%;
+    opacity: 0.25;
+}
+
+/* ──────────────────────────────────────────────────────────
+   BRANDING FOOTER
+   ────────────────────────────────────────────────────────── */
 .branding-footer {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
     font-family: var(--font-mono);
-    letter-spacing: 1px;
-    margin-top: 15px;
-    opacity: 0.5;
-    transition: all 0.3s ease;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 14px;
+    opacity: 0.45;
     cursor: pointer;
+    transition: all var(--dur-base) var(--ease-out-expo);
 }
 .branding-footer:hover {
     opacity: 1;
     color: var(--neon-cyan);
-    text-shadow: var(--glow-cyan);
-}
-/* ===========================================================
-   QUANTUM AI CORE
-=========================================================== */
-
-.echo-core{
-    position:relative;
-    width:100%;
-    height:560px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    isolation:isolate;
+    text-shadow: var(--glow-cyan-xs);
+    letter-spacing: 2px;
 }
 
-/* ---------------- Background ---------------- */
-
-.core-background{
-
-    position:absolute;
-    inset:0;
-
-    background:
-        radial-gradient(circle at center,
-        rgba(0,217,255,.08),
-        transparent 70%);
-
-}
-
-/* ---------------- Stars ---------------- */
-
-.core-stars{
-
-    position:absolute;
-    inset:0;
-
-}
-
-.core-stars span{
-
-    position:absolute;
-
-    width:4px;
-    height:4px;
-
-    border-radius:50%;
-
-    background:#00d9ff;
-
-    box-shadow:
-        0 0 10px #00d9ff,
-        0 0 20px #00d9ff;
-
-    animation:
-        floatStars linear infinite;
-
-}
-
-.s1{top:8%;left:18%;animation-duration:15s;}
-.s2{top:16%;left:73%;animation-duration:20s;}
-.s3{top:31%;left:9%;animation-duration:14s;}
-.s4{top:39%;left:82%;animation-duration:18s;}
-.s5{top:51%;left:16%;animation-duration:12s;}
-.s6{top:63%;left:72%;animation-duration:16s;}
-.s7{top:76%;left:28%;animation-duration:19s;}
-.s8{top:83%;left:61%;animation-duration:15s;}
-.s9{top:21%;left:41%;animation-duration:22s;}
-.s10{top:52%;left:52%;animation-duration:18s;}
-.s11{top:71%;left:86%;animation-duration:17s;}
-.s12{top:12%;left:58%;animation-duration:14s;}
-
-/* ---------------- Beam ---------------- */
-
-.vertical-beam{
-
-    position:absolute;
-
-    width:6px;
-    height:330px;
-
-    background:
-        linear-gradient(
-            transparent,
-            rgba(0,217,255,.9),
-            transparent
-        );
-
-    filter:blur(6px);
-
-    animation:
-        beamPulse 2.8s infinite;
-
-}
-
-/* ---------------- Platform ---------------- */
-
-.projector-platform{
-
-    position:absolute;
-
-    width:420px;
-    height:420px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-}
-
-.platform-ring{
-
-    position:absolute;
-
-    border-radius:50%;
-
-    border:1px solid rgba(0,217,255,.18);
-
-}
-
-.ring1{width:410px;height:410px;}
-.ring2{width:340px;height:340px;}
-.ring3{width:270px;height:270px;}
-.ring4{width:190px;height:190px;}
-.ring5{width:130px;height:130px;}
-
-/* ---------------- Core ---------------- */
-
-.core-area{
-
-    position:relative;
-
-    width:420px;
-    height:420px;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-}
-
-/* ---------------- Rings ---------------- */
-
-.outer-circle{
-
-    position:absolute;
-
-    width:360px;
-    height:360px;
-
-    border-radius:50%;
-
-    border:2px solid rgba(0,217,255,.25);
-
-    animation:
-        spinClock 24s linear infinite;
-
-}
-
-.middle-circle{
-
-    position:absolute;
-
-    width:270px;
-    height:270px;
-
-    border-radius:50%;
-
-    border:2px dashed rgba(123,97,255,.45);
-
-    animation:
-        spinAnti 18s linear infinite;
-
-}
-
-.inner-circle{
-
-    position:absolute;
-
-    width:170px;
-    height:170px;
-
-    border-radius:50%;
-
-    border:1px solid rgba(255,255,255,.35);
-
-    animation:
-        spinClock 8s linear infinite;
-
-}
-
-/* ---------------- Glow ---------------- */
-
-.core-glow{
-
-    position:absolute;
-
-    width:130px;
-    height:130px;
-
-    border-radius:50%;
-
-    background:
-        radial-gradient(circle,
-            #00d9ff,
-            #2456ff 70%,
-            transparent);
-
-    filter:blur(35px);
-
-    animation:
-        breathe 3s ease-in-out infinite;
-
-}
-
-/* ---------------- Center ---------------- */
-
-.core-center{
-
-    position:absolute;
-
-    width:105px;
-    height:105px;
-
-    border-radius:50%;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    background:
-        radial-gradient(circle,
-        #ffffff,
-        #00d9ff);
-
-    box-shadow:
-        0 0 25px #00d9ff,
-        0 0 60px #00d9ff,
-        0 0 120px rgba(0,217,255,.45);
-
-}
-
-/* ---------------- X ---------------- */
-
-.core-x{
-
-    font-size:44px;
-    font-weight:900;
-
-    color:white;
-
-    text-shadow:
-        0 0 10px #00d9ff,
-        0 0 25px #00d9ff,
-        0 0 50px #00d9ff;
-
-}
-
-/* ---------------- Pulse ---------------- */
-
-.pulse{
-
-    position:absolute;
-
-    border-radius:50%;
-
-    border:2px solid rgba(0,217,255,.4);
-
-}
-
-.pulse1{
-
-    width:120px;
-    height:120px;
-
-    animation:
-        pulseRing 2s infinite;
-
-}
-
-.pulse2{
-
-    width:120px;
-    height:120px;
-
-    animation:
-        pulseRing 2s infinite .8s;
-
-}
-
-/* ---------------- Animations ---------------- */
-
-@keyframes spinClock{
-
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-
-}
-
-@keyframes spinAnti{
-
-    from{
-        transform:rotate(360deg);
-    }
-
-    to{
-        transform:rotate(0deg);
-    }
-
-}
-
-@keyframes breathe{
-
-    0%,100%{
-
-        transform:scale(.95);
-
-        opacity:.7;
-
-    }
-
-    50%{
-
-        transform:scale(1.08);
-
-        opacity:1;
-
-    }
-
-}
-
-@keyframes beamPulse{
-
-    0%,100%{
-
-        opacity:.35;
-
-    }
-
-    50%{
-
-        opacity:1;
-
-    }
-
-}
-
-@keyframes pulseRing{
-
-    0%{
-
-        transform:scale(1);
-
-        opacity:1;
-
-    }
-
-    100%{
-
-        transform:scale(2);
-
-        opacity:0;
-
-    }
-
-}
-
-@keyframes floatStars{
-
-    from{
-
-        transform:translateY(0);
-
-    }
-
-    to{
-
-        transform:translateY(-40px);
-
-    }
-
-}
-
-/* =========================================
-   MISSING COMPONENT CLASSES
-   ========================================= */
-
-/* Panel title used across right-column panels */
-.panel-title {
-    font-family: var(--font-primary, 'Outfit', sans-serif);
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-primary, #F8FAFC);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 6px !important;
-}
-
-/* Active menu highlight for sidebar navigation */
+/* ──────────────────────────────────────────────────────────
+   NAVIGATION ACTIVE HIGHLIGHT
+   ────────────────────────────────────────────────────────── */
 .active-menu .stButton > button {
-    background: rgba(0, 217, 255, 0.1) !important;
-    border-color: #00D9FF !important;
-    color: #00D9FF !important;
-    box-shadow: 0 0 15px rgba(0, 217, 255, 0.2), inset 0 0 10px rgba(0, 217, 255, 0.05) !important;
+    background: rgba(0, 217, 255, 0.08) !important;
+    border-color: var(--neon-cyan) !important;
+    color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan-xs), inset 0 0 12px rgba(0,217,255,0.06) !important;
 }
 
-/* Monitor label for progress bars */
-.monitor-label {
-    font-family: var(--font-mono, 'Share Tech Mono', monospace);
-    font-size: 0.75rem;
-    color: var(--text-secondary, #94A3B8);
-    margin-bottom: 4px;
-}
-
-/* Left menu sidebar container */
-.left-menu-container {
-    min-height: auto !important;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Voice tray widget */
-.voice-tray-widget {
-    width: 100%;
-}
-
-/* Sidebar file uploader compact style */
-div[data-testid="stFileUploader"] label {
-    font-size: 0.7rem !important;
-}
-
-/* Chat input styling for dark theme */
+/* ──────────────────────────────────────────────────────────
+   CHAT INPUT
+   ────────────────────────────────────────────────────────── */
 div[data-testid="stChatInput"] {
-    background: rgba(6, 11, 25, 0.5) !important;
-    border: 1px solid rgba(0, 217, 255, 0.15) !important;
-    border-radius: var(--radius-md, 12px) !important;
+    background: rgba(5, 10, 28, 0.7) !important;
+    border: 1px solid rgba(0, 217, 255, 0.18) !important;
+    border-radius: var(--radius-xl) !important;
+    backdrop-filter: blur(24px) !important;
+    box-shadow: var(--glow-cyan-xs), 0 4px 20px rgba(0,0,0,0.4) !important;
+    transition: all var(--dur-base) var(--ease-out-expo) !important;
 }
-
+div[data-testid="stChatInput"]:focus-within {
+    border-color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan), 0 4px 20px rgba(0,0,0,0.4) !important;
+}
 div[data-testid="stChatInput"] textarea {
-    color: var(--text-primary, #F8FAFC) !important;
-    font-family: var(--font-primary, 'Outfit', sans-serif) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary) !important;
+    caret-color: var(--neon-cyan) !important;
 }
 
-/* Scrollable container styling */
-div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stVerticalBlock"] {
-    scrollbar-width: thin;
-}
+/* ──────────────────────────────────────────────────────────
+   MISC LAYOUT HELPERS
+   ────────────────────────────────────────────────────────── */
+.left-menu-container { min-height: auto !important; display: flex; flex-direction: column; }
+.voice-tray-widget   { width: 100%; }
+div[data-testid="stFileUploader"] label { font-size: 0.68rem !important; }
+div[data-testid="stVerticalBlockBorderWrapper"] div[data-testid="stVerticalBlock"] { scrollbar-width: thin; }
 
-/* Orbit ring animations for AI core */
-.orbit {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid rgba(0, 217, 255, 0.15);
-}
-
-.orbit1 { width: 380px; height: 380px; animation: spinClock 30s linear infinite; }
-.orbit2 { width: 320px; height: 320px; animation: spinAnti 22s linear infinite; }
-.orbit3 { width: 260px; height: 260px; animation: spinClock 16s linear infinite; }
-.orbit4 { width: 200px; height: 200px; animation: spinAnti 12s linear infinite; }
-.orbit5 { width: 150px; height: 150px; animation: spinClock 9s linear infinite; }
-
-/* Satellite dots on orbits */
-.satellite {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #00D9FF;
-    box-shadow: 0 0 8px #00D9FF, 0 0 16px #00D9FF;
-}
-
-.sat1 { top: 10%; left: 50%; animation: spinClock 15s linear infinite; }
-.sat2 { top: 50%; right: 5%; animation: spinAnti 12s linear infinite; }
-.sat3 { bottom: 10%; left: 40%; animation: spinClock 18s linear infinite; }
-.sat4 { top: 30%; left: 10%; animation: spinAnti 14s linear infinite; }
-
-/* Energy grid overlay */
-.energy-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
-    background-size: 20px 20px;
-    border-radius: 50%;
-    opacity: 0.3;
-}
-
-.mic-wave-glow {
-    margin-top: -5px !important;
-    margin-bottom: 5px !important;
-}
-
-.stHtmlComponent, .stHtmlComponent > * {
-    height: 320px !important;
-}
-
-.stChatInput {
-    margin-top: -15px !important;
-}
-
-.element-container {
-    margin-top: -3px !important;
-    margin-bottom: -3px !important;
-}
+.mic-wave-glow  { margin-top: -5px !important; margin-bottom: 5px !important; }
+.stHtmlComponent, .stHtmlComponent > * { height: 320px !important; }
+.stChatInput { margin-top: -15px !important; }
+.element-container { margin-top: -3px !important; margin-bottom: -3px !important; }
