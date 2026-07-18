@@ -20,7 +20,9 @@ def render_sidebar():
             "System Control": 8,
             "Sports Hub": 9,
             "Task Scheduler": 10,
-            "Control Settings": 11
+            "Notes": 11,
+            "Calculator": 12,
+            "Control Settings": 13
         }
         if active_view in view_indices:
             idx = view_indices[active_view]
@@ -87,6 +89,14 @@ def render_sidebar():
 
         if st.button("⏰ Task Scheduler", use_container_width=True, key="side_scheduler_btn"):
             st.session_state.active_view = "Task Scheduler"
+            st.rerun()
+
+        if st.button("📒 Notes", use_container_width=True, key="side_notes_btn"):
+            st.session_state.active_view = "Notes"
+            st.rerun()
+
+        if st.button("🧮 Calculator", use_container_width=True, key="side_calc_btn"):
+            st.session_state.active_view = "Calculator"
             st.rerun()
 
         if st.button("🔧 OS Settings", use_container_width=True, key="side_settings_btn"):

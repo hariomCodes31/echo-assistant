@@ -108,3 +108,83 @@ def load_settings_page():
             st.markdown('<p class="panel-title">Raw Memory Telemetry</p>', unsafe_allow_html=True)
             with st.expander("Expand Core Memory Logs"):
                 st.json(st.session_state.get("messages", []))
+
+    # ── Quick Command Reference (new collapsible section) ────────────────────
+    st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
+    with st.container(border=True):
+        st.markdown(
+            '<p class="panel-title">📖 Quick Command Reference</p>',
+            unsafe_allow_html=True,
+        )
+
+        with st.expander("Show all available commands & shortcuts", expanded=False):
+            col_ref1, col_ref2, col_ref3 = st.columns(3)
+
+            with col_ref1:
+                st.markdown(
+                    """
+                    **🌐 Browser & Web**
+                    | Command | Action |
+                    |---------|--------|
+                    | `open google` | Launch Google |
+                    | `open youtube` | Launch YouTube |
+                    | `open github` | Launch GitHub |
+                    | `open <site>` | Open any website |
+                    | `search <query>` | Google search |
+
+                    **🌤️ Weather**
+                    | Command | Action |
+                    |---------|--------|
+                    | `weather in <city>` | Get weather |
+                    """
+                )
+
+            with col_ref2:
+                st.markdown(
+                    """
+                    **🖥️ Desktop Actions**
+                    | Command | Action |
+                    |---------|--------|
+                    | `take screenshot` | Capture screen |
+                    | `open vs code` | Launch VS Code |
+                    | `open calculator` | Open Calculator |
+                    | `open notepad` | Open Notepad |
+                    | `open explorer` | File Explorer |
+
+                    **🎵 Music**
+                    | Command | Action |
+                    |---------|--------|
+                    | `play <song>` | Play music |
+                    | `pause music` | Pause playback |
+                    """
+                )
+
+            with col_ref3:
+                st.markdown(
+                    """
+                    **⚙️ System**
+                    | Command | Action |
+                    |---------|--------|
+                    | `shutdown` | Shutdown PC |
+                    | `restart` | Restart PC |
+                    | `lock screen` | Lock computer |
+                    | `volume up/down` | Adjust volume |
+                    | `mute` | Mute audio |
+
+                    **🧩 Navigation (Quick Tools)**
+                    | Button | Destination |
+                    |--------|-------------|
+                    | 📒 Notes | Notes page |
+                    | 🧮 Calc | Calculator page |
+                    | 📸 Screen | Take screenshot |
+                    """
+                )
+
+            st.markdown(
+                '<div style="font-size:0.68rem; color:#475569; font-family:\'Share Tech Mono\',monospace;'
+                'margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);">'
+                '💡 Tip: Chain commands with "and" or "then" — e.g. <span style="color:#00D9FF;">'
+                '"open chrome and play lofi"</span></div>',
+                unsafe_allow_html=True,
+            )
+

@@ -28,6 +28,8 @@ from pages.system_control import load_system_control_page
 from pages.sports import load_sports_page
 from pages.settings import load_settings_page
 from pages.task_scheduler import load_task_scheduler_page
+from pages.notes import load_notes_page
+from pages.calculator import load_calculator_page
 
 # Set page config to wide layout
 st.set_page_config(
@@ -184,14 +186,19 @@ with col_mid:
         load_settings_page()
     elif st.session_state.active_view == "Task Scheduler":
         load_task_scheduler_page()
+    elif st.session_state.active_view == "Notes":
+        load_notes_page()
+    elif st.session_state.active_view == "Calculator":
+        load_calculator_page()
         
     # 3. Bottom Chat Entry Command input field
     st.markdown('<div style="height: 8px;"></div>', unsafe_allow_html=True)
     prompt = st.chat_input("Type a command or ask anything...")
     
     if prompt:
-        # Append query to state
-        user_message = {"role": "user", "content": prompt}
+        # Append query to state (with timestamp)
+        ts_now = datetime.now().strftime("%d %b %Y, %I:%M:%S %p")
+        user_message = {"role": "user", "content": prompt, "timestamp": ts_now}
         if st.session_state.get("uploaded_image") is not None:
             mime = st.session_state.get("uploaded_image_mime", "image/png")
             b64_data = base64.b64encode(st.session_state.uploaded_image).decode()
@@ -208,7 +215,7 @@ with col_mid:
                 if answer is None:
                     answer = ask_ai(prompt)
                     
-        st.session_state.messages.append({"role": "assistant", "content": answer})
+        st.session_state.messages.append({"role": "assistant", "content": answer, "timestamp": ts_now})
         save_memory(st.session_state.messages)
         
         # Link vision reports console updates

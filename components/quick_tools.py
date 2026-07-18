@@ -4,7 +4,7 @@ from modules.memory import save_memory
 
 def render_quick_tools():
     """
-    Renders the 2x3 Quick Action Tools Button Panel Grid.
+    Renders the 2x4 Quick Action Tools Button Panel Grid.
     Fully linked to the operational router framework.
     """
     with st.container(border=True):
@@ -25,6 +25,10 @@ def render_quick_tools():
                 st.session_state.messages.append({"role": "assistant", "content": res})
                 save_memory(st.session_state.messages)
                 st.rerun()
+
+            if st.button("📒\nNotes", use_container_width=True, key="tool_notes"):
+                st.session_state.active_view = "Notes"
+                st.rerun()
                 
         with col_t2:
             if st.button("🌐\nChrome", use_container_width=True, key="tool_chrome"):
@@ -40,6 +44,10 @@ def render_quick_tools():
                 st.session_state.messages.append({"role": "assistant", "content": res})
                 save_memory(st.session_state.messages)
                 st.rerun()
+
+            if st.button("🧮\nCalc", use_container_width=True, key="tool_calc"):
+                st.session_state.active_view = "Calculator"
+                st.rerun()
                 
         with col_t3:
             if st.button("▶️\nYouTube", use_container_width=True, key="tool_youtube"):
@@ -53,3 +61,7 @@ def render_quick_tools():
                 st.session_state.messages = []
                 save_memory([])
                 st.rerun()
+
+            # Spacer to keep grid balanced
+            st.markdown('<div style="height:4px;"></div>', unsafe_allow_html=True)
+

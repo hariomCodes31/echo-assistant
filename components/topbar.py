@@ -1,6 +1,26 @@
 import streamlit as st
 import textwrap
+import time
 from datetime import datetime
+
+
+def _get_net_speed_str():
+    """Return a compact 'up/down KB/s' string using psutil."""
+    try:
+        import psutil
+        before = psutil.net_io_counters()
+        time.sleep(0.25)
+        after = psutil.net_io_counters()
+        sent_kb = max(0.0, (after.bytes_sent - before.bytes_sent) / 0.25 / 1024)
+        recv_kb = max(0.0, (after.bytes_recv - before.bytes_recv) / 0.25 / 1024)
+
+        def _fmt(kb):
+            return f"{kb / 1024:.1f}M" if kb >= 1024 else f"{kb:.0f}K"
+
+        return f"↑{_fmt(sent_kb)} ↓{_fmt(recv_kb)}"
+    except Exception:
+        return "↑ -- ↓ --"
+
 
 def render_topbar(cpu=23, ram=48, groq_status="READY"):
     """
@@ -9,9 +29,10 @@ def render_topbar(cpu=23, ram=48, groq_status="READY"):
     """
     current_time = datetime.now().strftime("%I:%M %p")
     current_date = datetime.now().strftime("%d %b %Y").upper()
-    
+    net_str = _get_net_speed_str()
+
     topbar_html = textwrap.dedent(f"""
-        <div class="status-badge-container" style="grid-template-columns: repeat(5, 1fr);">
+        <div class="status-badge-container" style="grid-template-columns: repeat(6, 1fr);">
             <div class="status-widget">
                 <p>LOCAL TIME</p>
                 <h4>{current_time}</h4>
@@ -41,7 +62,13 @@ def render_topbar(cpu=23, ram=48, groq_status="READY"):
                 </h4>
                 <div style="font-size:0.6rem; color:#64748B; margin-top:2px;">Ultra-Fast Inference</div>
             </div>
+            <div class="status-widget">
+                <p>NETWORK I/O</p>
+                <h4 style="color:#00D9FF; font-size:0.85rem; letter-spacing:0.5px;">{net_str}</h4>
+                <div style="font-size:0.6rem; color:#64748B; margin-top:2px;">Live Transfer Speed</div>
+            </div>
         </div>
     """).strip()
-    
+
     st.markdown(topbar_html, unsafe_allow_html=True)
+

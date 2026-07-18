@@ -1,7 +1,24 @@
 import streamlit as st
 import textwrap
 import psutil
+import time
 from datetime import datetime
+
+def _live_network_speed():
+    """Measure current total network throughput and return a display string."""
+    try:
+        before = psutil.net_io_counters()
+        time.sleep(0.2)
+        after = psutil.net_io_counters()
+        total_kb = (
+            (after.bytes_sent - before.bytes_sent) +
+            (after.bytes_recv - before.bytes_recv)
+        ) / 0.2 / 1024
+        if total_kb >= 1024:
+            return f"{total_kb / 1024:.1f} MB/s"
+        return f"{total_kb:.0f} KB/s"
+    except Exception:
+        return "-- KB/s"
 
 def render_bottom_bar():
     """
@@ -41,6 +58,9 @@ def render_bottom_bar():
     except Exception:
         cpu_temp = "42°C"
 
+    # Live network speed
+    net_speed = _live_network_speed()
+
     stat_style = "background:rgba(6, 11, 25, 0.35); border:1px solid rgba(0, 217, 255, 0.1); border-radius:10px; padding:6px 12px; display:flex; align-items:center; gap:8px; white-space:nowrap;"
 
     bottom_bar_html = textwrap.dedent(f"""
@@ -50,7 +70,7 @@ def render_bottom_bar():
             </div>
             <div style="{stat_style}">
                 <span style="color:#00D9FF;">🌐</span>
-                NETWORK: <span style="color:#00D9FF; font-weight:600;">1.2 Gbps</span>
+                NETWORK: <span style="color:#00D9FF; font-weight:600;">{net_speed}</span>
             </div>
             <div style="{stat_style}">
                 <span style="color:#7B61FF;">⏱️</span>
