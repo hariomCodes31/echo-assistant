@@ -27,6 +27,7 @@ from pages.weather_alerts import load_weather_alerts_page
 from pages.system_control import load_system_control_page
 from pages.sports import load_sports_page
 from pages.settings import load_settings_page
+from pages.task_scheduler import load_task_scheduler_page
 
 # Set page config to wide layout
 st.set_page_config(
@@ -181,6 +182,8 @@ with col_mid:
         load_sports_page()
     elif st.session_state.active_view == "Control Settings":
         load_settings_page()
+    elif st.session_state.active_view == "Task Scheduler":
+        load_task_scheduler_page()
         
     # 3. Bottom Chat Entry Command input field
     st.markdown('<div style="height: 8px;"></div>', unsafe_allow_html=True)

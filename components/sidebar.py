@@ -19,7 +19,8 @@ def render_sidebar():
             "Weather Alerts": 7,
             "System Control": 8,
             "Sports Hub": 9,
-            "Control Settings": 10
+            "Task Scheduler": 10,
+            "Control Settings": 11
         }
         if active_view in view_indices:
             idx = view_indices[active_view]
@@ -82,6 +83,10 @@ def render_sidebar():
 
         if st.button("🏆 Sports Hub", use_container_width=True, key="side_sports_btn"):
             st.session_state.active_view = "Sports Hub"
+            st.rerun()
+
+        if st.button("⏰ Task Scheduler", use_container_width=True, key="side_scheduler_btn"):
+            st.session_state.active_view = "Task Scheduler"
             st.rerun()
 
         if st.button("🔧 OS Settings", use_container_width=True, key="side_settings_btn"):

@@ -23,6 +23,9 @@ from typing import Callable
 # Registry of pending timers: label → Timer
 _pending: dict[str, threading.Timer] = {}
 
+# Registry of completed/fired timers log: list of dicts
+_fired_log: list[dict] = []
+
 
 def _seconds_until(hour: int, minute: int) -> float:
     """Return seconds until the next occurrence of HH:MM (today or tomorrow)."""
@@ -98,6 +101,7 @@ def schedule_command(
 
     def _fire():
         _pending.pop(label, None)
+        outcome = "Success"
         # Execute through the router pipeline
         try:
             from modules.router import execute_multiple, execute
@@ -112,6 +116,20 @@ def schedule_command(
                     result = ask_ai(command)
         except Exception as e:
             result = f"❌ Scheduled command failed: {e}"
+            outcome = "Failed"
+
+        # Log completion
+        try:
+            _fired_log.append({
+                "time": datetime.now().strftime("%I:%M:%S %p"),
+                "command": command,
+                "status": outcome,
+                "detail": result
+            })
+            if len(_fired_log) > 10:
+                _fired_log.pop(0)
+        except Exception:
+            pass
 
         if on_fire:
             try:
