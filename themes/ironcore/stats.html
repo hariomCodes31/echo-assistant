@@ -1,0 +1,55 @@
+<div class="iron-core-hud" style="position:relative; width:100%; font-family:var(--font-primary);">
+    <!-- Chamfered border decoration in pure CSS inside stats card -->
+    <div style="font-family:var(--font-mono); font-size:0.65rem; color:#EF4444; border-bottom:1px solid rgba(239, 68, 68, 0.25); padding-bottom:6px; margin-bottom:12px; letter-spacing:1px;">
+        STARK IND. // SYSTEM DIAGNOSTIC L3
+    </div>
+
+    <p class="panel-title" style="margin-bottom:15px; letter-spacing:2px; font-weight:700; color:#F59E0B;">ARC POWER CORE</p>
+
+    <!-- NEURAL LINK -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:6px; height:6px; background:#ef4444; border-radius:0; display:inline-block; transform:rotate(45deg);"></span>
+            <span style="font-size:0.7rem; color:#94A3B8;">NEURAL COUPLING</span>
+        </div>
+        <div style="font-size:0.75rem; font-weight:700; color:#ef4444; text-shadow:0 0 6px rgba(239,68,68,0.4);">ACTIVE // SYNC</div>
+    </div>
+
+    <!-- ARC TEMPERATURE -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:6px; height:6px; background:#ef4444; border-radius:0; display:inline-block; transform:rotate(45deg);"></span>
+            <span style="font-size:0.7rem; color:#94A3B8;">CORE TEMP</span>
+        </div>
+        <div style="font-size:0.75rem; font-weight:700; color:#F59E0B; text-shadow:0 0 6px rgba(245,158,11,0.4);">1048.2 K</div>
+    </div>
+
+    <!-- CORE INTEGRITY -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:6px; height:6px; background:#ef4444; border-radius:0; display:inline-block; transform:rotate(45deg);"></span>
+            <span style="font-size:0.7rem; color:#94A3B8;">THRUST STABILITY</span>
+        </div>
+        <div style="font-size:0.75rem; font-weight:700; color:#10B981; text-shadow:0 0 6px rgba(16,185,129,0.4);">100% NOMINAL</div>
+    </div>
+
+    <!-- Sparkline graphic in hot red/orange -->
+    <div style="height:25px; width:100%; margin-top:10px; margin-bottom:15px; background:rgba(0,0,0,0.3); border:1px solid rgba(239,68,68,0.2); overflow:hidden;">
+        <svg width="100%" height="25" viewBox="0 0 140 25" style="overflow:visible;" preserveAspectRatio="none">
+            <path d="M 0,5 L 15,18 L 30,8 L 50,22 L 70,5 L 90,17 L 110,8 L 140,20"
+                  fill="none" stroke="#ef4444" stroke-width="1.5"
+                  style="filter: drop-shadow(0 0 4px #ef4444);"/>
+        </svg>
+    </div>
+
+    <!-- Stabilizer bar -->
+    <div>
+        <div style="font-size:0.65rem; display:flex; justify-content:space-between; margin-bottom:5px; color:#94A3B8;">
+            <span>ARC ENERGY DISCHARGE</span>
+            <span style="color:#F59E0B; font-weight:600;">98.4%</span>
+        </div>
+        <div style="width:100%; height:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(239,68,68,0.3); overflow:hidden; position:relative; border-radius:2px;">
+            <div style="width:98.4%; height:100%; background:linear-gradient(90deg, #ef4444, #f59e0b);"></div>
+        </div>
+    </div>
+</div>

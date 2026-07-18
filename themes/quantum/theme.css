@@ -1,0 +1,45 @@
+/* ============================================================
+   themes/quantum/theme.css
+   Quantum HUD Operating Mode Theme Styles
+   ============================================================ */
+
+:root {
+    --bg-void: #010208;
+    --bg-deep: #020410;
+    --bg-panel-hologram: rgba(5, 10, 28, 0.55);
+    --bg-panel-glass: rgba(8, 15, 35, 0.45);
+    --bg-card: rgba(10, 18, 40, 0.6);
+
+    /* Accents */
+    --neon-cyan: #00D9FF;
+    --glow-cyan: 0 0 15px rgba(0, 217, 255, 0.35);
+    --glow-cyan-xs: 0 0 6px rgba(0, 217, 255, 0.25);
+    --glow-cyan-md: 0 0 30px rgba(0, 217, 255, 0.4);
+
+    --neon-purple: #7B61FF;
+    --glow-purple: 0 0 15px rgba(123, 97, 255, 0.35);
+
+    /* Fonts */
+    --font-display: 'Orbitron', sans-serif;
+    --font-primary: 'Space Grotesk', 'Outfit', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* Glass Panels */
+    --glass-bg: rgba(8, 15, 35, 0.55);
+    --glass-border: rgba(0, 217, 255, 0.12);
+    --glass-blur: blur(32px) saturate(180%);
+}
+
+/* Custom interactive button override for Quantum HUD */
+div.stButton > button {
+    border-radius: var(--radius-sm) !important;
+    font-family: var(--font-mono) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+/* Base custom font configuration */
+body, .stApp {
+    font-family: var(--font-primary);
+}

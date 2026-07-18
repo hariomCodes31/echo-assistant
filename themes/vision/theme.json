@@ -1,0 +1,8 @@
+{
+  "name": "Vision Glass",
+  "description": "Apple Vision Pro inspired translucent floating windows with minimal navigation and soft white glow",
+  "accent_color": "#FFFFFF",
+  "accent_glow": "rgba(255, 255, 255, 0.35)",
+  "primary_font": "Outfit",
+  "preview_emoji": "🕶️"
+}

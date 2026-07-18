@@ -1,0 +1,8 @@
+{
+  "name": "Neural Nexus",
+  "description": "Living AI network with purple/blue nodes and floating energy packets connected to the AI Core",
+  "accent_color": "#8B5CF6",
+  "accent_glow": "rgba(139, 92, 246, 0.4)",
+  "primary_font": "Space Grotesk",
+  "preview_emoji": "🧠"
+}

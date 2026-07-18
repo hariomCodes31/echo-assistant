@@ -65,10 +65,17 @@ def load_all_stylesheets():
         except FileNotFoundError:
             continue
 
-    st.markdown(
-        f"<style>{css_content}</style>",
-        unsafe_allow_html=True
-    )
+    # Load operating mode specific CSS overrides
+    from modules.theme_engine import ThemeEngine
+    active_mode = st.session_state.get("os_mode", "quantum")
+    theme_css = ThemeEngine.get_theme_css(active_mode)
+    css_content += "\n/* Operating Mode Overrides */\n" + theme_css
+
+    clean_css = "\n".join([line.strip() for line in css_content.split("\n") if line.strip()])
+    st.html(f"<style>{clean_css}</style>")
+
+
+
 
 # Load CSS once (called at module level, NOT inside the function)
 load_all_stylesheets()
@@ -76,12 +83,15 @@ load_all_stylesheets()
 # Initialize session parameters before injecting styles
 if "os_theme" not in st.session_state:
     st.session_state.os_theme = "Cyber Cyan"
+if "os_mode" not in st.session_state:
+    st.session_state.os_mode = "quantum"
 if "llm_model" not in st.session_state:
     st.session_state.llm_model = "llama-3.3-70b-versatile"
 if "llm_temp" not in st.session_state:
     st.session_state.llm_temp = 0.7
 if "llm_max_tokens" not in st.session_state:
     st.session_state.llm_max_tokens = 1024
+
 
 def inject_theme_css():
     theme = st.session_state.get("os_theme", "Cyber Cyan")
@@ -102,135 +112,37 @@ def inject_theme_css():
         }}
     </style>
     """
-    st.markdown(custom_style, unsafe_allow_html=True)
+    clean_style = "\n".join([line.strip() for line in custom_style.split("\n") if line.strip()])
+    st.html(clean_style)
+
+
 
 # Inject dynamic theme variables
 inject_theme_css()
 
-# ── HUD Interactions + Neural Canvas Background ──
-# stc.html() required — st.markdown() strips <script> in Streamlit 1.x
-stc.html("""
-<!DOCTYPE html><html><head>
-<style>body{margin:0;padding:0;background:transparent;overflow:hidden;}</style>
-</head><body>
-<script>
+# ── Dynamic Theme Assets & HUD Interactions ──
+from modules.theme_engine import ThemeEngine
+active_mode = st.session_state.get("os_mode", "quantum")
+
+# 1. Inject theme background elements HTML
+bg_html = ThemeEngine.get_theme_background_html(active_mode)
+if bg_html is None:
+    bg_html = ThemeEngine.get_theme_background_html("quantum")
+if bg_html:
+    clean_bg = "\n".join([line.strip() for line in bg_html.split("\n") if line.strip()])
+    st.html(clean_bg)
+
+
+
+# 2. Inject core UI interactions (card tilt, magnetic, ripple) + theme custom JS
+theme_js = ThemeEngine.get_theme_js(active_mode)
+
+base_interactions_js = """
 (function() {
   var doc = window.parent.document;
   var win = window.parent;
 
-  // ── Neural network canvas background ──────────────────────────────────────
-  if (!doc.getElementById('neural-canvas')) {
-    var cvs = doc.createElement('canvas');
-    cvs.id = 'neural-canvas';
-    Object.assign(cvs.style, {
-      position:'fixed', top:'0', left:'0', width:'100%', height:'100%',
-      pointerEvents:'none', zIndex:'-1', opacity:'0.55'
-    });
-    doc.body.insertBefore(cvs, doc.body.firstChild);
-
-    var ctx = cvs.getContext('2d');
-    var W, H, nodes = [], NODES=80, LINK=160;
-    var mx=0, my=0;
-
-    function resize(){ W=cvs.width=win.innerWidth; H=cvs.height=win.innerHeight; }
-    resize();
-    win.addEventListener('resize', resize);
-    doc.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; });
-
-    function mkNode(){
-      return {
-        x:Math.random()*W, y:Math.random()*H,
-        z:Math.random()*400,
-        vx:(Math.random()-0.5)*0.25,
-        vy:(Math.random()-0.5)*0.25,
-        vz:(Math.random()-0.5)*0.5,
-        hue: Math.random()<0.6 ? 193 : (Math.random()<0.5 ? 260 : 330)
-      };
-    }
-    for(var i=0;i<NODES;i++) nodes.push(mkNode());
-
-    var frame=0;
-    function drawNeural(){
-      frame++;
-      ctx.clearRect(0,0,W,H);
-
-      // Cursor influence
-      var inf = 80;
-      for(var i=0;i<nodes.length;i++){
-        var n=nodes[i];
-        var dx=n.x-mx, dy=n.y-my;
-        var d=Math.sqrt(dx*dx+dy*dy);
-        if(d<inf){ n.vx+=dx/d*0.04; n.vy+=dy/d*0.04; }
-        n.x+=n.vx; n.y+=n.vy; n.z+=n.vz;
-        n.vx*=0.98; n.vy*=0.98;
-        if(n.x<0||n.x>W) n.vx*=-1;
-        if(n.y<0||n.y>H) n.vy*=-1;
-        if(n.z<0||n.z>400) n.vz*=-1;
-      }
-
-      // Draw links
-      for(var i=0;i<nodes.length;i++){
-        for(var j=i+1;j<nodes.length;j++){
-          var dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
-          var dist=Math.sqrt(dx*dx+dy*dy);
-          if(dist<LINK){
-            var alpha=(1-dist/LINK)*0.12*(nodes[i].z/400+0.2);
-            ctx.beginPath();
-            ctx.moveTo(nodes[i].x,nodes[i].y);
-            ctx.lineTo(nodes[j].x,nodes[j].y);
-            ctx.strokeStyle='rgba(0,217,255,'+alpha+')';
-            ctx.lineWidth=0.6;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Draw nodes
-      for(var i=0;i<nodes.length;i++){
-        var n=nodes[i];
-        var depth=(n.z/400);
-        var r=1+depth*2.5;
-        var alpha=0.3+depth*0.6;
-        ctx.beginPath();
-        ctx.arc(n.x,n.y,r,0,Math.PI*2);
-        ctx.fillStyle='hsla('+n.hue+',100%,65%,'+alpha+')';
-        ctx.fill();
-        if(depth>0.5){
-          var g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,r*5);
-          g.addColorStop(0,'hsla('+n.hue+',100%,65%,0.25)');
-          g.addColorStop(1,'transparent');
-          ctx.beginPath(); ctx.arc(n.x,n.y,r*5,0,Math.PI*2);
-          ctx.fillStyle=g; ctx.fill();
-        }
-      }
-      win.requestAnimationFrame(drawNeural);
-    }
-    drawNeural();
-  }
-
-  // ── Cursor glow ───────────────────────────────────────────────────────────
-  if (!doc.getElementById('echo-cursor-glow')) {
-    var g = doc.createElement('div');
-    g.id = 'echo-cursor-glow';
-    Object.assign(g.style, {
-      position:'fixed', width:'280px', height:'280px', borderRadius:'50%',
-      background:'radial-gradient(circle,rgba(0,217,255,0.055) 0%,rgba(123,97,255,0.025) 45%,transparent 70%)',
-      pointerEvents:'none', zIndex:'9998', transform:'translate(-50%,-50%)',
-      mixBlendMode:'screen', left:'-500px', top:'-500px'
-    });
-    doc.body.appendChild(g);
-  }
-  var glow = doc.getElementById('echo-cursor-glow');
-  var cx=win.innerWidth/2, cy=win.innerHeight/2, tx=cx, ty=cy;
-  function lerp(a,b,t){ return a+(b-a)*t; }
-  doc.addEventListener('mousemove', function(e){ tx=e.clientX; ty=e.clientY; });
-  (function loop(){
-    cx=lerp(cx,tx,0.1); cy=lerp(cy,ty,0.1);
-    if(glow){ glow.style.left=cx+'px'; glow.style.top=cy+'px'; }
-    win.requestAnimationFrame(loop);
-  })();
-
-  // ── 3D card tilt ±6° ─────────────────────────────────────────────────────────
+  // ── 3D card tilt ±5° ─────────────────────────────────────────────────────────
   function applyTilt(el) {
     if(el._tiltBound) return; el._tiltBound=true;
     var M=5;
@@ -294,33 +206,110 @@ stc.html("""
   bindAll();
   new MutationObserver(bindAll).observe(doc.body,{childList:true,subtree:true});
 })();
+"""
+
+transition_js = f"""
+(function() {{
+  var doc = window.parent.document;
+  var win = window.parent;
+
+  // Create overlay if not present
+  if (!doc.getElementById('reboot-overlay')) {{
+    var overlay = doc.createElement('div');
+    overlay.id = 'reboot-overlay';
+    overlay.innerHTML = `
+      <div class="reboot-container">
+        <div class="reboot-scanner"></div>
+        <div class="reboot-title">
+          <span>ECHO CORE OS REBOOT</span>
+          <span class="reboot-percentage">0%</span>
+        </div>
+        <div class="reboot-progress-bar">
+          <div class="reboot-progress-fill"></div>
+        </div>
+        <div class="reboot-logs"></div>
+      </div>
+    `;
+    doc.body.appendChild(overlay);
+  }}
+
+  var overlay = doc.getElementById('reboot-overlay');
+  var activeTheme = '{active_mode}';
+  var prevTheme = doc.body.getAttribute('data-theme-id');
+
+  if (prevTheme && prevTheme !== activeTheme) {{
+    // Trigger transition overlay
+    overlay.classList.add('active');
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'all';
+
+    var logBox = overlay.querySelector('.reboot-logs');
+    var progressFill = overlay.querySelector('.reboot-progress-fill');
+    var percentText = overlay.querySelector('.reboot-percentage');
+
+    logBox.innerHTML = '';
+    progressFill.style.width = '0%';
+    percentText.textContent = '0%';
+
+    var logs = [
+      {{ text: 'SYS INTERRUPT: SWITCH MODE SIGNAL RECEIVED', time: 50 }},
+      {{ text: 'SHUTTING DOWN EXISTING COGNITIVE THREADS...', time: 200 }},
+      {{ text: 'DE-COUPLING ENERGY ORB REACTOR...', time: 400 }},
+      {{ text: 'LOADING HARDWARE PROFILE: ' + activeTheme.toUpperCase(), time: 650 }},
+      {{ text: 'INJECTING DESIGN SYSTEM TOKENS...', time: 900 }},
+      {{ text: 'SPAWNING PARTICLE ENVIRONMENT LAYER...', time: 1100 }},
+      {{ text: 'SYNAPSE RECONNECT COMPLETE // ECHO BOOT SUCCESS', time: 1350 }}
+    ];
+
+    logs.forEach(function(log) {{
+      setTimeout(function() {{
+        var entry = doc.createElement('div');
+        entry.className = 'reboot-log-entry success';
+        entry.innerHTML = '<span>[OK]</span> <span>' + log.text + '</span>';
+        logBox.appendChild(entry);
+        logBox.scrollTop = logBox.scrollHeight;
+      }}, log.time);
+    }});
+
+    var progress = 0;
+    var interval = setInterval(function() {{
+      progress += 5;
+      if (progress > 100) {{
+        progress = 100;
+        clearInterval(interval);
+        setTimeout(function() {{
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+          setTimeout(function() {{
+            overlay.classList.remove('active');
+          }}, 400);
+          doc.body.setAttribute('data-theme-id', activeTheme);
+        }}, 300);
+      }}
+      progressFill.style.width = progress + '%';
+      percentText.textContent = progress + '%';
+    }}, 75);
+  }} else {{
+    doc.body.setAttribute('data-theme-id', activeTheme);
+  }}
+}})();
+"""
+
+
+combined_js = f"""
+<!DOCTYPE html><html><head>
+<style>body{{margin:0;padding:0;background:transparent;overflow:hidden;}}</style>
+</head><body>
+<script>
+{base_interactions_js}
+{transition_js}
+{theme_js}
 </script>
 </body></html>
-""", height=0, scrolling=False)
+"""
+stc.html(combined_js, height=0, scrolling=False)
 
-# Inject background visual elements (core background, particles, scan lines)
-st.markdown("""
-    <div class="core-background"></div>
 
-    <!-- Floating Particles -->
-    <div class="particles">
-        <span class="particle p1"></span>
-        <span class="particle p2"></span>
-        <span class="particle p3"></span>
-        <span class="particle p4"></span>
-        <span class="particle p5"></span>
-        <span class="particle p6"></span>
-        <span class="particle p7"></span>
-        <span class="particle p8"></span>
-        <span class="particle p9"></span>
-        <span class="particle p10"></span>
-        <span class="particle p11"></span>
-        <span class="particle p12"></span>
-    </div>
-
-    <!-- Scan Lines -->
-    <div class="scan-lines"></div>
-""", unsafe_allow_html=True)
 
 # Initialize session parameters
 if "active_view" not in st.session_state:
@@ -344,11 +333,28 @@ if uploaded_file is not None:
     st.session_state.uploaded_image_size = len(uploaded_file.getvalue())
 
 # ----------------- MAIN OS WORKSPACE GRID ----------------- #
-col_left, col_mid, col_right = st.columns([2.2, 5.3, 2.5])
+# Layout configurations:
+# Quantum: Dashboard [2.2, 5.3, 2.5]
+# Vision: Floating dock navigation / windows [2.0, 5.5, 2.5]
+# Matrix: Terminal wireframe console [1.5, 7.0, 1.5]
+# Cyberpunk: Skewed asymmetrical layout [3.0, 4.5, 2.5]
+# Minimal: Command palette only [0.01, 9.98, 0.01] (sidebar and monitor columns hidden)
+
+layout_widths = {
+    "minimal": [0.01, 9.98, 0.01],
+    "cyberpunk": [3.0, 4.5, 2.5],
+    "matrix": [1.5, 7.0, 1.5],
+    "vision": [2.0, 5.5, 2.5],
+}
+
+widths = layout_widths.get(active_mode, [2.2, 5.3, 2.5])
+col_left, col_mid, col_right = st.columns(widths)
 
 # --- LEFT COLUMN: Navigation & Sources ---
-with col_left:
-    render_sidebar()
+if widths[0] > 0.1:
+    with col_left:
+        render_sidebar()
+
 
 # --- MIDDLE COLUMN: Clock, Main Workspace, Inputs & Console Reports ---
 with col_mid:
@@ -429,13 +435,14 @@ with col_mid:
     render_bottom_bar()
 
 # --- RIGHT COLUMN: Telemetry gauges, Shortcuts & Voice Assistant ---
-with col_right:
-    # 1. CPU/RAM meters
-    render_system_monitor()
-    
-    # 2. Quick command button grids
-    if st.session_state.active_view == "Chats":
-        render_quick_tools()
+if widths[2] > 0.1:
+    with col_right:
+        # 1. CPU/RAM meters
+        render_system_monitor()
         
-    # 3. Active mic trigger waveform panel
-    render_voice_panel()
+        # 2. Quick command button grids
+        if st.session_state.active_view == "Chats":
+            render_quick_tools()
+            
+        # 3. Active mic trigger waveform panel
+        render_voice_panel()

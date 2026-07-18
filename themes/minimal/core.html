@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: transparent;
+        margin: 0; padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+    }
+    .core-shell {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Minimal Dot */
+    .minimal-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+        animation: dot-breathe 4s ease-in-out infinite;
+    }
+
+    .core-idle      .minimal-dot { animation-duration: 4s; }
+    .core-listening .minimal-dot { animation-duration: 1.5s; width: 16px; height: 16px; }
+    .core-processing .minimal-dot { animation: dot-process 0.5s infinite ease-in-out; }
+    .core-speaking  .minimal-dot { animation: dot-speak 0.25s infinite ease-in-out; }
+
+    @keyframes dot-breathe {
+        0%, 100% { transform: scale(1.0); opacity: 0.5; }
+        50% { transform: scale(1.3); opacity: 1.0; }
+    }
+    @keyframes dot-process {
+        0%, 100% { transform: scale(1.0); opacity: 0.4; }
+        50% { transform: scale(1.4); opacity: 1.0; }
+    }
+    @keyframes dot-speak {
+        0%, 100% { transform: scale(1.0); }
+        50% { transform: scale(1.5); }
+    }
+</style>
+</head>
+<body>
+<div class="core-shell {state}">
+    <div class="minimal-dot"></div>
+</div>
+</body>
+</html>

@@ -16,5 +16,21 @@
         "role": "assistant",
         "content": "Hello. It's nice to meet you. Is there something I can help you with or would you like to chat?",
         "timestamp": "19 Jul 2026, 12:07:56 AM"
+    },
+    {
+        "role": "user",
+        "content": "\ud83c\udfa4 Open GitHub."
+    },
+    {
+        "role": "assistant",
+        "content": "\ud83d\udc19 Opened GitHub"
+    },
+    {
+        "role": "user",
+        "content": "open youtube"
+    },
+    {
+        "role": "assistant",
+        "content": "\u25b6\ufe0f Opened YouTube"
     }
 ]

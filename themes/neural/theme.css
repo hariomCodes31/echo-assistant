@@ -1,0 +1,75 @@
+/* ============================================================
+   themes/neural/theme.css
+   Neural Nexus Operating Mode Theme Styles
+   ============================================================ */
+
+:root {
+    --bg-void: #080313;
+    --bg-deep: #100624;
+    --bg-panel-hologram: rgba(139, 92, 246, 0.06);
+    --bg-panel-glass: rgba(139, 92, 246, 0.04);
+    --bg-card: rgba(16, 6, 36, 0.7);
+
+    /* Accents - Purple / Violet and Neon Blue */
+    --neon-cyan: #8B5CF6;
+    --glow-cyan: 0 0 15px rgba(139, 92, 246, 0.4);
+    --glow-cyan-xs: 0 0 6px rgba(139, 92, 246, 0.25);
+    --glow-cyan-md: 0 0 30px rgba(139, 92, 246, 0.45);
+
+    --neon-purple: #3B82F6; /* Neon Blue */
+    --glow-purple: 0 0 15px rgba(59, 130, 246, 0.4);
+
+    /* Fonts */
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-primary: 'Space Grotesk', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* Organic fluid glassmorphism */
+    --glass-bg: rgba(16, 6, 36, 0.65);
+    --glass-border: rgba(139, 92, 246, 0.15);
+    --glass-blur: blur(30px) saturate(160%);
+}
+
+body, .stApp {
+    font-family: var(--font-primary) !important;
+    background-color: var(--bg-void) !important;
+}
+
+/* Organic curved visual borders */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 20px !important;
+    border: 1px solid rgba(139, 92, 246, 0.18) !important;
+    background: rgba(16, 6, 36, 0.65) !important;
+    backdrop-filter: blur(30px) saturate(160%) !important;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.4), 
+        inset 0 1px 1px rgba(255, 255, 255, 0.05) !important;
+}
+
+div.stButton > button {
+    border-radius: 12px !important;
+    border: 1px solid var(--neon-cyan) !important;
+    background: rgba(139, 92, 246, 0.04) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary) !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.3s ease !important;
+}
+
+div.stButton > button:hover {
+    background: rgba(139, 92, 246, 0.12) !important;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.35) !important;
+}
+
+.status-widget {
+    border-radius: 12px !important;
+    background: rgba(16, 6, 36, 0.4) !important;
+    border: 1px solid rgba(139, 92, 246, 0.1) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple)) !important;
+    border-radius: var(--radius-full);
+}

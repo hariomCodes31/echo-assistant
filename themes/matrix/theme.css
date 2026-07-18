@@ -1,0 +1,86 @@
+/* ============================================================
+   themes/matrix/theme.css
+   Matrix Console Operating Mode Theme Styles
+   ============================================================ */
+
+:root {
+    --bg-void: #000000;
+    --bg-deep: #000000;
+    --bg-panel-hologram: rgba(0, 255, 51, 0.04);
+    --bg-panel-glass: rgba(0, 0, 0, 0.95);
+    --bg-card: rgba(0, 0, 0, 0.9);
+
+    /* Accents - Classic Matrix Terminal Green */
+    --neon-cyan: #00FF33;
+    --glow-cyan: 0 0 12px rgba(0, 255, 51, 0.45);
+    --glow-cyan-xs: 0 0 5px rgba(0, 255, 51, 0.3);
+    --glow-cyan-md: 0 0 25px rgba(0, 255, 51, 0.5);
+
+    --neon-purple: #008811;
+    --glow-purple: 0 0 10px rgba(0, 136, 17, 0.35);
+
+    /* Fonts - Sharp Retro Terminal Monospace */
+    --font-display: 'Share Tech Mono', monospace;
+    --font-primary: 'Share Tech Mono', monospace;
+    --font-body: 'Share Tech Mono', monospace;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* Flat wireframe style panels with no blur */
+    --glass-bg: #000000;
+    --glass-border: #00FF33;
+    --glass-blur: none;
+}
+
+body, .stApp {
+    font-family: var(--font-primary) !important;
+    background-color: var(--bg-void) !important;
+}
+
+/* Sharp wireframe card container overrides */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 0px !important;
+    border: 1px solid #00FF33 !important;
+    background: #000000 !important;
+    box-shadow: 0 0 15px rgba(0, 255, 51, 0.15) !important;
+}
+
+/* Monospace terminal style flat buttons */
+div.stButton > button {
+    border-radius: 0px !important;
+    border: 1px solid #00FF33 !important;
+    background: #000000 !important;
+    color: #00FF33 !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    transition: all 0.2s ease !important;
+}
+
+div.stButton > button:hover {
+    background: rgba(0, 255, 51, 0.12) !important;
+    box-shadow: 0 0 12px rgba(0, 255, 51, 0.4) !important;
+}
+
+.status-widget {
+    border-radius: 0 !important;
+    background: #000000 !important;
+    border: 1px solid rgba(0, 255, 51, 0.4) !important;
+}
+
+/* Retro CRT scanline effect on top of application */
+.stApp::before {
+    content: " " !important;
+    display: block !important;
+    position: fixed !important;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)) !important;
+    z-index: 9999 !important;
+    background-size: 100% 3px, 6px 100% !important;
+    pointer-events: none !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00FF33 !important;
+    border-radius: 0;
+}

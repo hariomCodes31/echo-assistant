@@ -1,0 +1,92 @@
+/* ============================================================
+   themes/space/theme.css
+   Space Command Operating Mode Theme Styles (NASA inspired)
+   ============================================================ */
+
+:root {
+    --bg-void: #020308;
+    --bg-deep: #050814;
+    --bg-panel-hologram: rgba(37, 99, 235, 0.05);
+    --bg-panel-glass: rgba(5, 10, 25, 0.85);
+    --bg-card: rgba(6, 12, 32, 0.9);
+
+    /* Accents - NASA Navy Blue & Satellite Cyan */
+    --neon-cyan: #3B82F6; /* Tech Blue */
+    --glow-cyan: 0 0 15px rgba(59, 130, 246, 0.35);
+    --glow-cyan-xs: 0 0 6px rgba(59, 130, 246, 0.2);
+    --glow-cyan-md: 0 0 30px rgba(59, 130, 246, 0.4);
+
+    --neon-purple: #10B981; /* Green nominal indicator */
+    --glow-purple: 0 0 12px rgba(16, 185, 129, 0.35);
+
+    /* Typography */
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-primary: 'Space Grotesk', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* Technical glassmorphism */
+    --glass-bg: rgba(6, 12, 32, 0.85);
+    --glass-border: rgba(59, 130, 246, 0.2);
+    --glass-blur: blur(25px);
+}
+
+body, .stApp {
+    font-family: var(--font-primary) !important;
+    background-color: var(--bg-void) !important;
+}
+
+/* Thin clean tech frames */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 4px !important;
+    border: 1px solid rgba(59, 130, 246, 0.25) !important;
+    background: rgba(6, 12, 32, 0.9) !important;
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.5), 
+        inset 0 0 8px rgba(59, 130, 246, 0.05) !important;
+    position: relative;
+}
+
+/* Add custom frame headers representing satellite scopes */
+div[data-testid="stVerticalBlockBorderWrapper"]::after {
+    content: "SECURE COMM FEED" !important;
+    position: absolute !important;
+    top: -8px !important;
+    left: 15px !important;
+    background: #020308 !important;
+    padding: 0 6px !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.58rem !important;
+    color: var(--neon-cyan) !important;
+    letter-spacing: 1px !important;
+}
+
+/* Flat tech command buttons */
+div.stButton > button {
+    border-radius: 4px !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    background: rgba(59, 130, 246, 0.05) !important;
+    color: #FFFFFF !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    transition: all 0.2s ease !important;
+}
+
+div.stButton > button:hover {
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-color: var(--neon-cyan) !important;
+    box-shadow: var(--glow-cyan-xs) !important;
+}
+
+.status-widget {
+    border-radius: 2px !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(59, 130, 246, 0.15) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--neon-cyan) !important;
+    border-radius: 4px;
+}

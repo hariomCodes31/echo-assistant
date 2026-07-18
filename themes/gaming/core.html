@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: transparent;
+        margin: 0; padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+    }
+    .core-shell {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Outer fan bracket */
+    .fan-bracket {
+        position: absolute;
+        width: 220px; height: 220px;
+        border: 4px solid #1f2937;
+        border-radius: 50%;
+        box-shadow: 0 0 25px rgba(0, 255, 0, 0.25);
+    }
+    
+    /* Spinning fan blades */
+    .fan-blades {
+        position: absolute;
+        width: 190px; height: 190px;
+        animation: spin-fan 2s linear infinite;
+    }
+    .blade {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 24px; height: 80px;
+        background: linear-gradient(180deg, #374151, #111827);
+        border-radius: 4px 16px 4px 16px;
+        margin-left: -12px; margin-top: -80px;
+        transform-origin: bottom center;
+    }
+    .blade-1 { transform: rotate(0deg); }
+    .blade-2 { transform: rotate(72deg); }
+    .blade-3 { transform: rotate(144deg); }
+    .blade-4 { transform: rotate(216deg); }
+    .blade-5 { transform: rotate(288deg); }
+
+    /* RGB glowing outer ring */
+    .rgb-glow-ring {
+        position: absolute;
+        width: 200px; height: 200px;
+        border: 2px solid transparent;
+        border-radius: 50%;
+        animation: rgb-cycle-border 4s linear infinite;
+    }
+    
+    /* Center Badge */
+    .fan-center {
+        position: absolute;
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: #111827;
+        border: 2px solid #00ff00;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+    }
+    
+    .fps-text {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.8rem;
+        color: #ffffff;
+        font-weight: 700;
+        text-shadow: 0 0 5px #00ff00;
+    }
+
+    .core-idle      .fan-blades { animation-duration: 2s; }
+    .core-listening .fan-blades { animation-duration: 0.8s; }
+    .core-processing .fan-blades { animation: spin-fan 0.15s linear infinite; }
+    .core-speaking  .fan-blades { animation: spin-fan 0.4s linear infinite; }
+
+    @keyframes spin-fan {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes rgb-cycle-border {
+        0% { border-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
+        25% { border-color: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+        50% { border-color: #ec4899; box-shadow: 0 0 15px #ec4899; }
+        75% { border-color: #f59e0b; box-shadow: 0 0 15px #f59e0b; }
+        100% { border-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
+    }
+</style>
+</head>
+<body>
+<div class="core-shell {state}">
+    <div class="fan-bracket"></div>
+    <div class="rgb-glow-ring"></div>
+    <div class="fan-blades">
+        <div class="blade blade-1"></div>
+        <div class="blade blade-2"></div>
+        <div class="blade blade-3"></div>
+        <div class="blade blade-4"></div>
+        <div class="blade blade-5"></div>
+    </div>
+    <div class="fan-center">
+        <div class="fps-text">RGB</div>
+    </div>
+</div>
+</body>
+</html>

@@ -300,3 +300,95 @@ div[data-testid="stSpinner"] > div {
    JSON / CODE
    ────────────────────────────────────────────────────────── */
 .stJson { background:rgba(2,5,15,0.7) !important; border:1px solid rgba(0,217,255,0.1) !important; border-radius:var(--radius-md) !important; font-family:var(--font-mono) !important; font-size:0.72rem !important; }
+
+/* ============================================================
+   REBOOT OVERLAY (Operating Mode Switching Transition)
+   ============================================================ */
+#reboot-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: #010206;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Share Tech Mono', monospace;
+    color: #00D9FF;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease-in-out;
+}
+#reboot-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+.reboot-container {
+    width: min(500px, 90vw);
+    text-align: left;
+    padding: 24px;
+    border: 1px dashed rgba(0, 217, 255, 0.25);
+    background: rgba(0, 10, 20, 0.65);
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0, 217, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+.reboot-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+    display: flex;
+    justify-content: space-between;
+}
+.reboot-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 217, 255, 0.15);
+}
+.reboot-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00D9FF, #7B61FF);
+    box-shadow: 0 0 8px #00D9FF;
+    transition: width 0.08s ease;
+}
+.reboot-logs {
+    height: 150px;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #94A3B8;
+}
+.reboot-log-entry {
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.reboot-log-entry.success {
+    color: #10B981;
+}
+.reboot-log-entry.working {
+    color: #00D9FF;
+}
+.reboot-scanner {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: rgba(0, 217, 255, 0.5);
+    box-shadow: 0 0 12px #00D9FF;
+    animation: rebootScan 2s infinite linear;
+}
+@keyframes rebootScan {
+    0% { top: 0; }
+    100% { top: 100%; }
+}
+

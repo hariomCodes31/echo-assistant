@@ -76,7 +76,10 @@ def render_voice_panel():
             </style>
         """).strip()
 
-        st.markdown(voice_hud, unsafe_allow_html=True)
+        clean_voice = "\n".join([line.strip() for line in voice_hud.split("\n") if line.strip()])
+        st.html(clean_voice)
+
+
 
         # Alt PTT execution
         ptt_disabled = mic_state in ("Listening", "Processing", "Speaking")

@@ -1,0 +1,89 @@
+/* ============================================================
+   themes/cyberpunk/theme.css
+   Cyberpunk Nexus Operating Mode Theme Styles
+   ============================================================ */
+
+:root {
+    --bg-void: #06020c;
+    --bg-deep: #0f0518;
+    --bg-panel-hologram: rgba(255, 0, 119, 0.08);
+    --bg-panel-glass: rgba(0, 217, 255, 0.06);
+    --bg-card: rgba(15, 5, 24, 0.85);
+
+    /* Accents - Shocking Pink/Magenta and Cyber Cyan */
+    --neon-cyan: #FF0077; /* Shocking Pink */
+    --glow-cyan: 0 0 20px rgba(255, 0, 119, 0.45);
+    --glow-cyan-xs: 0 0 8px rgba(255, 0, 119, 0.3);
+    --glow-cyan-md: 0 0 40px rgba(255, 0, 119, 0.5);
+
+    --neon-purple: #00FFCC; /* Cyber Mint/Cyan */
+    --glow-purple: 0 0 15px rgba(0, 255, 204, 0.45);
+
+    /* Fonts */
+    --font-display: 'Orbitron', sans-serif;
+    --font-primary: 'Space Grotesk', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* Cyberpunk hard neon border panels */
+    --glass-bg: rgba(15, 5, 24, 0.8);
+    --glass-border: rgba(255, 0, 119, 0.35);
+    --glass-blur: blur(15px);
+}
+
+body, .stApp {
+    font-family: var(--font-primary) !important;
+    background-color: var(--bg-void) !important;
+}
+
+/* Asymmetric borders and glitch styling for Cyberpunk panel envelopes */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 0px !important;
+    border: 2px solid var(--neon-cyan) !important;
+    border-right: 4px solid var(--neon-purple) !important;
+    border-bottom: 4px solid var(--neon-cyan) !important;
+    background: rgba(15, 5, 24, 0.85) !important;
+    box-shadow: 
+        0 15px 45px rgba(0,0,0,0.8), 
+        inset 0 0 15px rgba(255, 0, 119, 0.15) !important;
+    transform: skew(-1deg, 0deg) !important; /* Cyberpunk skewed look! */
+}
+
+/* Glitch hover buttons */
+div.stButton > button {
+    border-radius: 0px !important;
+    border: 2px solid var(--neon-purple) !important;
+    background: rgba(0, 255, 204, 0.05) !important;
+    color: var(--neon-purple) !important;
+    font-family: var(--font-display) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    transition: all 0.2s ease !important;
+}
+
+div.stButton > button:hover {
+    background: var(--neon-cyan) !important;
+    border-color: var(--neon-cyan) !important;
+    color: #000000 !important;
+    box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan) !important;
+    animation: glitch-button 0.3s steps(2) infinite;
+}
+
+/* Keyframes for glitching buttons */
+@keyframes glitch-button {
+    0% { transform: skew(3deg); }
+    50% { transform: skew(-3deg); }
+    100% { transform: skew(0deg); }
+}
+
+.status-widget {
+    border-radius: 0 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(255, 0, 119, 0.25) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple)) !important;
+    border-radius: 0;
+}

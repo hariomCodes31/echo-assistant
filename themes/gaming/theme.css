@@ -1,0 +1,83 @@
+/* ============================================================
+   themes/gaming/theme.css
+   Gaming Mode Operating Mode Theme Styles
+   ============================================================ */
+
+:root {
+    --bg-void: #05070a;
+    --bg-deep: #0b0e14;
+    --bg-panel-hologram: rgba(0, 255, 0, 0.05);
+    --bg-panel-glass: rgba(11, 14, 20, 0.9);
+    --bg-card: rgba(15, 20, 30, 0.95);
+
+    /* Accents - Razer Green / Neon Gaming green and blue RGB */
+    --neon-cyan: #00FF00;
+    --glow-cyan: 0 0 15px rgba(0, 255, 0, 0.4);
+    --glow-cyan-xs: 0 0 6px rgba(0, 255, 0, 0.25);
+    --glow-cyan-md: 0 0 30px rgba(0, 255, 0, 0.5);
+
+    --neon-purple: #3B82F6; /* RGB Blue */
+    --glow-purple: 0 0 12px rgba(59, 130, 246, 0.4);
+
+    /* Typography */
+    --font-display: 'Orbitron', sans-serif;
+    --font-primary: 'Orbitron', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* Gaming panels */
+    --glass-bg: rgba(11, 14, 20, 0.9);
+    --glass-border: rgba(0, 255, 0, 0.2);
+    --glass-blur: blur(10px);
+}
+
+body, .stApp {
+    font-family: var(--font-body) !important;
+    background-color: var(--bg-void) !important;
+}
+
+/* Sharp gaming borders with custom glowing frame */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 6px !important;
+    border: 2px solid #1F2937 !important;
+    background: rgba(11, 14, 20, 0.9) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Dynamic RGB glow on hover */
+div[data-testid="stVerticalBlockBorderWrapper"]:hover {
+    border-color: #00FF00 !important;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.25) !important;
+    transition: all 0.3s ease !important;
+}
+
+div.stButton > button {
+    border-radius: 4px !important;
+    border: 1px solid #3B82F6 !important;
+    background: rgba(59, 130, 246, 0.05) !important;
+    color: #FFFFFF !important;
+    font-family: var(--font-display) !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    transition: all 0.2s ease !important;
+}
+
+div.stButton > button:hover {
+    background: #00FF00 !important;
+    border-color: #00FF00 !important;
+    color: #000000 !important;
+    box-shadow: 0 0 15px #00FF00 !important;
+}
+
+.status-widget {
+    border-radius: 4px !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(0, 255, 0, 0.15) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00FF00 !important;
+    border-radius: 4px;
+}

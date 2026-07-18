@@ -1,0 +1,8 @@
+{
+  "name": "Space Command",
+  "description": "NASA inspired deep space control room with slow moving starfields and radar sweeps",
+  "accent_color": "#2563EB",
+  "accent_glow": "rgba(37, 99, 235, 0.35)",
+  "primary_font": "Space Grotesk",
+  "preview_emoji": "🚀"
+}

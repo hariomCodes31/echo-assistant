@@ -69,6 +69,33 @@ def load_settings_page():
                 st.toast(f"🎨 Theme accent changed to {selected_theme}")
                 st.rerun()
 
+        with st.container(border=True):
+            st.markdown('<p class="panel-title">🌐 Operating Modes HUD</p>', unsafe_allow_html=True)
+            
+            from modules.theme_engine import ThemeEngine
+            available_themes = ThemeEngine.get_available_themes()
+            active_mode = st.session_state.get("os_mode", "quantum")
+            
+            for t in available_themes:
+                is_active = (active_mode == t["id"])
+                
+                # Horizontal split card
+                sub_col_left, sub_col_right = st.columns([7, 3])
+                with sub_col_left:
+                    active_symbol = "✓ " if is_active else ""
+                    st.markdown(f"**{active_symbol}{t['name']}** {t['preview_emoji']}")
+                    st.markdown(f"<span style='font-size:0.75rem; color:var(--text-secondary);'>{t['description']}</span>", unsafe_allow_html=True)
+                with sub_col_right:
+                    if is_active:
+                        st.button("Active", key=f"active_{t['id']}", disabled=True, use_container_width=True)
+                    else:
+                        if st.button("Apply", key=f"apply_{t['id']}", use_container_width=True):
+                            st.session_state.os_mode = t["id"]
+                            st.toast(f"🔌 Switching OS Mode to {t['name']}...")
+                            st.rerun()
+                st.markdown('<div style="height:6px; border-bottom:1px solid rgba(255,255,255,0.03); margin-bottom:8px;"></div>', unsafe_allow_html=True)
+
+
     # Right Column: Memory Management & History Control
     with col_right:
         with st.container(border=True):

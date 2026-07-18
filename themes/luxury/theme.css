@@ -1,0 +1,76 @@
+/* ============================================================
+   themes/luxury/theme.css
+   Luxury Black Operating Mode Theme Styles
+   ============================================================ */
+
+:root {
+    --bg-void: #050505;
+    --bg-deep: #0a0a0a;
+    --bg-panel-hologram: rgba(212, 175, 55, 0.04);
+    --bg-panel-glass: rgba(10, 10, 10, 0.95);
+    --bg-card: rgba(12, 12, 12, 0.98);
+
+    /* Accents - Luxury Matte Gold */
+    --neon-cyan: #D4AF37;
+    --glow-cyan: 0 0 15px rgba(212, 175, 55, 0.3);
+    --glow-cyan-xs: 0 0 5px rgba(212, 175, 55, 0.2);
+    --glow-cyan-md: 0 0 25px rgba(212, 175, 55, 0.4);
+
+    --neon-purple: #A67C1E;
+    --glow-purple: 0 0 10px rgba(166, 124, 30, 0.2);
+
+    /* Typography */
+    --font-display: 'Outfit', sans-serif;
+    --font-primary: 'Outfit', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* Subtle matte panels */
+    --glass-bg: #0a0a0a;
+    --glass-border: rgba(212, 175, 55, 0.15);
+    --glass-blur: none;
+}
+
+body, .stApp {
+    font-family: var(--font-primary) !important;
+    background-color: var(--bg-void) !important;
+}
+
+/* Elegant thin gold frames */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 12px !important;
+    border: 1px solid rgba(212, 175, 55, 0.18) !important;
+    background: #0a0a0a !important;
+    box-shadow: 
+        0 30px 70px rgba(0, 0, 0, 0.5), 
+        inset 0 1px 0 rgba(212, 175, 55, 0.05) !important;
+}
+
+div.stButton > button {
+    border-radius: 6px !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    background: transparent !important;
+    color: #D4AF37 !important;
+    font-family: var(--font-primary) !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.3s ease !important;
+}
+
+div.stButton > button:hover {
+    background: rgba(212, 175, 55, 0.08) !important;
+    border-color: #D4AF37 !important;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.25) !important;
+}
+
+.status-widget {
+    border-radius: 6px !important;
+    background: #000000 !important;
+    border: 1px solid rgba(212, 175, 55, 0.1) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #D4AF37 !important;
+    border-radius: var(--radius-full);
+}

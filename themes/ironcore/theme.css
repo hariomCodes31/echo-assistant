@@ -1,0 +1,89 @@
+/* ============================================================
+   themes/ironcore/theme.css
+   Iron Core Operating Mode Theme Styles (Iron Man inspired)
+   ============================================================ */
+
+:root {
+    --bg-void: #0e0505;
+    --bg-deep: #160a0a;
+    --bg-panel-hologram: rgba(220, 38, 38, 0.05);
+    --bg-panel-glass: rgba(245, 158, 11, 0.04);
+    --bg-card: rgba(20, 10, 10, 0.7);
+
+    /* Accents - Gold and Hot Stark Red */
+    --neon-cyan: #F59E0B; /* Primary Gold */
+    --glow-cyan: 0 0 15px rgba(245, 158, 11, 0.35);
+    --glow-cyan-xs: 0 0 6px rgba(245, 158, 11, 0.25);
+    --glow-cyan-md: 0 0 30px rgba(245, 158, 11, 0.4);
+
+    --neon-purple: #EF4444; /* Secondary Red */
+    --glow-purple: 0 0 15px rgba(239, 68, 68, 0.35);
+
+    /* Fonts */
+    --font-display: 'Share Tech Mono', monospace;
+    --font-primary: 'Share Tech Mono', monospace;
+    --font-body: 'Share Tech Mono', monospace;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* Hard steel glassmorphism */
+    --glass-bg: rgba(22, 10, 10, 0.65);
+    --glass-border: rgba(245, 158, 11, 0.25);
+    --glass-blur: blur(20px) saturate(140%);
+}
+
+body, .stApp {
+    font-family: var(--font-primary) !important;
+    background-color: var(--bg-void) !important;
+}
+
+/* Industrial carbon-textured mechanical panel styling */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 8px !important;
+    border: 2px solid rgba(245, 158, 11, 0.25) !important;
+    background: rgba(22, 10, 10, 0.75) !important;
+    box-shadow: 
+        0 15px 35px rgba(0,0,0,0.6), 
+        inset 0 0 10px rgba(239, 68, 68, 0.1) !important;
+    position: relative;
+    clip-path: polygon(
+        0px 0px, 
+        calc(100% - 15px) 0px, 
+        100% 15px, 
+        100% 100%, 
+        15px 100%, 
+        0px calc(100% - 15px)
+    ) !important; /* Industrial chamfered corners! */
+}
+
+/* Mechanical Stark style buttons */
+div.stButton > button {
+    border-radius: 0px !important;
+    border: 2px solid #EF4444 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #FBBF24 !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.8rem !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.2) !important;
+    transition: all 0.25s ease !important;
+}
+
+div.stButton > button:hover {
+    background: rgba(245, 158, 11, 0.18) !important;
+    border-color: #F59E0B !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.4) !important;
+}
+
+.status-widget {
+    border-radius: 4px !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(245, 158, 11, 0.15) !important;
+}
+
+/* Stark style red progress indicators */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #F59E0B, #EF4444) !important;
+    border-radius: 0;
+}

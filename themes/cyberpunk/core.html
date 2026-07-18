@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: transparent;
+        margin: 0; padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+    }
+    .core-shell {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Cyberpunk neon rings */
+    .neon-ring {
+        position: absolute;
+        border-radius: 50%;
+        border: 2px solid #ff0077;
+        box-shadow: 0 0 15px #ff0077, inset 0 0 15px #ff0077;
+    }
+    .ring-outer {
+        width: 220px; height: 220px;
+        border: 2px dashed #00ffcc;
+        box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+        animation: spin-cw 6s linear infinite;
+    }
+    .ring-inner {
+        width: 150px; height: 150px;
+        border: 3px double #ff0077;
+        box-shadow: 0 0 15px rgba(255, 0, 119, 0.5);
+        animation: spin-ccw 4s linear infinite;
+    }
+    
+    /* Central glitching orb */
+    .neon-orb {
+        position: absolute;
+        width: 78px; height: 78px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, #ffffff, #00ffcc 40%, #ff0077 85%);
+        box-shadow: 
+            0 0 25px #00ffcc,
+            0 0 50px #ff0077,
+            inset 0 0 15px rgba(255, 255, 255, 0.8);
+        animation: orb-breathe 2s ease-in-out infinite;
+        z-index: 5;
+    }
+
+    /* Speed adjustments based on status */
+    .core-idle      .ring-outer { animation-duration: 6s; }
+    .core-listening .ring-outer { animation-duration: 2s; }
+    .core-processing .ring-outer { animation: spin-cw 0.4s linear infinite; }
+    .core-speaking  .ring-outer { animation: spin-cw 0.8s linear infinite; }
+
+    .core-listening  .neon-orb { box-shadow: 0 0 45px #00ffcc, 0 0 90px #ff0077; }
+    .core-processing .neon-orb { animation: glitch-orb 0.25s steps(2) infinite; }
+    .core-speaking   .neon-orb { animation: speak-shake 0.15s infinite; }
+
+    @keyframes spin-cw {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes spin-ccw {
+        0% { transform: rotate(360deg); }
+        100% { transform: rotate(0deg); }
+    }
+    @keyframes orb-breathe {
+        0%, 100% { transform: scale(1.0); }
+        50% { transform: scale(1.08); filter: hue-rotate(15deg); }
+    }
+    @keyframes glitch-orb {
+        0%, 100% { transform: scale(1.0) skewX(-4deg); filter: brightness(1.2) hue-rotate(45deg); }
+        50% { transform: scale(1.15) skewX(4deg); filter: brightness(1.5) hue-rotate(-45deg); }
+    }
+    @keyframes speak-shake {
+        0%, 100% { transform: translate(0, 0) scale(1.05); }
+        33% { transform: translate(-2px, 2px) scale(0.98); }
+        66% { transform: translate(2px, -2px) scale(1.1); }
+    }
+</style>
+</head>
+<body>
+<div class="core-shell {state}">
+    <div class="neon-ring ring-outer"></div>
+    <div class="neon-ring ring-inner"></div>
+    <div class="neon-orb"></div>
+</div>
+</body>
+</html>

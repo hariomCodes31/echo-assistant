@@ -1,0 +1,8 @@
+{
+  "name": "Iron Core",
+  "description": "Stark Industries inspired mechanical Arc Reactor industrial UI in red and gold",
+  "accent_color": "#FF3E3E",
+  "accent_glow": "rgba(255, 62, 62, 0.35)",
+  "primary_font": "Share Tech Mono",
+  "preview_emoji": "🤖"
+}

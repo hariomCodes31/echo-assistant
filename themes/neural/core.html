@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: transparent;
+        margin: 0; padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+    }
+    .core-shell {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Pulsing brain/synaptic core */
+    .synaptic-orb {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #ffffff 0%, #8b5cf6 55%, #1e1b4b 100%);
+        box-shadow: 
+            0 0 25px rgba(139, 92, 246, 0.75),
+            0 0 50px rgba(139, 92, 246, 0.35),
+            0 0 80px rgba(139, 92, 246, 0.15),
+            inset 0 0 15px rgba(255,255,255,0.45);
+        animation: orb-breathe 3.5s ease-in-out infinite;
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Outward floating glowing rings */
+    .synaptic-web-ring {
+        position: absolute;
+        border: 1.5px dashed rgba(139, 92, 246, 0.25);
+        border-radius: 50%;
+        animation: spin-web 10s infinite linear;
+    }
+    .ring-1 { width: 140px; height: 140px; animation-duration: 6s; }
+    .ring-2 { width: 210px; height: 210px; animation-duration: 9s; animation-delay: 2.2s; }
+    .ring-3 { width: 280px; height: 280px; animation-duration: 12s; animation-delay: 4.5s; }
+
+    /* Dot indicators (synapse signals) */
+    .synapse-node {
+        position: absolute;
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: #3b82f6;
+        box-shadow: 0 0 6px #3b82f6;
+    }
+    .node-1 { top: 10px; left: 50%; }
+    .node-2 { bottom: 20px; right: 40px; }
+    .node-3 { top: 50%; left: -3px; }
+
+    /* Core State classes */
+    .core-idle      .synaptic-orb { animation-duration: 3.5s; }
+    .core-listening .synaptic-orb { animation-duration: 1.0s; box-shadow: 0 0 35px rgba(139,92,246,0.9), 0 0 70px rgba(59,130,246,0.6); }
+    .core-processing .synaptic-orb { animation: orb-process 0.5s infinite ease-in-out; }
+    .core-speaking  .synaptic-orb { animation: orb-speak 0.2s infinite ease-in-out; }
+
+    @keyframes orb-breathe {
+        0%, 100% { transform: scale(1.0); }
+        50% { transform: scale(1.06); }
+    }
+    @keyframes orb-process {
+        0%, 100% { transform: scale(1.0); filter: hue-rotate(0deg); }
+        50% { transform: scale(1.12); filter: hue-rotate(90deg); }
+    }
+    @keyframes orb-speak {
+        0%, 100% { transform: scale(1.0) translate(0, 0); }
+        50% { transform: scale(1.04) translate(-1px, 1px); }
+    }
+    @keyframes spin-web {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+<div class="core-shell {state}">
+    <div class="synaptic-web-ring ring-1"><div class="synapse-node node-1"></div></div>
+    <div class="synaptic-web-ring ring-2"><div class="synapse-node node-2"></div></div>
+    <div class="synaptic-web-ring ring-3"><div class="synapse-node node-3"></div></div>
+    <div class="synaptic-orb"></div>
+</div>
+</body>
+</html>

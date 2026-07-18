@@ -1,0 +1,8 @@
+{
+  "name": "Quantum HUD",
+  "description": "Deep blue holographic interface with animated system core reactor",
+  "accent_color": "#00D9FF",
+  "accent_glow": "rgba(0, 217, 255, 0.35)",
+  "primary_font": "Orbitron",
+  "preview_emoji": "💠"
+}

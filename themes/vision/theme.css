@@ -1,0 +1,93 @@
+/* ============================================================
+   themes/vision/theme.css
+   Vision Glass Operating Mode Theme Styles (VisionOS inspired)
+   ============================================================ */
+
+:root {
+    --bg-void: #0d0e12;
+    --bg-deep: #121319;
+    --bg-panel-hologram: rgba(255, 255, 255, 0.05);
+    --bg-panel-glass: rgba(255, 255, 255, 0.03);
+    --bg-card: rgba(255, 255, 255, 0.04);
+
+    /* Accents - Minimalist Soft White */
+    --neon-cyan: #FFFFFF;
+    --glow-cyan: 0 0 20px rgba(255, 255, 255, 0.3);
+    --glow-cyan-xs: 0 0 8px rgba(255, 255, 255, 0.15);
+    --glow-cyan-md: 0 0 35px rgba(255, 255, 255, 0.4);
+
+    --neon-purple: #CBD5E1;
+    --glow-purple: 0 0 15px rgba(203, 213, 225, 0.15);
+
+    /* Typography */
+    --font-display: 'Outfit', sans-serif;
+    --font-primary: 'Outfit', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+
+    /* High-end glassmorphism elements */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-blur: blur(40px) saturate(210%);
+}
+
+/* Base Body Styles */
+body, .stApp {
+    font-family: var(--font-primary) !important;
+    background-color: var(--bg-void) !important;
+}
+
+/* Translucent floating panel container override */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    border-radius: 28px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    backdrop-filter: blur(40px) saturate(210%) !important;
+    box-shadow: 
+        0 40px 100px rgba(0, 0, 0, 0.25), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease !important;
+}
+
+/* Minimalist Button Overrides */
+div.stButton > button {
+    border-radius: var(--radius-xl) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: #F8FAFC !important;
+    font-family: var(--font-primary) !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: none !important;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+div.stButton > button:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Telemetry Widgets (Status Cards) Overrides */
+.status-widget {
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+    box-shadow: none !important;
+}
+
+/* Disable corner HUD brackets in Vision OS for clean lines */
+.corner-bracket {
+    display: none !important;
+}
+
+/* Floating Scrollbar */
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35) !important;
+}

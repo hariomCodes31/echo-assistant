@@ -1,0 +1,8 @@
+{
+  "name": "Cyberpunk Nexus",
+  "description": "High-energy cyberpunk grid with flashing neon magenta/cyan accents and scanline sweeps",
+  "accent_color": "#FF0077",
+  "accent_glow": "rgba(255, 0, 119, 0.4)",
+  "primary_font": "Orbitron",
+  "preview_emoji": "⚡"
+}

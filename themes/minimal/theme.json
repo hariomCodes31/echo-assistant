@@ -1,0 +1,8 @@
+{
+  "name": "Minimal Focus",
+  "description": "Clean monochrome console interface optimized for absolute focus and hidden navigation layouts",
+  "accent_color": "#FFFFFF",
+  "accent_glow": "rgba(255, 255, 255, 0.1)",
+  "primary_font": "Outfit",
+  "preview_emoji": "⚫"
+}

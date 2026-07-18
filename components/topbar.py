@@ -109,5 +109,8 @@ def render_topbar(cpu=23, ram=48, groq_status="READY"):
         </div>
     """).strip()
 
-    st.markdown(topbar_html, unsafe_allow_html=True)
+    clean_topbar = "\n".join([line.strip() for line in topbar_html.split("\n") if line.strip()])
+    st.html(clean_topbar)
+
+
 

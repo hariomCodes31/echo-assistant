@@ -1,0 +1,8 @@
+{
+  "name": "Matrix Console",
+  "description": "Green terminal interface with falling digital rain background and sharp wireframe layouts",
+  "accent_color": "#00FF33",
+  "accent_glow": "rgba(0, 255, 51, 0.4)",
+  "primary_font": "Share Tech Mono",
+  "preview_emoji": "📟"
+}

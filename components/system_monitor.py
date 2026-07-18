@@ -155,5 +155,8 @@ def render_system_monitor():
         </style>
     """).strip()
 
+    clean_monitor = "\n".join([line.strip() for line in monitor_html.split("\n") if line.strip()])
     with st.container(border=True):
-        st.markdown(monitor_html, unsafe_allow_html=True)
+        st.html(clean_monitor)
+
+

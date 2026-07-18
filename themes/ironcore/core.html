@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: transparent;
+        margin: 0; padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+    }
+    .reactor-shell {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Outer casing */
+    .outer-casing {
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        border: 4px solid #ef4444;
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 20px rgba(239, 68, 68, 0.4);
+    }
+    /* Rotating mechanical ring */
+    .mech-ring {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border: 8px dashed #f59e0b;
+        border-radius: 50%;
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        animation: spin-cw 12s linear infinite;
+    }
+    /* Reactor segment nodes */
+    .segments-container {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        animation: spin-ccw 8s linear infinite;
+    }
+    .segment {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 16px; height: 32px;
+        background: #f59e0b;
+        border: 1px solid #ef4444;
+        box-shadow: 0 0 8px #f59e0b;
+        margin-top: -16px; margin-left: -8px;
+    }
+    /* Positioning 10 segments around the ring */
+    .seg-1  { transform: rotate(0deg) translateY(-85deg); }
+    .seg-2  { transform: rotate(36deg) translateY(-85deg); }
+    .seg-3  { transform: rotate(72deg) translateY(-85deg); }
+    .seg-4  { transform: rotate(108deg) translateY(-85deg); }
+    .seg-5  { transform: rotate(144deg) translateY(-85deg); }
+    .seg-6  { transform: rotate(180deg) translateY(-85deg); }
+    .seg-7  { transform: rotate(216deg) translateY(-85deg); }
+    .seg-8  { transform: rotate(252deg) translateY(-85deg); }
+    .seg-9  { transform: rotate(288deg) translateY(-85deg); }
+    .seg-10 { transform: rotate(324deg) translateY(-85deg); }
+
+    /* Glowing Inner Core */
+    .inner-core {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 4px solid #ef4444;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffffff 10%, #f59e0b 50%, #7f1d1d 90%);
+        box-shadow: 
+            0 0 30px rgba(245, 158, 11, 0.8),
+            0 0 60px rgba(239, 68, 68, 0.6),
+            inset 0 0 15px rgba(255,255,255,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        animation: reactor-breathe 3s ease-in-out infinite;
+    }
+    
+    .triangular-vent {
+        width: 0; height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 35px solid rgba(255, 255, 255, 0.9);
+        filter: drop-shadow(0 0 6px #f59e0b);
+        transform: rotate(180deg);
+        margin-top: 10px;
+    }
+
+    /* Core State classes */
+    .core-idle      .mech-ring { animation-duration: 12s; }
+    .core-listening .mech-ring { animation-duration: 4s; }
+    .core-processing .mech-ring { animation: spin-cw 0.8s linear infinite; }
+    .core-speaking  .mech-ring { animation: spin-cw 1.8s linear infinite; }
+
+    .core-listening  .inner-core { animation-duration: 1s; box-shadow: 0 0 45px rgba(245,158,11,1.0), 0 0 90px rgba(239,68,68,0.8); }
+    .core-processing .inner-core { animation: process-flicker 0.4s infinite; }
+    .core-speaking   .inner-core { animation: reactor-vibrate 0.15s infinite; }
+
+    @keyframes spin-cw {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes spin-ccw {
+        0% { transform: rotate(360deg); }
+        100% { transform: rotate(0deg); }
+    }
+    @keyframes reactor-breathe {
+        0%, 100% { transform: scale(1.0); }
+        50% { transform: scale(1.05); }
+    }
+    @keyframes process-flicker {
+        0%, 100% { opacity: 0.8; transform: scale(1.02); }
+        50% { opacity: 1.0; transform: scale(1.08); filter: brightness(1.2); }
+    }
+    @keyframes reactor-vibrate {
+        0%, 100% { transform: translate(0, 0) scale(1.03); }
+        33% { transform: translate(-1px, 1px) scale(1.01); }
+        66% { transform: translate(1px, -1px) scale(1.05); }
+    }
+</style>
+</head>
+<body>
+<div class="reactor-shell {state}">
+    <div class="outer-casing"></div>
+    <div class="mech-ring"></div>
+    <div class="segments-container">
+        <div class="segment seg-1"></div>
+        <div class="segment seg-2"></div>
+        <div class="segment seg-3"></div>
+        <div class="segment seg-4"></div>
+        <div class="segment seg-5"></div>
+        <div class="segment seg-6"></div>
+        <div class="segment seg-7"></div>
+        <div class="segment seg-8"></div>
+        <div class="segment seg-9"></div>
+        <div class="segment seg-10"></div>
+    </div>
+    <div class="inner-core">
+        <div class="triangular-vent"></div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {
+        background: transparent;
+        margin: 0; padding: 0;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+    }
+    .core-shell {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    /* Concentric gold pulse rings */
+    .gold-ring {
+        position: absolute;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 50%;
+        animation: ring-fade 4s ease-out infinite;
+    }
+    .ring-1 { animation-delay: 0s; }
+    .ring-2 { animation-delay: 2s; }
+    
+    /* Central Gold Orb */
+    .gold-orb {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #ffffff 0%, #d4af37 55%, #451a03 100%);
+        box-shadow: 
+            0 0 20px rgba(212, 175, 55, 0.6),
+            0 0 40px rgba(212, 175, 55, 0.2),
+            inset 0 0 12px rgba(255,255,255,0.4);
+        animation: orb-breathe 4s ease-in-out infinite;
+        position: relative;
+        z-index: 2;
+    }
+
+    .core-idle      .gold-orb { animation-duration: 4s; }
+    .core-listening .gold-orb { animation-duration: 1.2s; box-shadow: 0 0 35px rgba(212,175,55,0.85); }
+    .core-processing .gold-orb { animation: orb-process 0.6s infinite ease-in-out; }
+    .core-speaking  .gold-orb { animation: orb-speak 0.25s infinite ease-in-out; }
+
+    @keyframes orb-breathe {
+        0%, 100% { transform: scale(1.0); }
+        50% { transform: scale(1.05); }
+    }
+    @keyframes orb-process {
+        0%, 100% { transform: scale(1.0); filter: brightness(1.0); }
+        50% { transform: scale(1.1); filter: brightness(1.2); }
+    }
+    @keyframes orb-speak {
+        0%, 100% { transform: scale(1.0) translate(0, 0); }
+        50% { transform: scale(1.03) translate(-1px, 1px); }
+    }
+    @keyframes ring-fade {
+        0% { width: 80px; height: 80px; opacity: 0.8; }
+        100% { width: 220px; height: 220px; opacity: 0; }
+    }
+</style>
+</head>
+<body>
+<div class="core-shell {state}">
+    <div class="gold-ring ring-1"></div>
+    <div class="gold-ring ring-2"></div>
+    <div class="gold-orb"></div>
+</div>
+</body>
+</html>

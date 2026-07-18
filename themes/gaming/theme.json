@@ -1,0 +1,8 @@
+{
+  "name": "Gaming Mode",
+  "description": "RGB-lit high-performance gamer style HUD with reactive borders and FPS monitors",
+  "accent_color": "#00FF00",
+  "accent_glow": "rgba(0, 255, 0, 0.35)",
+  "primary_font": "Orbitron",
+  "preview_emoji": "🎮"
+}
