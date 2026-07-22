@@ -1,34 +1,12 @@
 [
     {
         "role": "user",
-        "content": "weather in delhi"
+        "content": "hello",
+        "timestamp": "22 Jul 2026, 05:45:57 PM"
     },
     {
         "role": "assistant",
-        "content": "\n\ud83c\udf24 Weather in Delhi\n\n\ud83c\udf21 Temperature : 26.7\u00b0C\n\ud83d\udca7 Humidity    : 95%\n\ud83c\udf2c Wind Speed  : 6.4 km/h\n"
-    },
-    {
-        "role": "user",
-        "content": "\ud83c\udfa4 ."
-    },
-    {
-        "role": "assistant",
-        "content": "It looks like you might have sent an empty message. Could you please provide more context or ask a question so I can assist you better?"
-    },
-    {
-        "role": "user",
-        "content": "\ud83c\udfa4 Conected text."
-    },
-    {
-        "role": "assistant",
-        "content": "It seems like you're referring to \"connected text.\" Connected text is a term used to describe a type of writing or speech where ideas are linked together in a logical and coherent manner. This can include the use of transitional phrases, cohesive language, and a clear structure to help the reader or listener follow the argument or narrative.\n\nConnected text can take many forms, including essays, stories, speeches, and even conversations. The key characteristics of connected text include:\n\n1. **Cohesion**: The use of linking words and phrases to connect ideas between sentences and paragraphs.\n2. **Coherence**: The logical and clear organization of ideas to convey a message or tell a story.\n3. **Structure**: A clear beginning, middle, and end, with a logical flow of ideas.\n4. **Transitions**: The use of transitional phrases and words to guide the reader or listener through the text.\n\nExamples of connected text include:\n\n* A well-structured essay that argues a point and supports it with evidence\n* A story that has a clear beginning, middle, and end, with characters and plot twists that engage the reader\n* A speech that persuades the audience to take a particular action or adopt a certain point of view\n* A conversation that flows logically and coherently, with participants building on each other's ideas.\n\nConnected text is important in many areas of life, including education, business, and communication. It helps to convey ideas clearly and effectively, and can be used to persuade, inform, or entertain others."
-    },
-    {
-        "role": "user",
-        "content": "\ud83c\udfa4 Conected with text."
-    },
-    {
-        "role": "assistant",
-        "content": "\u274c Error calling Groq Vision API: Error code: 404 - {'error': {'message': 'The model `meta-llama/llama-4-scout-17b-16e-instruct` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'code': 'model_not_found'}}"
+        "content": "Hello. How can I assist you today?",
+        "timestamp": "22 Jul 2026, 05:45:57 PM"
     }
 ]
