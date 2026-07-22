@@ -312,6 +312,9 @@ Return ONLY the final translated command string.
                         self.mic_state = "Speaking"
                         self.tts_player.speak(response)
 
+            except sr.WaitTimeoutError:
+                # Normal silence timeout in continuous mode; keep listening
+                continue
             except Exception as e:
                 self.mic_state = "Idle"
                 print(f"[ECHO X Continuous Listener Error]: {e}")
