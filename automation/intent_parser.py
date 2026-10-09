@@ -329,7 +329,7 @@ def _llm_parse(command: str) -> list[dict] | None:
     """Call Groq LLM to parse a command the fast path couldn't handle."""
     try:
         resp = _client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="qwen/qwen3.8-27b",
             messages=[
                 {"role": "system", "content": _LLM_SYSTEM},
                 {"role": "user",   "content": command},

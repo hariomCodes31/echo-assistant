@@ -86,7 +86,7 @@ if "os_theme" not in st.session_state:
 if "os_mode" not in st.session_state:
     st.session_state.os_mode = "quantum"
 if "llm_model" not in st.session_state:
-    st.session_state.llm_model = "llama-3.3-70b-versatile"
+    st.session_state.llm_model = "qwen/qwen3.8-27b"
 if "llm_temp" not in st.session_state:
     st.session_state.llm_temp = 0.7
 if "llm_max_tokens" not in st.session_state:
@@ -198,6 +198,26 @@ base_interactions_js = """
     });
   }
 
+  // ── Alt + Space hotkey for Voice PTT ──────────────────────────────────────────
+  if(!win._echoVoiceHotkeyBound){
+    win._echoVoiceHotkeyBound = true;
+    win.addEventListener('keydown', function(e){
+      if(e.altKey && (e.code === 'Space' || e.key === ' ')){
+        e.preventDefault();
+        var buttons = doc.querySelectorAll('div.stButton > button');
+        for(var i=0; i<buttons.length; i++){
+          var t = buttons[i].innerText || buttons[i].textContent || '';
+          if(t.indexOf('TRANSMISSION') !== -1){
+            if(!buttons[i].disabled){
+              buttons[i].click();
+            }
+            break;
+          }
+        }
+      }
+    });
+  }
+
   // ── Bind + rebind on re-renders ───────────────────────────────────────────────
   function bindAll(){
     doc.querySelectorAll('[data-testid="stVerticalBlockBorderWrapper"]').forEach(applyTilt);
@@ -206,6 +226,7 @@ base_interactions_js = """
   bindAll();
   new MutationObserver(bindAll).observe(doc.body,{childList:true,subtree:true});
 })();
+
 """
 
 transition_js = f"""

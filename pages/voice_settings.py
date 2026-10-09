@@ -7,10 +7,34 @@ def get_installed_voices():
     try:
         ps_cmd = "Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer; $s.GetInstalledVoices() | ForEach-Object { $_.VoiceInfo.Name }"
         res = subprocess.run(["powershell", "-NoProfile", "-Command", ps_cmd], capture_output=True, text=True, check=True)
-        voices = [v.strip() for v in res.stdout.strip().split("\r\n") or res.stdout.strip().split("\n") if v.strip()]
+        output = res.stdout.strip()
+        voices = [v.strip() for v in output.replace("\r\n", "\n").split("\n") if v.strip()]
         return voices if voices else ["Microsoft David Desktop", "Microsoft Zira Desktop"]
     except Exception:
         return ["Microsoft David Desktop", "Microsoft Zira Desktop"]
+
+def get_input_microphones():
+    """Returns list of genuine input audio devices (index, name)."""
+    devices = []
+    try:
+        import pyaudio
+        p = pyaudio.PyAudio()
+        for i in range(p.get_device_count()):
+            try:
+                info = p.get_device_info_by_index(i)
+                if info.get("maxInputChannels", 0) > 0:
+                    raw_name = info.get("name", f"Microphone {i}").replace("\r", " ").replace("\n", " ").strip()
+                    devices.append((i, raw_name))
+            except Exception:
+                pass
+        p.terminate()
+    except Exception:
+        try:
+            for i, name in enumerate(sr.Microphone.list_microphone_names()):
+                devices.append((i, name.replace("\r", " ").replace("\n", " ").strip()))
+        except Exception:
+            pass
+    return devices
 
 def load_voice_settings_page():
     st.markdown('<p class="panel-title" style="font-size:1.5rem; color:#00D9FF; letter-spacing:2px; text-transform:uppercase;">🎙️ Voice Calibration Dashboard</p>', unsafe_allow_html=True)
@@ -30,19 +54,18 @@ def load_voice_settings_page():
             current_mode = voice_manager.mode
             selected_mode = st.radio("Voice Operation Mode", options=mode_options, index=mode_options.index(current_mode) if current_mode in mode_options else 0)
             
-            # Microphone device dropdown
-            try:
-                mic_names = sr.Microphone.list_microphone_names()
-            except Exception:
-                mic_names = []
+            # Microphone device dropdown - only genuine input devices
+            input_devices = get_input_microphones()
+            mic_options = ["Default System Microphone"] + [f"[{idx}] {name}" for idx, name in input_devices]
             
-            mic_options = ["Default System Microphone"] + [f"[{i}] {name}" for i, name in enumerate(mic_names)]
-            
-            # Get current mic index
+            # Match current mic selection
             current_mic = voice_manager.mic_index
             default_index = 0
-            if current_mic is not None and current_mic < len(mic_names):
-                default_index = current_mic + 1
+            if current_mic is not None:
+                for opt_idx, (d_idx, _) in enumerate(input_devices, start=1):
+                    if d_idx == current_mic:
+                        default_index = opt_idx
+                        break
                 
             selected_mic_str = st.selectbox("Active Audio Input Device", options=mic_options, index=default_index)
             
@@ -69,7 +92,6 @@ def load_voice_settings_page():
             selected_vol = st.slider("Speech Volume", min_value=0.0, max_value=1.0, value=current_vol, step=0.1)
             
             # Speed/Rate control
-            # Convert System.Speech range (-10 to 10, default 0) to pyttsx3 rate range (100 to 300, default 200)
             current_rate = int((voice_manager.tts_player.rate * 10) + 200)
             selected_rate = st.slider("Speech Rate / Speed", min_value=100, max_value=300, value=current_rate, step=10)
             
@@ -77,14 +99,13 @@ def load_voice_settings_page():
             installed_voices = get_installed_voices()
             current_voice = voice_manager.tts_player.voice_id
             
-            # Try to match current voice in the list
             default_voice_idx = 0
             for i, v in enumerate(installed_voices):
                 if current_voice and current_voice.lower() in v.lower():
                     default_voice_idx = i
                     break
                     
-            selected_voice = st.selectbox("Synthesis Voice Voice ID", options=installed_voices, index=default_voice_idx)
+            selected_voice = st.selectbox("Synthesis Voice ID", options=installed_voices, index=default_voice_idx)
             
             # Apply changes
             voice_manager.update_settings(
@@ -109,7 +130,6 @@ def load_voice_settings_page():
         st.markdown('<p class="panel-title">Current Voice Status</p>', unsafe_allow_html=True)
         col_s1, col_s2, col_s3 = st.columns(3)
         
-        # Map internal plain-string states to display labels
         state_display_map = {
             "Idle": "⚪ Idle",
             "Listening": "🟢 Listening",

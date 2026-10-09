@@ -94,6 +94,11 @@ def render_voice_panel():
             with st.spinner("🎤 Listening... Speak now!"):
                 user_text, response = voice_manager.trigger_ptt()
 
+            # FIX: Ensure messages is initialized before appending
+            if "messages" not in st.session_state:
+                from modules.memory import load_memory
+                st.session_state.messages = load_memory()
+
             if response:
                 if user_text:
                     st.session_state.messages.append({
@@ -106,7 +111,15 @@ def render_voice_panel():
                 })
                 from modules.memory import save_memory
                 save_memory(st.session_state.messages)
+                # FIX: Don't double-speak - trigger_ptt -> process_voice_input already
+                # saves to memory; only speak here if the response hasn't been spoken yet.
+                # The voice_manager.process_voice_input does NOT speak by itself in PTT mode,
+                # so we speak it here once.
                 voice_manager.tts_player.speak(response)
+            elif user_text is None and response is None:
+                # No speech detected — show a brief note (no rerun needed)
+                st.toast("No speech detected. Please try again.", icon="🎤")
+                return
 
             st.session_state.active_view = "Chats"
             st.rerun()

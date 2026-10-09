@@ -45,11 +45,20 @@ class TTSPlayer:
         self.active_speaking = True
 
         # Clean text for PowerShell execution
-        clean_text = text.replace("'", "''").replace('"', '""')
+        # FIX: Escape both standard apostrophe (') and smart apostrophe (')
+        clean_text = str(text)
+        clean_text = clean_text.replace("'", "''").replace("\u2018", "''").replace("\u2019", "''")
+        # FIX: Escape standard double-quotes
+        clean_text = clean_text.replace('"', '""')
         # Remove common emoji/unicode symbols that cause encoding issues in PowerShell
-        for ch in ["❌", "✅", "🤖", "📂", "📸", "⚪", "🟢", "🟡", "🔴", "🎤", "🔊",
-                   "💬", "🖼️", "🎙️", "🖥️", "🌐", "🎵", "🌤", "⚙️", "🗑️"]:
+        for ch in ["\u274c", "\u2705", "\U0001f916", "\U0001f4c2", "\U0001f4f8", "\u26aa", "\U0001f7e2", "\U0001f7e1", "\U0001f534", "\U0001f3a4", "\U0001f50a",
+                   "\U0001f4ac", "\U0001f5bc\ufe0f", "\U0001f399\ufe0f", "\U0001f5a5\ufe0f", "\U0001f310", "\U0001f3b5", "\U0001f324", "\u2699\ufe0f", "\U0001f5d1\ufe0f"]:
             clean_text = clean_text.replace(ch, "")
+        # Remove any remaining non-ASCII characters that PowerShell may choke on
+        clean_text = clean_text.encode("ascii", errors="ignore").decode("ascii")
+        # FIX: Truncate extremely long text to prevent PowerShell command-line length overflow
+        if len(clean_text) > 2000:
+            clean_text = clean_text[:2000] + "..."
 
         # Build PowerShell System.Speech script
         ps_script = "Add-Type -AssemblyName System.Speech; $s = New-Object System.Speech.Synthesis.SpeechSynthesizer;"
@@ -161,7 +170,7 @@ Return ONLY the final translated command string.
 """
         try:
             response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
+                model="qwen/qwen3.8-27b",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": raw_speech}
@@ -183,7 +192,8 @@ Return ONLY the final translated command string.
 
         # Check for immediate interruptions first
         clean_text = raw_text.lower().strip().strip("?.!,")
-        interrupt_words = ["stop", "sop", "cancel", "quiet", "silence", "shh", "shush", "hush"]
+        # FIX: Removed duplicate/typo "sop" from interrupt_words list
+        interrupt_words = ["stop", "cancel", "quiet", "silence", "shh", "shush", "hush"]
         if clean_text in interrupt_words or any(w in clean_text.split() for w in interrupt_words):
             self.tts_player.stop()
             self.interrupted = True
@@ -199,7 +209,7 @@ Return ONLY the final translated command string.
 
         if result:
             # Update last action if execution succeeded
-            if not result.startswith("❌") and not result.startswith("⚠️"):
+            if not result.startswith("\u274c") and not result.startswith("\u26a0\ufe0f"):
                 self.last_action = resolved_cmd
 
             # Save history to memory.json
@@ -208,7 +218,10 @@ Return ONLY the final translated command string.
         else:
             # Fallback to chat completion if not a system command
             from ai import ask_ai
-            response = ask_ai(resolved_cmd)
+            try:
+                response = ask_ai(resolved_cmd)
+            except Exception as e:
+                response = f"I encountered an issue processing your request: {e}"
             self._save_to_chat_history(raw_text, response)
             return raw_text, response
 
@@ -219,13 +232,14 @@ Return ONLY the final translated command string.
         """
         self.mic_state = "Listening"
         try:
-            # Increase listening timeout to 7 seconds for a wider user response window
+            # Responsive yet robust listening configuration:
+            # 8s timeout to start speaking, 12s phrase time limit, 0.25s noise calibration, 0.8s pause threshold
             transcription = record_and_transcribe(
                 device_index=self.mic_index,
-                timeout=7,
-                phrase_time_limit=8,
-                calibration_duration=0.0,
-                pause_threshold=0.4
+                timeout=8,
+                phrase_time_limit=12,
+                calibration_duration=0.25,
+                pause_threshold=0.8
             )
             if transcription:
                 return self.process_voice_input(transcription)
@@ -261,14 +275,13 @@ Return ONLY the final translated command string.
                 self.mic_state = "Listening"
 
             try:
-                # Continuous listener uses highly responsive parameters
-                # phrase_time_limit is raised to 8 seconds to prevent cutting off longer commands
+                # Continuous listener uses 5s timeout and 0.8s pause threshold
                 transcription = record_and_transcribe(
                     device_index=self.mic_index,
-                    timeout=2,
-                    phrase_time_limit=8,
-                    calibration_duration=0.0,
-                    pause_threshold=0.4
+                    timeout=5,
+                    phrase_time_limit=10,
+                    calibration_duration=0.2,
+                    pause_threshold=0.8
                 )
 
                 if not transcription:
@@ -277,7 +290,8 @@ Return ONLY the final translated command string.
                 # Strip punctuation for matching keywords
                 clean_txt = transcription.lower().replace(",", "").replace(".", "").replace("?", "").replace("!", "").strip()
                 words = clean_txt.split()
-                interrupt_words = ["stop", "sop", "cancel", "quiet", "silence", "shh", "shush", "hush"]
+                # FIX: Removed duplicate/typo "sop" from interrupt_words list
+                interrupt_words = ["stop", "cancel", "quiet", "silence", "shh", "shush", "hush"]
 
                 # 1. Voice Interruption Check (Always checked first, even when assistant is speaking)
                 if clean_txt in interrupt_words or any(w in words for w in interrupt_words):
